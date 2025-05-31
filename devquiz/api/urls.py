@@ -8,15 +8,14 @@ urlpatterns = [
     # Listar quizzes da disiciplina
     path('disciplinas/<int:disciplina_id>/quizzes/', views.disciplina_quizzes, name='disciplina_quizzes'),
 
-    # Listar questões de um quiz
+    # Listar questão(ões) de um quiz + Receber resposta do aluno
     path('quizzes/<int:quiz_id>/questoes/', views.quiz_questoes, name='quizzes_detail'),
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', views.quiz_questoes, name='quizzes_detail'),
 
-    # Listar respostas de uma questão
-    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/', views.questao_resposta, name='questoes_respostas'),
-
     # Certificado
     path('certificados/<str:codigo>/', views.certificados, name='certificado'),
+
+
 ]
 
 

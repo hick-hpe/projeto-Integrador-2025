@@ -59,7 +59,7 @@ class Resposta(models.Model):
 
 
 class RespostaAluno(models.Model):
-    aluno = models.ForeignKey(Aluno, related_name='respostas_aluno', on_delete=models.CASCADE)
+    aluno = models.ForeignKey(User, related_name='respostas_aluno', on_delete=models.CASCADE)
     questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
     alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
 
@@ -86,8 +86,3 @@ class Certificado(models.Model):
     def __str__(self):
         return f"{self.usuario.username} - {self.disciplina.nome} - {self.data_emissao}"
 
-"""
-Criar Certificado de exemplo
-
-c = Certificado
-"""

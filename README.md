@@ -19,10 +19,7 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
 - `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Exibe os seguintes detalhes de uma questão:
     - Descrição
     - Alternativas
-- `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/` - Exibe os seguintes detalhes de uma questão:
-    - Descrição
-    - Alternativa correta
-    - Explicação da resposta
+- `POST /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Recebe a repsosta do aluno de uma questão
 - `GET /api/certificados/<str:codigo>/` - Exibe os seguintes detalhes de um certificado:
     - Código
     - Usuário
