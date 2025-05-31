@@ -16,7 +16,7 @@ urlpatterns = [
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/', views.questao_resposta, name='questoes_respostas'),
 
     # Certificado
-    path('certificados/<int:codigo>/', views.certificados, name='certificado'),
+    path('certificados/<str:codigo>/', views.certificados, name='certificado'),
 ]
 
 

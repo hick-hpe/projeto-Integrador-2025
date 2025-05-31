@@ -34,6 +34,7 @@ class Quiz(models.Model):
 class Questao(models.Model):
     quiz = models.ForeignKey(Quiz, related_name='questoes', on_delete=models.CASCADE)
     descricao = models.TextField()
+    explicacao = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.quiz.descricao[:30]}: {self.descricao[:50]}..."
@@ -80,6 +81,13 @@ class Certificado(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     data_emissao = models.DateField(auto_now_add=True)
+    # adicionar qr_code
 
     def __str__(self):
         return f"{self.usuario.username} - {self.disciplina.nome} - {self.data_emissao}"
+
+"""
+Criar Certificado de exemplo
+
+c = Certificado
+"""

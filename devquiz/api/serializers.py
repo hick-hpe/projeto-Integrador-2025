@@ -93,3 +93,18 @@ class CertificadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificado
         fields = ['id', 'codigo', 'usuario', 'usuario_id', 'disciplina', 'disciplina_id', 'data_emissao']
+
+class CertificadoPublicoSerializer(serializers.ModelSerializer):
+    usuario = serializers.SerializerMethodField()
+    disciplina = serializers.CharField(source='disciplina.nome')
+
+    class Meta:
+        model = Certificado
+        fields = ['codigo', 'usuario', 'disciplina', 'data_emissao']
+
+    def get_usuario(self, obj):
+        return obj.usuario.get_full_name() or obj.usuario.username
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        return data

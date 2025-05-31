@@ -24,14 +24,36 @@ def disciplina_quizzes(request, disciplina_id):
 
 @api_view(['GET'])
 def quiz_questoes(request, quiz_id, questao_id=None):
-    return Response({"msg": "Questões do Quiz"})
+    if questao_id:
+        questoes = Questao.objects.filter(quiz_id=quiz_id, id=questao_id)
+    else:
+        questoes = Questao.objects.filter(quiz_id=quiz_id)
+    
+    serializer = QuestaoSerializer(questoes, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
 def questao_resposta(request, quiz_id, questao_id):
-    return Response({"msg": "Resposta e explicação da questão"})
+    try:
+        questao = Questao.objects.get(quiz_id=quiz_id, id=questao_id)
+        alternativa = questao.alternativas.filter(correta=True).first()
+        data = {
+            'questao': questao.descricao,
+            'alternativa_correta': alternativa.texto,
+            'explicacao': questao.explicacao
+        }
+        return Response(data)
+    except Questao.DoesNotExist:
+        return Response({'erro': 'Questão não encontrada.'}, status=404)
 
 
 @api_view(['GET'])
-def certificados(request, codigo):
-    return Response({"msg": "Certificado do aluno!!!"})
+def certificados(request, codigo=None):
+    if codigo:
+        try:
+            certificado = Certificado.objects.get(codigo=codigo)
+            serializer = CertificadoPublicoSerializer(certificado)
+            return Response(serializer.data)
+        except Certificado.DoesNotExist:
+            return Response({'erro': 'Certificado não encontrado.'}, status=404)
