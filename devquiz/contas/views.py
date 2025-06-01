@@ -2,9 +2,10 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['POST'])
 def register_view(request):
@@ -33,7 +34,7 @@ def logout_view(request):
     logout(request)
     return Response({'detail': 'Logout successful'}, status=status.HTTP_200_OK)
 
-@login_required(login_url='/auth/login/')
+@permission_classes([IsAuthenticated])
 def profile_view(request):
     user = request.user
     return HttpResponse(f'Bem vindo, {user.username}')

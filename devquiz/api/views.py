@@ -1,10 +1,11 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Quiz, Questao, Certificado, Disciplina, RespostaAluno, Alternativa
+from .models import Quiz, Questao, Certificado, Disciplina, Alternativa
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, CertificadoPublicoSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
-
-@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
 def disciplinas_lista(request):
     if request.method == 'GET':
         disciplinas = Disciplina.objects.all()
@@ -12,6 +13,7 @@ def disciplinas_lista(request):
         return Response(serializer.data)
 
 
+@permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def disciplina_quizzes(request, disciplina_id):
     if request.method == 'GET':
@@ -22,6 +24,7 @@ def disciplina_quizzes(request, disciplina_id):
     return Response({"msg": "GET"})
 
 
+@permission_classes([IsAuthenticated])
 @api_view(['GET', 'POST'])
 def quiz_questoes(request, quiz_id, questao_id=None):
     if request.method == "POST":
@@ -48,7 +51,8 @@ def quiz_questoes(request, quiz_id, questao_id=None):
 
 
 @api_view(['GET'])
-def certificados(request, codigo=None):
+@permission_classes([AllowAny])
+def certificados(request, codigo):
     if codigo:
         try:
             certificado = Certificado.objects.get(codigo=codigo)
@@ -56,4 +60,6 @@ def certificados(request, codigo=None):
             return Response(serializer.data)
         except Certificado.DoesNotExist:
             return Response({'erro': 'Certificado não encontrado.'}, status=404)
+    else:
+        return Response({'erro': 'Código do certificado não fornecido.'}, status=400)
 
