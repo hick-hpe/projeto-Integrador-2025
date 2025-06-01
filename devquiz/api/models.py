@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Aluno(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
+    # realizando_quiz = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - {self.matricula}"

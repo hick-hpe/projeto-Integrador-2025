@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Perfil</title>
+    </head>
+    <body>
+        <h2>Perfil do Usuário</h2>
+        <div id="mensagem"></div>
+        <button onclick="logout()">Sair</button>
+
+        <script>
+        const apiURL = 'http://localhost:8000/auth/';
+        const accessToken = localStorage.getItem("access");
+
+        if (!accessToken || accessToken === "null" || accessToken === "undefined") {
+            alert("Você precisa estar logado.");
+            window.location.href = "login.html";
+        }
+
+        fetch(apiURL + 'profile/', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById("mensagem").textContent = data.message;
+            } else {
+                alert("Erro ao obter perfil.");
+                window.location.href = "login.html";
+            }
+        })
+        .catch(err => {
+            alert("Erro ao carregar perfil.");
+            console.log(err);
+        });
+
+        function logout() {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            window.location.href = "login.html";
+        }
+
+        function make_obj() {
+            return {
+                'access': localStorage.getItem('access'),
+                'refresh': localStorage.getItem('refresh'),
+            }
+        }
+
+        function apply_obj(obj) {
+            localStorage.setItem('access', obj.access);
+            localStorage.setItem('refresh', obj.refresh);
+        }
+
+        // const obj = make_obj();
+        // apply_obj(obj);
+
+    </script>
+    </body>
+</html>

@@ -50,7 +50,7 @@ def quiz_questoes(request, quiz_id, questao_id=None):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET'])  
 @permission_classes([AllowAny])
 def certificados(request, codigo):
     if codigo:

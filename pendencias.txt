@@ -1,0 +1,12 @@
+rotas pra realizar o quiz e enviar resultados:
+    POST /api/quizzes/<int:quiz_id>/iniciar/
+        - iniciar o quiz
+        - Aluno.realizando_quiz = True
+    POST /api/quizzes/<int:quiz_id>/concluir/
+        - concluir o quiz
+        - Aluno.realizando_quiz = False
+        - calcular desempenho (acertos, erros) e enviar
+    POST /api/quizzes/<int:quiz_id>/desistir/
+        - desistir do quiz
+        - Aluno.realizando_quiz = False
+
