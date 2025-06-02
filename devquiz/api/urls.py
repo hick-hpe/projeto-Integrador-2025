@@ -15,7 +15,11 @@ urlpatterns = [
     # Certificado
     path('certificados/<str:codigo>/', views.certificados, name='certificado'),
 
+    # Desistir do quiz
+    path('quizzes/<int:quiz_id>/desistir/', views.desistir_quiz, name='desistir_quiz'),
 
+    # Concluir quiz
+    path('quizzes/<int:quiz_id>/concluir/', views.concluir_quiz, name='concluir_quiz'),
 ]
 
 

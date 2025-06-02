@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Quiz, Questao, Certificado, Disciplina, Alternativa
+from .models import Quiz, Questao, Certificado, Disciplina, Alternativa, Aluno
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, CertificadoPublicoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -63,3 +63,41 @@ def certificados(request, codigo):
     else:
         return Response({'erro': 'Código do certificado não fornecido.'}, status=400)
 
+@api_view(['POST'])
+def desistir_quiz(request, quiz_id):
+    if quiz_id:
+        return Response({"message": "Quiz Desistido!!"})
+    else:
+        return Response({"error": "ID do quiz não enviado"})
+
+
+@api_view(['POST'])
+def concluir_quiz(request, quiz_id):
+    if quiz_id:
+        quiz = Quiz.objects.filter(id=quiz_id).first()
+        if quiz:
+            pontuacao = 0
+            acertos = 0
+            respostas = request.data.get('respostas', [])
+
+            for r in respostas:
+                questao = Questao.objects.get(id=r['questao_id'], quiz=quiz)
+                alternativa = Alternativa.objects.get(id=r['alternativa_id'], questao=questao)
+
+                if alternativa.correta:
+                    acertos += 1
+                    pontuacao += 10
+
+            data = {
+                "mensagem": "Quiz concluído com sucesso",
+                "usuario": str(request.user),
+                "quiz": quiz.nivel,
+                "disciplina": quiz.disciplina.nome,
+                "acertos": acertos,
+                "pontuacao": pontuacao
+            }
+            return Response(data)
+        else:
+            return Response({"error": "Quiz não encontrado"})
+    else:
+        return Response({"error": "ID do quiz não enviado"})
