@@ -43,10 +43,9 @@ class Questao(models.Model):
 class Alternativa(models.Model):
     questao = models.ForeignKey(Questao, related_name='alternativas', on_delete=models.CASCADE)
     texto = models.CharField(max_length=200)
-    correta = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.texto} ({'Correta' if self.correta else 'Incorreta'})"
+        return f"{self.texto}"
 
 
 class Resposta(models.Model):
@@ -59,7 +58,8 @@ class Resposta(models.Model):
 
 
 class RespostaAluno(models.Model):
-    aluno = models.ForeignKey(User, related_name='respostas_aluno', on_delete=models.CASCADE)
+    aluno = models.ForeignKey(User, related_name='rescpostas_aluno', on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
     alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
 
@@ -67,13 +67,13 @@ class RespostaAluno(models.Model):
         return f"{self.aluno.user.username} - Questão {self.questao.id} - Alternativa: {self.alternativa.texto}"
     
 
-class Pontuacao(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    pontuacao = models.IntegerField(default=0)
+# class Pontuacao(models.Model):
+#     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+#     pontuacao = models.IntegerField(default=0)
 
-    def __str__(self):
-        return f"{self.usuario.username} - {self.pontuacao} pontos"
+#     def __str__(self):
+#         return f"{self.usuario.username} - {self.pontuacao} pontos"
 
 
 class Certificado(models.Model):

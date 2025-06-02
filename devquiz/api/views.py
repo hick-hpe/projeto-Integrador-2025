@@ -16,36 +16,34 @@ def disciplinas_lista(request):
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def disciplina_quizzes(request, disciplina_id):
-    if request.method == 'GET':
-        quizzes = Quiz.objects.filter(disciplina_id=disciplina_id)
-        serializer = QuizSerializer(quizzes, many=True)
-        return Response(serializer.data)
-    
-    return Response({"msg": "GET"})
+    quizzes = Quiz.objects.filter(disciplina_id=disciplina_id)
+    serializer = QuizSerializer(quizzes, many=True)
+    return Response(serializer.data)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def quiz_questoes(request, quiz_id):
+    questoes = Questao.objects.filter(quiz_id=quiz_id)
+    serializer = QuestaoSerializer(questoes, many=True)
+    return Response(serializer.data)
 
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET', 'POST'])
-def quiz_questoes(request, quiz_id, questao_id=None):
+def questoes_detail(request, quiz_id, questao_id):
     if request.method == "POST":
-        # Buscar a questão
         questao = Questao.objects.get(quiz_id=quiz_id, id=questao_id)
         alternativa = Alternativa.objects.get(
             questao=questao, id=request.data.get('alternativa_id')
         )
-        
-        # Comparar com a resposta certa
+
         if alternativa.correta:
             return Response({"msg": "POST - Resposta correta", "explicacao": questao.explicacao})
         else:
             return Response({"msg": "POST - Resposta incorreta", "explicacao": questao.explicacao})
-    
 
-    if questao_id:
-        questoes = Questao.objects.filter(quiz_id=quiz_id, id=questao_id)
-    else:
-        questoes = Questao.objects.filter(quiz_id=quiz_id)
-    
+    questoes = Questao.objects.filter(quiz_id=quiz_id, id=questao_id)
     serializer = QuestaoSerializer(questoes, many=True)
     return Response(serializer.data)
 
@@ -63,8 +61,23 @@ def certificados(request, codigo):
     else:
         return Response({'erro': 'Código do certificado não fornecido.'}, status=400)
 
+
+@api_view(['POST'])
+def iniciar_quiz(request, quiz_id):
+    """
+    Contruir objetos "RespostaAluno", depois recuperá-los em "concluir_quiz()"
+    """
+    if quiz_id:
+        return Response({"message": "Quiz Iniciado!!"})
+    else:
+        return Response({"error": "ID do quiz não enviado"})
+
+
 @api_view(['POST'])
 def desistir_quiz(request, quiz_id):
+    """
+    Excluir os objetos "RespostaAluno"
+    """
     if quiz_id:
         return Response({"message": "Quiz Desistido!!"})
     else:
@@ -73,6 +86,9 @@ def desistir_quiz(request, quiz_id):
 
 @api_view(['POST'])
 def concluir_quiz(request, quiz_id):
+    """
+    Continuar, recuperar os objetos "RespostaAluno"
+    """
     if quiz_id:
         quiz = Quiz.objects.filter(id=quiz_id).first()
         if quiz:

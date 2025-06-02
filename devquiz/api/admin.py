@@ -7,6 +7,6 @@ admin.site.register([
     Quiz,
     Questao,
     Alternativa,
-    Pontuacao, # a ver...
+    # Pontuacao, # a ver...
     Certificado
 ])

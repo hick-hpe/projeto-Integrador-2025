@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from .models import (
     Aluno, Disciplina, Quiz, Questao,
     Alternativa, Resposta, RespostaAluno,
-    Pontuacao, Certificado
+    # Pontuacao,
+    Certificado
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -71,13 +72,13 @@ class RespostaAlunoSerializer(serializers.ModelSerializer):
         fields = ['id', 'aluno', 'questao', 'alternativa']
 
 
-class PontuacaoSerializer(serializers.ModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    quiz = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all())
+# class PontuacaoSerializer(serializers.ModelSerializer):
+#     usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+#     quiz = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all())
 
-    class Meta:
-        model = Pontuacao
-        fields = ['id', 'usuario', 'quiz', 'pontuacao']
+#     class Meta:
+#         model = Pontuacao
+#         fields = ['id', 'usuario', 'quiz', 'pontuacao']
 
 
 class CertificadoSerializer(serializers.ModelSerializer):
