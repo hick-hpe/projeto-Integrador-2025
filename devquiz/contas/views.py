@@ -2,10 +2,11 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -18,15 +19,13 @@ def register_view(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def profile_view(request):
     mensagem = f'Bem vindo, {request.user.username}'
     print("Acessando o perfil do usuário:", request.user.username)
     print(mensagem)
-    return Response({'message': mensagem})
+    return Response({'detail': mensagem})
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def logout_view(request):
     try:
         refresh_token = request.data["refresh"]             
