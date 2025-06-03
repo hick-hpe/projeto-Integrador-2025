@@ -66,6 +66,9 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ORIGINS = [
+    # link do frontend
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

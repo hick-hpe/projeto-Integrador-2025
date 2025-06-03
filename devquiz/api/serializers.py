@@ -41,7 +41,7 @@ class QuizSerializer(serializers.ModelSerializer):
 class AlternativaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alternativa
-        fields = ['id', 'texto', 'correta']
+        fields = ['id', 'questao', 'texto']
 
 
 class QuestaoSerializer(serializers.ModelSerializer):
