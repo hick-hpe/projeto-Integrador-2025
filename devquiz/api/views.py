@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Quiz, Questao, Certificado, Disciplina, Alternativa, Aluno
+from .models import Quiz, Questao, Certificado, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, CertificadoPublicoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -33,15 +33,37 @@ def quiz_questoes(request, quiz_id):
 @api_view(['GET', 'POST'])
 def questoes_detail(request, quiz_id, questao_id):
     if request.method == "POST":
-        questao = Questao.objects.get(quiz_id=quiz_id, id=questao_id)
-        alternativa = Alternativa.objects.get(
-            questao=questao, id=request.data.get('alternativa_id')
+        """
+        request: {
+            "questao_id": 1,
+            "alternativa_id": 1
+        }
+        """
+        alternativa_id = request.data['alternativa_id']
+        quiz = Quiz.objects.filter(id=quiz_id).first(),
+        questao = Questao.objects.filter(id=questao_id).first(),
+        alternativa = Alternativa.objects.filter(id=alternativa_id).first(),
+        
+        resposta_aluno = RespostaAluno.objects.create(
+            user=request.user,
+            quiz=quiz,
+            questao=questao,
+            alternativa=alternativa
         )
-
-        if alternativa.correta:
-            return Response({"msg": "POST - Resposta correta", "explicacao": questao.explicacao})
-        else:
-            return Response({"msg": "POST - Resposta incorreta", "explicacao": questao.explicacao})
+        
+        res_gabarito = Resposta(questao=questao)
+        if res_gabarito.alternativa == resposta_aluno.alternativa:
+            desempenho = Desempenho.objects.filter(
+                user=request.user,
+                disciplina=quiz.disciplina,
+                quiz=quiz,
+            )
+            
+            desempenho.num_acertos += 1
+            desempenho.save()
+        
+        
+        return Response({"message": f"Enviando repsosta da questão {questao_id}!!"})
 
     questoes = Questao.objects.filter(quiz_id=quiz_id, id=questao_id)
     serializer = QuestaoSerializer(questoes, many=True)
@@ -65,8 +87,22 @@ def certificados(request, codigo):
 @api_view(['POST'])
 def iniciar_quiz(request, quiz_id):
     """
-    Contruir objetos "RespostaAluno", depois recuperá-los em "concluir_quiz()"
+    Contruir objetos "Desempenho", depois recuperá-los em "concluir_quiz()"
     """
+    quiz = Quiz.objects.filter(id=quiz_id)
+    desempenho = Desempenho.objects.filter(
+        user=request.user,
+        disciplina=quiz.disciplina,
+        quiz=quiz
+    )
+    
+    if not desempenho:
+        desempenho = Desempenho.objects.create(
+            user=request.user,
+            disciplina=quiz.disciplina,
+            quiz=quiz
+        )
+    
     if quiz_id:
         return Response({"message": "Quiz Iniciado!!"})
     else:

@@ -95,3 +95,6 @@ for q in questoes:
     questao = Questao.objects.create(quiz=quiz, descricao=q['descricao'])
     for alt in q['alternativas']:
         Alternativa.objects.create(questao=questao, texto=alt['texto'], correta=alt['correta'])
+
+
+Certificado
