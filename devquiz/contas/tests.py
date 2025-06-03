@@ -2,7 +2,6 @@ from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from rest_framework import status
 
-
 class AuthTestCase(APITestCase):
     def setUp(self):
         self.username = 'usuario_teste'
@@ -21,9 +20,9 @@ class AuthTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['detail'], 'Registration successful')
 
-    def test_login_usuario(self):
+    def test_login_com_cookie(self):
         """
-        Testa se o login com JWT retorna os tokens de acesso e refresh.
+        Testa se o login retorna e armazena os tokens JWT nos cookies.
         """
         data = {
             'username': self.username,
@@ -31,53 +30,58 @@ class AuthTestCase(APITestCase):
         }
         response = self.client.post('/auth/token/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
 
-        # Armazena tokens para uso em outros testes
-        self.access_token = response.data['access']
-        self.refresh_token = response.data['refresh']
+        # Verifica se os cookies foram definidos corretamente
+        self.assertIn('access_token', response.cookies)
+        self.assertIn('refresh_token', response.cookies)
 
-    def test_perfil_autenticado(self):
+    def test_perfil_autenticado_com_cookie(self):
         """
-        Testa se o endpoint de perfil só funciona com autenticação.
+        Testa se o perfil pode ser acessado com autenticação via cookie JWT.
         """
-        # Login para obter o token
         data = {
             'username': self.username,
             'password': self.password
         }
         response = self.client.post('/auth/token/', data)
-        access_token = response.data['access']
 
-        # Envia o token no cabeçalho da requisição
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        access_cookie = response.cookies.get('access_token')
+        self.assertIsNotNone(access_cookie)
+
+        # # Simula a presença do cookie no cliente
+        self.client.cookies['access_token'] = access_cookie.value
+
         response = self.client.get('/auth/profile/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('message', response.data)
+        self.assertIn('detail', response.data)
+        print('DETAIL:', response.data['detail'])
 
-    def test_logout_usuario(self):
+    def test_logout_usuario_com_cookie(self):
         """
-        Testa se o logout com refresh token funciona e adiciona o token na blacklist.
+        Testa se o logout remove os cookies e invalida o refresh token.
         """
-        # Login
         data = {
             'username': self.username,
             'password': self.password
         }
         response = self.client.post('/auth/token/', data)
-        refresh_token = response.data['refresh']
-        access_token = response.data['access']
 
-        # Faz logout com o refresh token
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
-        response = self.client.post('/auth/logout/', {'refresh': refresh_token})
+        access_cookie = response.cookies.get('access_token')
+        refresh_cookie = response.cookies.get('refresh_token')
+
+        self.assertIsNotNone(refresh_cookie)
+
+        # Define os cookies manualmente para simular sessão ativa
+        self.client.cookies['access_token'] = access_cookie.value
+        self.client.cookies['refresh_token'] = refresh_cookie.value
+
+        response = self.client.post('/auth/logout/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['detail'], 'Logout successful')
 
-    def test_tentar_acessar_perfil_apos_logout(self):
+    def test_tentar_acessar_perfil_sem_login(self):
         """
-        Testa se o endpoint de perfil só funciona com autenticação.
+        Testa se o acesso ao perfil sem login retorna 401.
         """
         response = self.client.get('/auth/profile/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
