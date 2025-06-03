@@ -1,2 +1,4 @@
+- certificados em app separado da api
+  - /certificados/<str:codigo/
 - limitar tentativas de login
   - django-axes
