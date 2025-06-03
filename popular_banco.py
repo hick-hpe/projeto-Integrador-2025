@@ -1,15 +1,17 @@
-from api.models import *
+from devquiz.api.models import *
+from django.contrib.auth.models import User
 
-disciplina = Disciplina.objects.get(nome='Desenvolvimento Web II')
+# Busca ou cria a disciplina
+disciplina, _ = Disciplina.objects.get_or_create(nome='Desenvolvimento Web II')
 
-# Criar quiz para as questões
+# Criação do quiz
 quiz = Quiz.objects.create(
     disciplina=disciplina,
     nivel='iniciante',
     descricao='Quiz sobre conceitos básicos de Django.'
 )
 
-# Questões e alternativas
+# Lista de questões e alternativas (com marcação de correta)
 questoes = [
     {
         'descricao': 'Django é um framework web escrito em Python.',
@@ -91,10 +93,25 @@ questoes = [
     }
 ]
 
+# Popular o banco com as questões, alternativas e respostas corretas
 for q in questoes:
     questao = Questao.objects.create(quiz=quiz, descricao=q['descricao'])
+
     for alt in q['alternativas']:
-        Alternativa.objects.create(questao=questao, texto=alt['texto'], correta=alt['correta'])
+        alternativa = Alternativa.objects.create(
+            questao=questao,
+            texto=alt['texto']
+        )
+        if alt['correta']:
+            Resposta.objects.create(
+                questao=questao,
+                alternativa=alternativa,
+                explicacao="Resposta correta."
+            )
 
 
-Certificado
+certificado, _ = Certificado.objects.create(
+    codigo="CERT12345",
+    aluno=User.objects.get(pk=1),
+    disciplina=disciplina
+)

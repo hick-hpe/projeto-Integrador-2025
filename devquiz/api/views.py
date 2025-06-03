@@ -61,7 +61,6 @@ def questoes_detail(request, quiz_id, questao_id):
             desempenho.num_acertos += 1
             desempenho.save()
 
-
         serializer = RespostaSerializer(res_questao)
         return Response(serializer.data)
         

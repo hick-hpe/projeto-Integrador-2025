@@ -1,0 +1,2 @@
+- limitar tentativas de login
+  - django-axes
