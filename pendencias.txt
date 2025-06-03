@@ -1,3 +1,5 @@
+- rotas de recuperação de conta
+  - enviar email de recueração
 - certificados em app separado da api
   - /certificados/<str:codigo/
 - limitar tentativas de login
