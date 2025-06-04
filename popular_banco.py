@@ -1,4 +1,4 @@
-from devquiz.api.models import *
+from api.models import *
 from django.contrib.auth.models import User
 
 # Busca ou cria a disciplina
@@ -112,6 +112,6 @@ for q in questoes:
 
 certificado, _ = Certificado.objects.create(
     codigo="CERT12345",
-    aluno=User.objects.get(pk=1),
+    usuario=User.objects.get(pk=1),
     disciplina=disciplina
 )

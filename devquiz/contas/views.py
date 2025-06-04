@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.core.mail import send_mail
 from django.conf import settings
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -92,3 +93,25 @@ def logout_view(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=400)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def send_mail_view(request):
+    context = {}
+
+    if request.method == 'GET':
+        address = "davidhotes01@gmail.com"
+        subject = "Assunto teste"
+        message = "VC é gay"
+
+        if address and subject and message:
+            try:
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [address])
+                context['detail'] = 'Email sent successfully'
+            except Exception as e:
+                context['detail'] = f'Error sending email: {e}'
+        else:
+            context['detail'] = 'All fields are required'
+    
+    return Response(context)

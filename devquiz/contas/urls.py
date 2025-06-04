@@ -9,6 +9,7 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('profile/', profile_view, name='profile'),
     path('logout/', logout_view, name='logout'),
+    path('send-mail/', send_mail_view, name='send_mail'),
 
     # JWT com cookies
     path('token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
