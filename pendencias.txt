@@ -2,3 +2,7 @@
   - django-axes
 - crud quiz e questao
 - upload de foto de perfil
+- colocar 3X questões
+- escolher entre iniciante, mediano e avançado
+  - escolher 10 aleatoriamente para o quiz
+- X de cada dificuldade
