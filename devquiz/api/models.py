@@ -24,9 +24,9 @@ class Disciplina(models.Model):
 
 class Quiz(models.Model):
     NIVEIS = (
-        ('iniciante', 'Iniciante'),
-        ('intermediario', 'Intermediário'),
-        ('avancado', 'Avançado'),
+        ('Iniciante', 'Iniciante'),
+        ('Intermediário', 'Intermediário'),
+        ('Avançado', 'Avançado'),
     )
     disciplina = models.ForeignKey(Disciplina, related_name='quizzes', on_delete=models.CASCADE)
     nivel = models.CharField(max_length=13, choices=NIVEIS, default='iniciante')

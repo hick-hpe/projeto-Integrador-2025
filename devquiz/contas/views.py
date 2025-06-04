@@ -42,6 +42,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             # Remove tokens do corpo da resposta (uso apenas via cookie)
             response.data.pop('access', None)
             response.data.pop('refresh', None)
+            response.data['detail'] = 'Logado com sucesso!!'
 
         return response
 

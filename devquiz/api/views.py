@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
-from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, CertificadoPublicoSerializer, RespostaSerializer
+from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
@@ -99,6 +99,50 @@ def resposta_questao(request, quiz_id, questao_id):
 
 
 @permission_classes([IsAuthenticated])
+@api_view(['POST', 'PUT', 'DELETE'])
+def crud_quiz(request, quiz_id=None):
+    disciplina = request.data.get('disciplina_id')
+    nivel = request.data.get('nivel')
+    descricao = request.data.get('descricao')
+    alternativas = []
+    # for a in request.data.get('alternativas'):
+        # alternativas.append(a)
+
+    if not all([disciplina, descricao, nivel]):
+        return Response({'error': 'Campos obrigatórios não enviados.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "POST":
+        quiz = Quiz.objects.create(disciplina, nivel, descricao)
+        return Response({'detail': 'Quiz criado com sucesso!'})
+
+    elif request.method == "PUT":
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+
+        if quiz:
+            Quiz.objects.update_or_create(
+                id=quiz_id,
+                disciplina=disciplina,
+                defaults={
+                    'descricao': descricao
+                }
+            )
+
+            return Response({'detail': 'Quiz atualizado com sucesso!'})
+        else:
+            return Response({'error': 'Quiz não encontrado!'})
+        
+    
+    elif request.method == 'DELETE':
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+
+        if quiz:
+            quiz.delete()
+            return Response({'detail': 'Quiz excluído com sucesso!'})
+        else:
+            return Response({'error': 'Quiz não encontrado!'})
+
+
+@permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def desistir_quiz(request, quiz_id):
     """
@@ -116,7 +160,7 @@ def desistir_quiz(request, quiz_id):
     respostas = RespostaAluno.objects.filter(user=request.user, quiz=quiz)
     respostas.delete()
 
-    return Response({"message": "Quiz desistido com sucesso!"})
+    return Response({"message": "Você desistiu do quiz!"})
 
 
 from rest_framework.decorators import api_view, permission_classes
@@ -137,7 +181,7 @@ def concluir_quiz(request, quiz_id):
 
     desempenho = Desempenho.objects.filter(user=request.user, quiz=quiz).first()
     if not desempenho:
-        return Response({"error": "Desempenho não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Quiz não iniciado!"}, status=status.HTTP_404_NOT_FOUND)
 
     data = {
         "mensagem": "Quiz concluído com sucesso!",
@@ -145,6 +189,7 @@ def concluir_quiz(request, quiz_id):
         "quiz": quiz.nivel,
         "disciplina": quiz.disciplina.nome,
         "acertos": desempenho.num_acertos,
+        "total_questoes": quiz.questoes.count(),
         "pontuacao": desempenho.num_acertos * 10
     }
 

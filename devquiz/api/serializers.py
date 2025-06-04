@@ -28,7 +28,7 @@ class DisciplinaSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
-    disciplina = DisciplinaSerializer(read_only=True)
+    disciplina = serializers.CharField(source="disciplina.nome")
     disciplina_id = serializers.PrimaryKeyRelatedField(
         queryset=Disciplina.objects.all(), source='disciplina', write_only=True
     )
@@ -100,6 +100,5 @@ class CertificadoSerializer(serializers.ModelSerializer):
         fields = ['codigo', 'usuario', 'disciplina', 'data_emissao']
 
     def to_representation(self, instance):
-        print('instance:',instance)
         data = super().to_representation(instance)
         return data

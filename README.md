@@ -13,9 +13,49 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
 - Futuramente, espera-se implementar uma funcionalidade de ranking
 
 ## Rotas da API
-- `GET /api/disciplinas/` - Listar disciplinas
-- `GET /api/disciplinas/<int:disciplina_id>/quizzes/` - Listar os quizzes de uma disciplina
-- `GET /api/quizzes/<int:quiz_id>/questoes/` - Listar as questões de um quiz
+- `GET /api/disciplinas/` - Listar disciplinas. <br/>
+    - Formato de resposta: <br/>
+        ```
+        [
+            {
+                "id": 1,
+                "nome": "Desenvolvimento Web II"
+            }
+        ]
+        ```
+- `GET /api/disciplinas/<int:disciplina_id>/quizzes/` - Listar os quizzes de uma disciplina. <br/>
+    - Formato de resposta: <br/>
+        ```
+        [
+            {
+                "id": 1,
+                "disciplina": "Desenvolvimento Web II",
+                "nivel": "Iniciante",
+                "descricao": "Quiz sobre conceitos básicos de Django."
+            }
+        ]
+        ```
+- `GET /api/quizzes/<int:quiz_id>/questoes/` - Listar as questões de um quiz. <br/>
+    - Formato de resposta: <br/>
+        ```
+        [
+            {
+                "id": 51,
+                "quiz": 3,
+                "descricao": "Django é um framework web escrito em Python.",
+                "alternativas": [
+                    {
+                        "id": 29,
+                        "texto": "Verdadeiro"
+                    },
+                    {
+                        "id": 30,
+                        "texto": "Falso"
+                    }
+                ]
+            }
+        ]
+        ```
 - `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Exibe os detalhes de uma questão. Pde ser em múltipla escolha ou verdadeiro e falso. <br/>
     - Formato de resposta de Verdadeiro/Falso: <br/>
         ```
@@ -90,7 +130,7 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
             "explicacao": "Explicação da reposta"
         }
         ```
-- `GET /api/certificados/<str:codigo>/` - Exibe os detalhes de um certificado. <br/>
+- `GET /certificados/<str:codigo>/` - Exibe os detalhes de um certificado. <br/>
     - Formato de resposta: <br/>
         ```
         {
@@ -100,11 +140,23 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
             "data_emissao": "2025-06-03"
         }
         ```
-- `POST /api/quizzes/<int:quiz_id>/desistir/` - Informar à aplicação que o aluno desistiu do quiz: o servidor irá excluir os dados em cache
-- `POST /api/quizzes/<int:quiz_id>/concluir/` - Informar à aplicação que o aluno concluiu do quiz: o servidor irá retornar o desempenho do aluno e excluir os dados em cache. <br/>
+- `POST /api/quizzes/<int:quiz_id>/desistir/` - Informar à aplicação que o aluno desistiu do quiz e limpa os dados temporários. <br/>
     - Formato de resposta: <br/>
         ```
         {
-            "chave": <int>
+            "mensagem": "Você desistiu do quiz!"
+        }
+        ```
+- `POST /api/quizzes/<int:quiz_id>/concluir/` - Mostra o desempenho do aluno no quiz. <br/>
+    - Formato de resposta: <br/>
+        ```
+        {
+            "mensagem": "Quiz concluído com sucesso!",
+            "usuario": "Henrique",
+            "quiz": "iniciante",
+            "disciplina": "Desenvolvimento Web II",
+            "acertos": 4,
+            "total_questoes": 10,
+            "pontuacao": 40
         }
         ```
