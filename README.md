@@ -77,13 +77,17 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
     - Formato de envio: <br/>
         ```
         {
-            "alternativa_id": <int>
+            "alternativa_id": 12
         }
         ```
     - Formato de resposta: <br/>
         ```
         {
-            "chave": <int>
+            "correto": false,
+            "id": 18,
+            "questao": "Descrição da questão aqui",
+            "alternativa": "Descrição da alternativa aqui",
+            "explicacao": "Explicação da reposta"
         }
         ```
 - `GET /api/certificados/<str:codigo>/` - Exibe os detalhes de um certificado. <br/>

@@ -91,30 +91,15 @@ class RespostaAlunoSerializer(serializers.ModelSerializer):
 
 
 class CertificadoSerializer(serializers.ModelSerializer):
-    usuario = UserSerializer(read_only=True)
-    usuario_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), source='usuario', write_only=True
-    )
-    disciplina = DisciplinaSerializer(read_only=True)
-    disciplina_id = serializers.PrimaryKeyRelatedField(
-        queryset=Disciplina.objects.all(), source='disciplina', write_only=True
-    )
-
-    class Meta:
-        model = Certificado
-        fields = ['id', 'codigo', 'usuario', 'usuario_id', 'disciplina', 'disciplina_id', 'data_emissao']
-
-class CertificadoPublicoSerializer(serializers.ModelSerializer):
-    usuario = serializers.SerializerMethodField()
+    usuario = serializers.CharField(source='usuario.username')
     disciplina = serializers.CharField(source='disciplina.nome')
+    data_emissao = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
         model = Certificado
         fields = ['codigo', 'usuario', 'disciplina', 'data_emissao']
 
-    def get_usuario(self, obj):
-        return obj.usuario.get_full_name() or obj.usuario.username
-
     def to_representation(self, instance):
+        print('instance:',instance)
         data = super().to_representation(instance)
         return data
