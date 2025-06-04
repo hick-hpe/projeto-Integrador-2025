@@ -84,7 +84,6 @@ def questoes_detail(request, quiz_id, questao_id):
     return Response(serializer.data)
 
 
-
 @api_view(['GET'])
 # arrumar permissao pra nao permititr o aluno
 def resposta_questao(request, quiz_id, questao_id):
@@ -162,11 +161,6 @@ def desistir_quiz(request, quiz_id):
 
     return Response({"message": "Você desistiu do quiz!"})
 
-
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 
 @permission_classes([IsAuthenticated])
 @api_view(['POST'])
