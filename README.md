@@ -48,7 +48,6 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
             "data_emissao": "2025-06-03"
         }
         ```
-- `POST /api/quizzes/<int:quiz_id>/iniciar/` - Informar à aplicação que o aluno iniciou o quiz: o servidor irá começar a controlar as respostas
 - `POST /api/quizzes/<int:quiz_id>/desistir/` - Informar à aplicação que o aluno desistiu do quiz: o servidor irá excluir os dados em cache
 - `POST /api/quizzes/<int:quiz_id>/concluir/` - Informar à aplicação que o aluno concluiu do quiz: o servidor irá retornar o desempenho do aluno e excluir os dados em cache. <br/>
     - Formato de resposta: <br/>

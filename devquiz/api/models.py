@@ -47,7 +47,6 @@ class Aluno(models.Model):
 class Questao(models.Model):
     quiz = models.ForeignKey(Quiz, related_name='questoes', on_delete=models.CASCADE)
     descricao = models.TextField()
-    explicacao = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.quiz.descricao[:30]}: {self.descricao[:50]}..."
@@ -62,8 +61,8 @@ class Alternativa(models.Model):
 
 
 class Resposta(models.Model):
-    questao = models.ForeignKey(Questao, related_name='respostas', on_delete=models.CASCADE)
-    alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
+    questao = models.OneToOneField(Questao, related_name='resposta', on_delete=models.CASCADE)
+    alternativa = models.OneToOneField(Alternativa, on_delete=models.CASCADE)
     explicacao = models.TextField(blank=True, null=True)
 
     def __str__(self):

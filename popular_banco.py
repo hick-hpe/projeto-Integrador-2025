@@ -1,15 +1,14 @@
-from api.models import *
+from devquiz.api.models import *
 from django.contrib.auth.models import User
 
 # Busca ou cria a disciplina
 disciplina, _ = Disciplina.objects.get_or_create(nome='Desenvolvimento Web II')
 
 # Criação do quiz
-quiz = Quiz.objects.create(
-    disciplina=disciplina,
-    nivel='iniciante',
-    descricao='Quiz sobre conceitos básicos de Django.'
-)
+quiz = Quiz.objects.get(id=3)
+
+for q in Questao.objects.all():
+    q.delete()
 
 # Lista de questões e alternativas (com marcação de correta)
 questoes = [
@@ -109,9 +108,11 @@ for q in questoes:
                 explicacao="Resposta correta."
             )
 
+# Cria o certificado para o usuário com id=1
+# usuario = User.objects.get(pk=1)
 
-certificado, _ = Certificado.objects.create(
-    codigo="CERT12345",
-    usuario=User.objects.get(pk=1),
-    disciplina=disciplina
-)
+# certificado, created = Certificado.objects.get_or_create(
+#     codigo="CERT12345",
+#     usuario=usuario,
+#     disciplina=disciplina
+# )

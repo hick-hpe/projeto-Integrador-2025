@@ -41,7 +41,7 @@ class QuizSerializer(serializers.ModelSerializer):
 class AlternativaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alternativa
-        fields = ['id', 'questao', 'texto']
+        fields = ['id', 'texto']
 
 
 class QuestaoSerializer(serializers.ModelSerializer):
@@ -54,12 +54,21 @@ class QuestaoSerializer(serializers.ModelSerializer):
 
 
 class RespostaSerializer(serializers.ModelSerializer):
-    questao = serializers.PrimaryKeyRelatedField(queryset=Questao.objects.all())
-    alternativa = serializers.PrimaryKeyRelatedField(queryset=Alternativa.objects.all())
+    questao_id = serializers.PrimaryKeyRelatedField(queryset=Questao.objects.all(), write_only=True)
+    alternativa_id = serializers.PrimaryKeyRelatedField(queryset=Alternativa.objects.all(), write_only=True)
+    questao = serializers.SerializerMethodField(read_only=True)
+    alternativa = serializers.SerializerMethodField(read_only=True)
+
+    def get_questao(self, obj):
+        return obj.questao.descricao
+    
+    def get_alternativa(self, obj):
+        return obj.alternativa.texto
 
     class Meta:
         model = Resposta
-        fields = ['id', 'questao', 'alternativa', 'explicacao']
+        fields = ['id', 'questao_id', 'questao', 'alternativa', 'alternativa_id', 'explicacao']
+        read_only_fields = ['questao', 'alternativa', 'explicacao']
 
 
 class RespostaAlunoSerializer(serializers.ModelSerializer):
