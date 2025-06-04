@@ -12,9 +12,6 @@ urlpatterns = [
     path('quizzes/<int:quiz_id>/questoes/', views.quiz_questoes, name='quizzes_questoes'),
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', views.questoes_detail, name='questoes_detail'),
 
-    # Certificado
-    path('certificados/<str:codigo>/', views.certificados, name='certificado'),
-
     # Iniciar quiz
     path('quizzes/<int:quiz_id>/iniciar/', views.iniciar_quiz, name='iniciar_quiz'),
 

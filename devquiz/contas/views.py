@@ -7,6 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
 from django.conf import settings
+from random import randint
+from api.models import Codigo
 
 class CookieTokenObtainPairView(TokenObtainPairView):
     """
@@ -46,7 +48,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def register_view(request):
+def cadastro(request):
     """
     View de registro de usuário.
     """
@@ -54,29 +56,29 @@ def register_view(request):
     password = request.data.get('password')
 
     if not username or not password:
-        return Response({'detail': 'Username and password are required'}, status=400)
+        return Response({'detail': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(username=username).exists():
-        return Response({'detail': 'Username already exists'}, status=400)
+        return Response({'detail': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
     User.objects.create_user(username=username, password=password)
-    return Response({'detail': 'Registration successful'}, status=201)
+    return Response({'detail': 'Registration successful'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
-def profile_view(request):
+def teste_autenticacao(request):
     """
-    Retorna os dados do perfil do usuário autenticado.
+    Retorna os dados do usuário autenticado.
     """
     if not request.user or not request.user.is_authenticated:
-        return Response({'detail': 'Authentication credentials were not provided.'}, status=401)
+        return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
 
     mensagem = f'Bem vindo, {request.user.username}'
     return Response({'detail': mensagem})
 
 
 @api_view(['POST'])
-def logout_view(request):
+def logout(request):
     """
     Invalida o refresh token e remove os cookies.
     """
@@ -86,32 +88,68 @@ def logout_view(request):
             token = RefreshToken(refresh_token)
             token.blacklist()
 
-        response = Response({"detail": "Logout successful"}, status=200)
+        response = Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         return response
 
     except Exception as e:
-        return Response({"error": str(e)}, status=400)
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+def gerar_codigo():
+    return str(randint(100000, 999999))
+
+@api_view(['POST'])
 @permission_classes([AllowAny])
-def send_mail_view(request):
-    context = {}
+def enviar_mail(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({'detail': 'Email é obrigatório!'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == 'GET':
-        address = "davidhotes01@gmail.com"
-        subject = "Assunto teste"
-        message = "VC é gay"
+    if not User.objects.filter(email=email).exists():
+        return Response({'detail': 'Email não cadastrado!'}, status=status.HTTP_404_NOT_FOUND)
 
-        if address and subject and message:
-            try:
-                send_mail(subject, message, settings.EMAIL_HOST_USER, [address])
-                context['detail'] = 'Email sent successfully'
-            except Exception as e:
-                context['detail'] = f'Error sending email: {e}'
-        else:
-            context['detail'] = 'All fields are required'
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({'detail': 'Erro inesperado ao buscar o usuário!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    codigo_gerado = gerar_codigo()
+    assunto = "Código enviado!"
+    mensagem = f"Seu código de recuperação é: {codigo_gerado}"
+
+    try:
+        send_mail(assunto, mensagem, settings.EMAIL_HOST_USER, [email])
+        Codigo.objects.create(user=user, codigo=codigo_gerado)
+        return Response({'detail': 'Código enviado com sucesso'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'detail': f'Erro ao enviar o e-mail: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def validar_codigo(request):
+    email = request.data.get('email')
+    codigo_recebido = request.data.get('codigo')
+
+    if not email or not codigo_recebido:
+        return Response({'detail': 'Email e código são obrigatórios'}, status=status.HTTP_400_BAD_REQUEST)
     
-    return Response(context)
+    if not User.objects.filter(email=email).exists():
+        return Response({'detail': 'Email não cadastrado'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'detail': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        codigo_obj = Codigo.objects.filter(user=user, codigo=codigo_recebido).first()
+
+        if not codigo_obj:
+            return Response({'detail': 'Código inválido'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if codigo_obj.expirado():
+            return Response({'detail': 'Código expirado'}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'detail': 'Código válido'})

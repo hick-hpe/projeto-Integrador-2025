@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Quiz, Questao, Certificado, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
+from .models import Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, CertificadoPublicoSerializer, RespostaSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -67,20 +67,6 @@ def questoes_detail(request, quiz_id, questao_id):
     questoes = Questao.objects.filter(quiz_id=quiz_id, id=questao_id)
     serializer = QuestaoSerializer(questoes, many=True)
     return Response(serializer.data)
-
-
-@api_view(['GET'])  
-@permission_classes([AllowAny])
-def certificados(request, codigo):
-    if codigo:
-        try:
-            certificado = Certificado.objects.get(codigo=codigo)
-            serializer = CertificadoPublicoSerializer(certificado)
-            return Response(serializer.data)
-        except Certificado.DoesNotExist:
-            return Response({'erro': 'Certificado não encontrado.'}, status=404)
-    else:
-        return Response({'erro': 'Código do certificado não fornecido.'}, status=400)
 
 
 @api_view(['POST'])

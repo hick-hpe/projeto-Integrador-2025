@@ -5,8 +5,9 @@ from rest_framework import status
 class AuthTestCase(APITestCase):
     def setUp(self):
         self.username = 'usuario_teste'
+        self.email = 'teste@gmail.com'
         self.password = 'senha123'
-        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
 
     def test_registro_usuario(self):
         """
@@ -86,3 +87,31 @@ class AuthTestCase(APITestCase):
         response = self.client.get('/auth/profile/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn('detail', response.data)
+
+    def test_enviar_email(self):
+        """
+        Email enviado com sucesso
+        """
+        response = self.client.post('/auth/enviar-email/', {"email":self.email})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_email_nao_cadastrado(self):
+        """
+        Email não cadastrado
+        """
+        response = self.client.post('/auth/enviar-email/', {"email":"self.email"})
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_email_nao_fornecido(self):
+        """
+        Usuário não informou o email
+        """
+        response = self.client.post('/auth/enviar-email/')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_validar_codigo(self):
+        """
+        Validar o código fornecido
+        """
+        response = self.client.post('/auth/enviar-email/', {"email":self.email, "codigo": "123456"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
