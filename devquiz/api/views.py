@@ -28,11 +28,10 @@ def disciplina_quizzes(request, disciplina_id):
 @api_view(['GET'])
 def quiz_questoes(request, quiz_id):
     questoes = list(Questao.objects.filter(quiz_id=quiz_id))
-    # random.shuffle(questoes)
-    # questoes_aleatorias = questoes[:10]
+    random.shuffle(questoes)
+    questoes_aleatorias = questoes[:10]
     
-    # serializer = QuestaoSerializer(questoes_aleatorias, many=True)
-    serializer = QuestaoSerializer(questoes, many=True)
+    serializer = QuestaoSerializer(questoes_aleatorias, many=True)
     return Response(serializer.data)
 
 
