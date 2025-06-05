@@ -28,7 +28,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 max_age=int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()),
                 httponly=True,
                 secure=False,
-                samesite='Lax'
+                samesite='Strict'
             )
             response.set_cookie(
                 key='refresh_token',
@@ -36,13 +36,17 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 max_age=int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()),
                 httponly=True,
                 secure=False,
-                samesite='Lax'
+                samesite='Strict'
             )
+
+            # produção:
+            # secure=True, samesite='None'
 
             # Remove tokens do corpo da resposta (uso apenas via cookie)
             response.data.pop('access', None)
             response.data.pop('refresh', None)
             response.data['detail'] = 'Logado com sucesso!!'
+
 
         return response
 
@@ -65,17 +69,9 @@ def cadastro(request):
     User.objects.create_user(username=username, password=password)
     return Response({'detail': 'Registration successful'}, status=status.HTTP_201_CREATED)
 
-
 @api_view(['GET'])
-def teste_autenticacao(request):
-    """
-    Retorna os dados do usuário autenticado.
-    """
-    if not request.user or not request.user.is_authenticated:
-        return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-    mensagem = f'Bem vindo, {request.user.username}'
-    return Response({'detail': mensagem})
+def usuario_autenticado(request):
+    return Response({'user': request.user.username})
 
 
 @api_view(['POST'])

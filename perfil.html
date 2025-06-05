@@ -1,63 +1,58 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Perfil</title>
-    </head>
-    <body>
-        <h2>Perfil do Usuário</h2>
-        <div id="mensagem"></div>
-        <button onclick="logout()">Sair</button>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <h1>Quiz de Desenvolvimento Web II</h1>
+    <div id="usuario"></div>
 
-        <script>
-        const apiURL = 'http://localhost:8000/auth/';
-        const accessToken = localStorage.getItem("access");
+    <div id="questoes"></div>
 
-        if (!accessToken || accessToken === "null" || accessToken === "undefined") {
-            alert("Você precisa estar logado.");
-            window.location.href = "login.html";
-        }
+    <script>
+        const NIVEL = 1;
+        const API_URL = `http://localhost:8000/api/quizzes/${NIVEL}/questoes/`;
+        const AUTH_URL = 'http://localhost:8000/auth/teste_autenticacao/';
+        const usuario = document.getElementById('usuario');
+        const questoes = document.getElementById('questoes');
 
-        fetch(apiURL + 'profile/', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + accessToken
-            }
+        fetch(AUTH_URL, {
+            credentials: 'include'
         })
-        .then(res => res.json())
+        .then(response => {
+            console.log("Status da autenticação:", response.status);
+            return response.text();
+        })
         .then(data => {
-            if (data.message) {
-                document.getElementById("mensagem").textContent = data.message;
-            } else {
-                alert("Erro ao obter perfil.");
-                window.location.href = "login.html";
-            }
+            console.log("Conteúdo retornado:", data);
+            usuario.innerText = data;
         })
-        .catch(err => {
-            alert("Erro ao carregar perfil.");
-            console.log(err);
-        });
+        .catch(err => console.error("Erro ao autenticar:", err));
 
-        function logout() {
-            localStorage.removeItem("access");
-            localStorage.removeItem("refresh");
-            window.location.href = "login.html";
-        }
 
-        function make_obj() {
-            return {
-                'access': localStorage.getItem('access'),
-                'refresh': localStorage.getItem('refresh'),
+        /*
+        formato questoes
+        [
+            {
+                "id": 51,
+                "quiz": 3,
+                "descricao": "Django é um framework web escrito em Python.",
+                "alternativas": [
+                    {
+                        "id": 29,
+                        "texto": "Verdadeiro"
+                    },
+                    {
+                        "id": 30,
+                        "texto": "Falso"
+                    }
+                ]
             }
-        }
-
-        function apply_obj(obj) {
-            localStorage.setItem('access', obj.access);
-            localStorage.setItem('refresh', obj.refresh);
-        }
-
-        // const obj = make_obj();
-        // apply_obj(obj);
+        ]
+        */
 
     </script>
-    </body>
+</body>
 </html>
