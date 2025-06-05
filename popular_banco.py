@@ -4,115 +4,314 @@ from django.contrib.auth.models import User
 # Busca ou cria a disciplina
 disciplina, _ = Disciplina.objects.get_or_create(nome='Desenvolvimento Web II')
 
-# Criação do quiz
-quiz = Quiz.objects.get(id=3)
-
+# Apaga todas as questões existentes para evitar duplicação
 for q in Questao.objects.all():
     q.delete()
 
-# Lista de questões e alternativas (com marcação de correta)
-questoes = [
+# Cria os 3 quizzes por nível
+quiz_iniciante, _ = Quiz.objects.get_or_create(disciplina=disciplina, nivel="Iniciante")
+quiz_intermediario, _ = Quiz.objects.get_or_create(disciplina=disciplina, nivel="Intermediário")
+quiz_avancado, _ = Quiz.objects.get_or_create(disciplina=disciplina, nivel="Avançado")
+
+# Questões para cada nível
+questoes_iniciante = [
     {
         'descricao': 'Django é um framework web escrito em Python.',
         'alternativas': [
             {'texto': 'Verdadeiro', 'correta': True},
-            {'texto': 'Falso', 'correta': False}
-        ]
+            {'texto': 'Falso', 'correta': False},
+        ],
     },
     {
-        'descricao': 'O comando para criar um novo projeto Django é: django-admin startproject nome_do_projeto.',
+        'descricao': 'Qual arquivo define as configurações principais do projeto Django?',
         'alternativas': [
-            {'texto': 'Verdadeiro', 'correta': True},
-            {'texto': 'Falso', 'correta': False}
-        ]
+            {'texto': 'urls.py', 'correta': False},
+            {'texto': 'settings.py', 'correta': True},
+            {'texto': 'models.py', 'correta': False},
+            {'texto': 'views.py', 'correta': False},
+        ],
     },
     {
-        'descricao': 'Qual destes arquivos é responsável pelas rotas (URLs) em um projeto Django?',
+        'descricao': 'O que o comando "python manage.py runserver" faz?',
+        'alternativas': [
+            {'texto': 'Inicia o servidor de desenvolvimento Django', 'correta': True},
+            {'texto': 'Cria o banco de dados', 'correta': False},
+            {'texto': 'Apaga as migrações', 'correta': False},
+            {'texto': 'Cria um novo app', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Em Django, o que é um "app"?',
+        'alternativas': [
+            {'texto': 'Uma aplicação completa, como um site inteiro', 'correta': False},
+            {'texto': 'Um componente modular que faz parte do projeto Django', 'correta': True},
+            {'texto': 'Um banco de dados', 'correta': False},
+            {'texto': 'Um template HTML', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual comando é usado para criar migrações após alterar modelos?',
+        'alternativas': [
+            {'texto': 'python manage.py migrate', 'correta': False},
+            {'texto': 'python manage.py makemigrations', 'correta': True},
+            {'texto': 'python manage.py runserver', 'correta': False},
+            {'texto': 'python manage.py startapp', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que é o ORM do Django?',
+        'alternativas': [
+            {'texto': 'Um gerenciador de banco de dados externo', 'correta': False},
+            {'texto': 'Uma ferramenta para criar templates HTML', 'correta': False},
+            {'texto': 'Um sistema que permite manipular banco de dados via código Python', 'correta': True},
+            {'texto': 'Um servidor web', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual dos arquivos abaixo define as URLs em um app Django?',
         'alternativas': [
             {'texto': 'models.py', 'correta': False},
             {'texto': 'views.py', 'correta': False},
             {'texto': 'urls.py', 'correta': True},
-            {'texto': 'admin.py', 'correta': False}
-        ]
+            {'texto': 'admin.py', 'correta': False},
+        ],
     },
     {
-        'descricao': 'O Django ORM permite manipular o banco de dados usando objetos Python.',
+        'descricao': 'Em Django, o que a função "render" faz?',
+        'alternativas': [
+            {'texto': 'Envia dados para o banco de dados', 'correta': False},
+            {'texto': 'Renderiza um template HTML e retorna uma resposta HTTP', 'correta': True},
+            {'texto': 'Cria um modelo', 'correta': False},
+            {'texto': 'Define rotas da aplicação', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual comando cria um superusuário para acessar o admin do Django?',
+        'alternativas': [
+            {'texto': 'python manage.py createsuperuser', 'correta': True},
+            {'texto': 'python manage.py createadmin', 'correta': False},
+            {'texto': 'python manage.py startuser', 'correta': False},
+            {'texto': 'python manage.py runserver', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Verdadeiro ou falso? Django fornece um painel administrativo pronto para uso.',
         'alternativas': [
             {'texto': 'Verdadeiro', 'correta': True},
-            {'texto': 'Falso', 'correta': False}
-        ]
+            {'texto': 'Falso', 'correta': False},
+        ],
     },
+]
+
+questoes_intermediario = [
     {
-        'descricao': 'Para criar uma nova aplicação em um projeto Django, usamos o comando: python manage.py startapp nome_app.',
+        'descricao': 'Qual das opções abaixo é uma maneira correta de definir um campo de texto em um modelo Django?',
         'alternativas': [
-            {'texto': 'Verdadeiro', 'correta': True},
-            {'texto': 'Falso', 'correta': False}
-        ]
+            {'texto': 'models.CharField(max_length=100)', 'correta': True},
+            {'texto': 'models.TextField(max_length=100)', 'correta': False},
+            {'texto': 'models.Text(max_length=100)', 'correta': False},
+            {'texto': 'models.StringField(max_length=100)', 'correta': False},
+        ],
     },
     {
-        'descricao': 'Qual destes comandos aplica as migrações pendentes no banco de dados?',
+        'descricao': 'Em Django, qual função é usada para aplicar as migrações ao banco de dados?',
         'alternativas': [
             {'texto': 'python manage.py makemigrations', 'correta': False},
             {'texto': 'python manage.py migrate', 'correta': True},
             {'texto': 'python manage.py runserver', 'correta': False},
-            {'texto': 'python manage.py createsuperuser', 'correta': False}
-        ]
+            {'texto': 'python manage.py syncdb', 'correta': False},
+        ],
     },
     {
-        'descricao': 'O arquivo settings.py armazena as configurações do projeto Django.',
+        'descricao': 'Qual das opções abaixo define uma relação "um-para-muitos" em modelos Django?',
         'alternativas': [
-            {'texto': 'Verdadeiro', 'correta': True},
-            {'texto': 'Falso', 'correta': False}
-        ]
+            {'texto': 'models.ManyToManyField()', 'correta': False},
+            {'texto': 'models.OneToOneField()', 'correta': False},
+            {'texto': 'models.ForeignKey()', 'correta': True},
+            {'texto': 'models.RelatedField()', 'correta': False},
+        ],
     },
     {
-        'descricao': 'Qual destes métodos é usado para consultar todos os objetos de um modelo no Django ORM?',
+        'descricao': 'O que é o método "get_queryset" em uma View baseada em classe (CBV)?',
         'alternativas': [
-            {'texto': 'Model.objects.all()', 'correta': True},
-            {'texto': 'Model.all()', 'correta': False},
-            {'texto': 'Model.get()', 'correta': False},
-            {'texto': 'Model.filter()', 'correta': False}
-        ]
+            {'texto': 'Método que retorna o conjunto de objetos a ser exibido', 'correta': True},
+            {'texto': 'Método que cria um novo objeto no banco', 'correta': False},
+            {'texto': 'Método que renderiza o template', 'correta': False},
+            {'texto': 'Método que trata o formulário', 'correta': False},
+        ],
     },
     {
-        'descricao': 'O Django possui um painel administrativo pronto para uso.',
+        'descricao': 'Qual dos seguintes middlewares não é padrão do Django?',
         'alternativas': [
-            {'texto': 'Verdadeiro', 'correta': True},
-            {'texto': 'Falso', 'correta': False}
-        ]
+            {'texto': 'SecurityMiddleware', 'correta': False},
+            {'texto': 'SessionMiddleware', 'correta': False},
+            {'texto': 'CustomMiddleware', 'correta': True},
+            {'texto': 'CommonMiddleware', 'correta': False},
+        ],
     },
     {
-        'descricao': 'Qual comando inicia o servidor de desenvolvimento do Django?',
+        'descricao': 'Qual comando cria um novo app Django?',
         'alternativas': [
-            {'texto': 'python manage.py runserver', 'correta': True},
-            {'texto': 'python manage.py startproject', 'correta': False},
-            {'texto': 'python manage.py migrate', 'correta': False},
-            {'texto': 'python manage.py shell', 'correta': False}
-        ]
-    }
+            {'texto': 'django-admin startproject', 'correta': False},
+            {'texto': 'python manage.py startapp', 'correta': True},
+            {'texto': 'python manage.py createsuperuser', 'correta': False},
+            {'texto': 'python manage.py makemigrations', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Em Django REST Framework, qual classe é usada para criar uma ViewSet?',
+        'alternativas': [
+            {'texto': 'APIView', 'correta': False},
+            {'texto': 'ViewSet', 'correta': True},
+            {'texto': 'GenericView', 'correta': False},
+            {'texto': 'Serializer', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que é um "QuerySet" no Django?',
+        'alternativas': [
+            {'texto': 'Uma coleção de objetos do banco de dados filtrados ou não', 'correta': True},
+            {'texto': 'Um template HTML', 'correta': False},
+            {'texto': 'Um formulário Django', 'correta': False},
+            {'texto': 'Um arquivo de migração', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual o propósito do arquivo urls.py em um projeto Django?',
+        'alternativas': [
+            {'texto': 'Definir as rotas URL e mapear para views', 'correta': True},
+            {'texto': 'Configurar banco de dados', 'correta': False},
+            {'texto': 'Definir modelos', 'correta': False},
+            {'texto': 'Configurar templates', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que é o arquivo "admin.py" em um app Django?',
+        'alternativas': [
+            {'texto': 'Define a interface administrativa para os modelos', 'correta': True},
+            {'texto': 'Define os modelos de dados', 'correta': False},
+            {'texto': 'Define as URLs', 'correta': False},
+            {'texto': 'Define as views', 'correta': False},
+        ],
+    },
 ]
 
-# Popular o banco com as questões, alternativas e respostas corretas
-for q in questoes:
-    questao = Questao.objects.create(quiz=quiz, descricao=q['descricao'])
+questoes_avancado = [
+    {
+        'descricao': 'O que a função "select_related" faz em um QuerySet Django?',
+        'alternativas': [
+            {'texto': 'Faz um JOIN para buscar relações de forma eficiente', 'correta': True},
+            {'texto': 'Seleciona somente os campos necessários', 'correta': False},
+            {'texto': 'Cria uma nova relação entre modelos', 'correta': False},
+            {'texto': 'Atualiza o banco de dados', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual é o propósito do middleware "CsrfViewMiddleware" em Django?',
+        'alternativas': [
+            {'texto': 'Proteger contra ataques CSRF (Cross Site Request Forgery)', 'correta': True},
+            {'texto': 'Gerenciar sessões do usuário', 'correta': False},
+            {'texto': 'Autenticar usuários', 'correta': False},
+            {'texto': 'Renderizar templates', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que o decorador "@login_required" faz em uma view Django?',
+        'alternativas': [
+            {'texto': 'Exige que o usuário esteja autenticado para acessar a view', 'correta': True},
+            {'texto': 'Redireciona automaticamente para a página inicial', 'correta': False},
+            {'texto': 'Cria uma nova sessão para o usuário', 'correta': False},
+            {'texto': 'Permite acesso público à view', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual é o efeito do método "annotate" em um QuerySet?',
+        'alternativas': [
+            {'texto': 'Adiciona campos calculados a cada objeto do QuerySet', 'correta': True},
+            {'texto': 'Filtra o QuerySet', 'correta': False},
+            {'texto': 'Ordena o QuerySet', 'correta': False},
+            {'texto': 'Exclui objetos do banco', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que é o "Django Signals"?',
+        'alternativas': [
+            {'texto': 'Um mecanismo para enviar notificações entre partes do código', 'correta': True},
+            {'texto': 'Um tipo de banco de dados', 'correta': False},
+            {'texto': 'Um framework JavaScript', 'correta': False},
+            {'texto': 'Um middleware', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual é a função do arquivo "wsgi.py" em um projeto Django?',
+        'alternativas': [
+            {'texto': 'Servir como ponto de entrada para servidores web compatíveis com WSGI', 'correta': True},
+            {'texto': 'Configurar banco de dados', 'correta': False},
+            {'texto': 'Definir modelos', 'correta': False},
+            {'texto': 'Gerenciar rotas', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Em Django REST Framework, o que faz o "Serializer"?',
+        'alternativas': [
+            {'texto': 'Converte objetos complexos como QuerySets para tipos nativos Python (json, xml)', 'correta': True},
+            {'texto': 'Renderiza templates HTML', 'correta': False},
+            {'texto': 'Gerencia URLs', 'correta': False},
+            {'texto': 'Gerencia autenticação', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'Qual o propósito do método "prefetch_related"?',
+        'alternativas': [
+            {'texto': 'Busca relações ManyToMany e ForeignKey para evitar consultas extras', 'correta': True},
+            {'texto': 'Exclui objetos relacionados', 'correta': False},
+            {'texto': 'Cria índices no banco', 'correta': False},
+            {'texto': 'Aplica filtros avançados', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que o arquivo "celery.py" normalmente configura em um projeto Django?',
+        'alternativas': [
+            {'texto': 'Configuração do sistema de filas para tarefas assíncronas', 'correta': True},
+            {'texto': 'Configuração do banco de dados', 'correta': False},
+            {'texto': 'Configuração de templates', 'correta': False},
+            {'texto': 'Configuração do servidor web', 'correta': False},
+        ],
+    },
+    {
+        'descricao': 'O que é um "Custom Manager" em Django?',
+        'alternativas': [
+            {'texto': 'Uma classe para definir consultas personalizadas no ORM', 'correta': True},
+            {'texto': 'Um tipo especial de view', 'correta': False},
+            {'texto': 'Um template customizado', 'correta': False},
+            {'texto': 'Um middleware', 'correta': False},
+        ],
+    },
+]
 
-    for alt in q['alternativas']:
-        alternativa = Alternativa.objects.create(
-            questao=questao,
-            texto=alt['texto']
-        )
-        if alt['correta']:
-            Resposta.objects.create(
-                questao=questao,
-                alternativa=alternativa,
-                explicacao="Resposta correta."
-            )
+# Função para popular questões em cada quiz
+def popular_questoes(quiz, questoes):
+    for q in questoes:
+        questao = Questao.objects.create(quiz=quiz, descricao=q['descricao'])
+        for alt in q['alternativas']:
+            alternativa = Alternativa.objects.create(questao=questao, texto=alt['texto'])
+            if alt['correta']:
+                Resposta.objects.create(questao=questao, alternativa=alternativa, explicacao="Resposta correta.")
 
-# Cria o certificado para o usuário com id=1
-# usuario = User.objects.get(pk=1)
+# Popular os quizzes
+popular_questoes(quiz_iniciante, questoes_iniciante)
+popular_questoes(quiz_intermediario, questoes_intermediario)
+popular_questoes(quiz_avancado, questoes_avancado)
 
-# certificado, created = Certificado.objects.get_or_create(
-#     codigo="CERT12345",
-#     usuario=usuario,
-#     disciplina=disciplina
-# )
+# Cria o usuário se não existir
+usuario, created = User.objects.get_or_create(username="palermo")
+if created:
+    usuario.set_password("palermo123")
+    usuario.save()
+
+# Cria o certificado para o usuário
+certificado, created = Certificado.objects.get_or_create(
+    codigo="CERT12345",
+    usuario=usuario,
+    disciplina=disciplina
+)

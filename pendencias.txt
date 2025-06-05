@@ -6,3 +6,10 @@
 - escolher entre iniciante, mediano e avançado
   - escolher 10 aleatoriamente para o quiz
 - X de cada dificuldade
+
+
+
+10 iniciante
+10 medio
+10 avançado
+OKAY :D

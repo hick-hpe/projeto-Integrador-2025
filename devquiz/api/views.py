@@ -5,6 +5,7 @@ from .models import Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Respo
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+import random
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -26,7 +27,11 @@ def disciplina_quizzes(request, disciplina_id):
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def quiz_questoes(request, quiz_id):
-    questoes = Questao.objects.filter(quiz_id=quiz_id)
+    questoes = list(Questao.objects.filter(quiz_id=quiz_id))
+    # random.shuffle(questoes)
+    # questoes_aleatorias = questoes[:10]
+    
+    # serializer = QuestaoSerializer(questoes_aleatorias, many=True)
     serializer = QuestaoSerializer(questoes, many=True)
     return Response(serializer.data)
 
