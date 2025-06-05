@@ -160,3 +160,67 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
             "pontuacao": 40
         }
         ```
+## Rodar protótipo teste:
+- Instalação:
+    - Clonar repositório:
+        ```
+        git clone https://github.com/hick-hpe/projeto-Integrador-2025/
+        ```
+    - Acessar o repositório:
+        ```
+        cd projeto-Integrador-2025
+        ```
+    - Criar e ativar ambiente virtual:
+        - Windows:
+            ```
+            python -m venv venv
+            venv\Scripts\activate
+            ```
+        - Linux/MacOS:
+            ```
+            python3 -m venv venv
+            source venv/bin/activate
+            ```
+- Ambiente Django:
+    - Instalar dependências:
+        ```
+        pip install -r requirements.txt
+        ```
+    - Acessar o projeto:
+        ```
+        cd devquiz
+        ```
+    - Criar as migrações:
+        ```
+        python manage.py makemigrations
+        ```
+    - Criar as tabelas:
+        ```
+        python manage.py migrate
+        ```
+    - Iniciar servidor:
+        ```
+        python manage.py runserver
+        ```
+- Ambiente React:
+    - Acessar o projeto:
+        ```
+        cd devquiz/reactapp
+        ```
+    - Instalar dependências:
+        ```
+        npm install
+        ```
+    - Iniciar servidor:
+        ```
+        npm run dev
+        ```
+## Servidores
+- Servidor Django:
+    ```
+    http://localhost:8000/
+    ```
+- Servidor React:
+    ```
+    http://localhost:5173/
+    ```
