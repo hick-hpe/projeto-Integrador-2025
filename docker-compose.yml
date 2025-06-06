@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  django:
+    build: ./devquiz/
+    container_name: django
+    ports:
+      - "8000:8000"
+    networks:
+      - rede_privada
+    # volumes:
+    #   - ./devquiz:/app
+
+  react:
+    build: ./devquiz/reactapp/
+    container_name: react
+    ports:
+      - "5173:5173"
+    networks:
+      - rede_publica
+      - rede_privada
+    depends_on:
+      - django
+    # volumes:
+    #   - ./devquiz/reactapp:/app
+
+networks:
+  rede_privada:
+  rede_publica:
