@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework import status
 from api.models import Certificado, Disciplina # teste
 from api.serializers import CertificadoSerializer
 import pdfkit
@@ -49,9 +50,19 @@ def gerar_certificado(request):
 @permission_classes([AllowAny]) # erro: rever as permissões ;-;
 def certificados_download(request, codigo=None):
     # if codigo:
-        # try:
+        print('sera???')
+        try:
+            print("--- Disciplinas ---")
+            print((d.id, d.nome) for d in Disciplina.objects.all())
+            print("----------------------")
+            
             disciplina = Disciplina.objects.get(pk=1) # teste
             # disciplina.logo
+            
+            print("--- Certificado ---")
+            print(c for c in Certificado.objects.all())
+            print("----------------------")
+            
             certificado = Certificado.objects.get(
                 # usuario=request.user,
                 # codigo=codigo,
@@ -76,6 +87,7 @@ def certificados_download(request, codigo=None):
             pdfkit.from_string(rendered, pdf_path, options={'enable-local-file-access': ''})
 
             return FileResponse(open(pdf_path, 'rb'), as_attachment=True)
-        # except Certificado.DoesNotExist:
-            # return Response({'erro': 'Certificado não encontrado.'}, status=404)
+        
+        except Certificado.DoesNotExist:
+            return Response({'erro': 'Certificado não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
     # return Response({'erro': 'Código do certificado não fornecido.'}, status=400)
