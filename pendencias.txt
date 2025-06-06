@@ -5,7 +5,7 @@
 - escolher entre iniciante, mediano e avançado
   - escolher 10 aleatoriamente para o quiz
 - arrumar redirecionadmento das rotas no proxy
-  - "proxy": "http://localhost:8000",
+  - "proxy": "http://https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev",
 
 
 20 iniciante

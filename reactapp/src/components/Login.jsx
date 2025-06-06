@@ -7,13 +7,13 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const AUTH_URL = "http://localhost:8000/auth/";
+    const AUTH_URL = "https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/auth/token/";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch(AUTH_URL + "token/", {
+            const response = await fetch(AUTH_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),

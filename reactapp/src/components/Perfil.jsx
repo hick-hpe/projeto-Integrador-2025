@@ -5,8 +5,8 @@ import { FaRedo, FaSignOutAlt, FaCheckCircle, FaTimesCircle } from "react-icons/
 
 const Perfil = () => {
   const NIVEL = 1;
-  const API_URL = `http://localhost:8000/api/quizzes/${NIVEL}/questoes/`;
-  const AUTH_URL = "http://localhost:8000/auth/";
+  const API_URL = `https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/api/quizzes/${NIVEL}/questoes/`;
+  const AUTH_URL = "https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/auth/";
   const URL_GET_USER = `${AUTH_URL}teste-autenticacao/`;
   const URL_LOGOUT = `${AUTH_URL}logout/`;
 
@@ -68,7 +68,7 @@ const Perfil = () => {
       if (!respostaId) continue;
 
       try {
-        const res = await fetch(`http://localhost:8000/api/quizzes/${NIVEL}/questoes/${questao.id}/resposta/`, {
+        const res = await fetch(`http://https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/api/quizzes/${NIVEL}/questoes/${questao.id}/resposta/`, {
           credentials: "include",
         });
         const data = await res.json();
