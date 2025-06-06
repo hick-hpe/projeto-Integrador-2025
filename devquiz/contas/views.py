@@ -47,7 +47,6 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             response.data.pop('refresh', None)
             response.data['detail'] = 'Logado com sucesso!!'
 
-
         return response
 
 
@@ -59,20 +58,24 @@ def cadastro(request):
     """
     username = request.data.get('username')
     password = request.data.get('password')
+    confirm_password = request.data.get('confirmPassword')
 
-    if not username or not password:
-        return Response({'detail': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+    if username and password and confirm_password:
+        if User.objects.filter(username=username).exists():
+            return Response({'detail': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if User.objects.filter(username=username).exists():
-        return Response({'detail': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        if password != confirm_password:
+            return Response({'detail': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
 
-    User.objects.create_user(username=username, password=password)
-    return Response({'detail': 'Registration successful'}, status=status.HTTP_201_CREATED)
+        User.objects.create_user(username=username, password=password)
+        return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'detail': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def usuario_autenticado(request):
     return Response({'user': request.user.username})
-
 
 @api_view(['POST'])
 def logout(request):

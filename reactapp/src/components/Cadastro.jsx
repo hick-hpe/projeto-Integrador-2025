@@ -6,8 +6,9 @@ import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const navigate = useNavigate();
-    const AUTH_URL = "http://localhost:8000/auth/token/";
+    const AUTH_URL = "http://localhost:8000/auth/cadastro/";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,17 +17,17 @@ const Login = () => {
             const response = await fetch(AUTH_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, password, confirmPassword }),
                 credentials: "include",
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                alert("Login feito com sucesso!");
-                navigate("/perfil");
+                alert(data.detail);
+                navigate("/");
             } else {
-                alert("Erro ao logar: Credenciais inválidas");
+                alert("Erro ao criar conta: " + (data.detail || "Erro desconhecido"));
             }
         } catch (error) {
             console.error("Erro na requisição:", error);
@@ -38,7 +39,7 @@ const Login = () => {
         <Container className="mt-5">
             <Row className="justify-content-center">
                 <Col md={6}>
-                    <h2 className="mb-4 text-center">Login</h2>
+                    <h2 className="mb-4 text-center">Cadastro</h2>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3">
                             <Form.Label><FaUser className="me-2" />Usuário</Form.Label>
@@ -62,12 +63,23 @@ const Login = () => {
                             />
                         </Form.Group>
 
+                        <Form.Group className="mb-3">
+                            <Form.Label><FaLock className="me-2" />Confirmar senha</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Digite sua senha"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+
                         <div className="d-grid">
                             <Button variant="primary" type="submit">
-                                <FaSignInAlt className="me-2" /> Entrar
+                                <FaSignInAlt className="me-2" /> Cadastrar
                             </Button>
                         </div>
-                        <a href="/cadastro">Criar conta</a>
+                        <a href="/">Logar</a>
                     </Form>
                 </Col>
             </Row>

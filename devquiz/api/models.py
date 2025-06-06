@@ -17,6 +17,7 @@ class Codigo(models.Model):
 
 class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
+    # logo
 
     def __str__(self):
         return self.nome
@@ -102,6 +103,7 @@ class Certificado(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
+    percentual_acertos = models.IntegerField(default=0)
     data_emissao = models.DateField(auto_now_add=True)
     # adicionar qr_code
 

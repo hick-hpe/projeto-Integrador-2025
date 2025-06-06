@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Certificado</title>
-  <link rel="stylesheet" href="{% static 'css/certificado_pdf.css' %}">
+  <!-- <link rel="stylesheet" href="{% static 'css/certificado_pdf.css' %}"> -->
+  <link rel="stylesheet" href="../../static/css/certificado_pdf.css">
 </head>
 <body>
   <div class="certificado" style="background: linear-gradient(120deg, #e8f5e9 60%, #fdfdfd 100%);">
@@ -28,9 +29,13 @@
       <span class="curso" style="font-size: 24px; color: #2e7d32; font-weight: bold;">Desenvolvimento Web com Django</span>
     </div>
 
-    <div class="descricao" style="font-size: 18px; text-align: center; margin-bottom: 24px;">
+    <!-- retomar este, comentado para testes -->
+    <!-- <div class="descricao" style="font-size: 18px; text-align: center; margin-bottom: 24px;">
       O participante obteve <strong style="color:#388e3c">{{ percentual_acertos }}%</strong> de acertos no quiz final de avaliação.<br>
       Ao atingir esse desempenho, demonstrou domínio dos conhecimentos abordados e está oficialmente certificado.
+    </div> -->
+    <div class="descricao" style="font-size: 18px; text-align: center; margin-bottom: 24px;">
+      O participante demonstrou domínio dos conhecimentos abordados e está oficialmente certificado.
     </div>
 
     <div class="data" style="text-align: right; margin-top: 40px; color: #22543d; font-size: 16px;">
@@ -43,7 +48,8 @@
     </div>
 
     <div class="logo">
-      <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo" style="width: 100px;">
+      <!-- <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo" style="width: 100px;"> -->
+      <img src="../../static/img/image.png" alt="Logo" style="width: 100px;">
     </div>
   </div>
 </body>

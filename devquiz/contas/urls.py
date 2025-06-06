@@ -5,7 +5,7 @@ from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('register/', views.cadastro, name='cadastro'),
+    path('cadastro/', views.cadastro, name='cadastro'),
     path('teste-autenticacao/', views.usuario_autenticado, name='teste_autenticacao'),
     path('logout/', views.logout, name='logout'),
     path('enviar-email/', views.enviar_mail, name='enviar_mail'),

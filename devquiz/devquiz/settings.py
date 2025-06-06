@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'contas',
     'certificado',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 CORS_ALLOW_CREDENTIALS = True

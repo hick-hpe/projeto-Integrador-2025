@@ -218,7 +218,7 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
 ## Servidores
 - Servidor Django:
     ```
-    http://https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/
+    http:localhost:8000/
     ```
 - Servidor React:
     ```

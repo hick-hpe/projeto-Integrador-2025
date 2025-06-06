@@ -1,9 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from api.models import Certificado
+from api.models import Certificado, Disciplina # teste
 from api.serializers import CertificadoSerializer
-
 import pdfkit
 import os
 import base64
@@ -39,12 +38,26 @@ def data_extenso(data: datetime):
     return f"{data.day} de {meses[data.month - 1]} de {data.year}"
 
 
+@api_view(['POST'])
+def gerar_certificado(request):
+    """
+    Gerar apenas se o aluno obteve pelo menos 70% de acertos
+    """
+    pass
+
 @api_view(['GET'])
-def certificados_download(request, codigo):
-    if codigo:
-        try:
-            certificado = Certificado.objects.get(codigo=codigo)
-            nome = certificado.nome
+@permission_classes([AllowAny]) # erro: rever as permissões ;-;
+def certificados_download(request, codigo=None):
+    # if codigo:
+        # try:
+            disciplina = Disciplina.objects.get(pk=1) # teste
+            # disciplina.logo
+            certificado = Certificado.objects.get(
+                # usuario=request.user,
+                # codigo=codigo,
+                disciplina=disciplina # teste
+            )
+            nome = request.user
             percentual_acertos = certificado.percentual_acertos
 
             data_formatada = data_extenso(datetime.today())
@@ -63,6 +76,6 @@ def certificados_download(request, codigo):
             pdfkit.from_string(rendered, pdf_path, options={'enable-local-file-access': ''})
 
             return FileResponse(open(pdf_path, 'rb'), as_attachment=True)
-        except Certificado.DoesNotExist:
-            return Response({'erro': 'Certificado não encontrado.'}, status=404)
-    return Response({'erro': 'Código do certificado não fornecido.'}, status=400)
+        # except Certificado.DoesNotExist:
+            # return Response({'erro': 'Certificado não encontrado.'}, status=404)
+    # return Response({'erro': 'Código do certificado não fornecido.'}, status=400)

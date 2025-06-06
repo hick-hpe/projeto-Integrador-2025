@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Card, Container, Row, Col, Alert, Spinner } from "react-bootstrap";
-import { FaRedo, FaSignOutAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaRedo, FaSignOutAlt, FaCheckCircle, FaTimesCircle, FaDownload } from "react-icons/fa";
 
 const Perfil = () => {
   const NIVEL = 1;
-  const API_URL = `https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/api/quizzes/${NIVEL}/questoes/`;
-  const AUTH_URL = "https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/auth/";
+  const API_URL = `http://localhost:8000/api/quizzes/${NIVEL}/questoes/`;
+  const AUTH_URL = "http://localhost:8000/auth/";
   const URL_GET_USER = `${AUTH_URL}teste-autenticacao/`;
   const URL_LOGOUT = `${AUTH_URL}logout/`;
+  const URL_DOWNLOAD_CERTIFICADO = `http://localhost:8000/certificados/download/`;
 
   const [usuario, setUsuario] = useState("");
   const [questoes, setQuestoes] = useState([]);
@@ -33,7 +34,8 @@ const Perfil = () => {
     fetch(API_URL, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        setQuestoes(data);
+        // setQuestoes(data);
+        setQuestoes(data.filter((d, i) => i < 4));
       })
       .catch((err) => console.error("Erro ao carregar questões:", err));
   }, []);
@@ -68,7 +70,7 @@ const Perfil = () => {
       if (!respostaId) continue;
 
       try {
-        const res = await fetch(`http://https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev/api/quizzes/${NIVEL}/questoes/${questao.id}/resposta/`, {
+        const res = await fetch(`http://localhost:8000/api/quizzes/${NIVEL}/questoes/${questao.id}/resposta/`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -79,12 +81,43 @@ const Perfil = () => {
           explicacao: data.detail.explicacao,
         });
       } catch (error) {
-        console.error("Erro ao buscar resultado:", error);
+        console.error("Erro ao buscar resultado: ", error);
       }
     }
 
     setResultados(resultadosFinais);
     setLoadingResultados(false);
+  };
+
+  const downloadCertificado = async () => {
+    try {
+      const response = await fetch(URL_DOWNLOAD_CERTIFICADO, {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao baixar certificado");
+      }
+
+      // Recebe o arquivo como blob
+      const blob = await response.blob();
+
+      // Cria uma URL temporária para o blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Cria um link temporário e simula o clique para baixar
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "certificado.pdf"; // Nome sugerido para o arquivo
+      document.body.appendChild(a);
+      a.click();
+
+      // Limpa o link e a URL temporária
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao baixar certificado: ", error);
+    }
   };
 
   const makeLogout = async () => {
@@ -194,8 +227,19 @@ const Perfil = () => {
         </Row>
       )}
       <div className="d-flex justify-content-between mt-4">
-        <Button variant="success" onClick={() => location.reload()}>
+        <Button
+          variant="success"
+          onClick={() => location.reload()}
+          disabled={!resultados.length}
+        >
           <FaRedo className="me-2" /> Recomeçar
+        </Button>
+        <Button
+          disabled={!resultados.length}
+          variant="primary"
+          onClick={downloadCertificado}
+        >
+          <FaDownload className="me-2" /> Download
         </Button>
         <Button variant="danger" onClick={makeLogout}>
           <FaSignOutAlt className="me-2" /> Logout
