@@ -15,14 +15,15 @@ COPY requirements.txt .
 # Instala as dependências do Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Instala o Gunicorn (caso não esteja no requirements.txt)
-RUN pip install --no-cache-dir gunicorn
 
 # Copia todo o código do projeto para dentro do container
 COPY . .
+
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 # Expõe a porta 8000 (usada pelo Gunicorn)
 EXPOSE 8000
 
 # Comando padrão: inicia o Gunicorn como servidor WSGI para produção
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "devquiz.wsgi:application"]
