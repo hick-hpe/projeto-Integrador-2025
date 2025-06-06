@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Card, Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 import { FaRedo, FaSignOutAlt, FaCheckCircle, FaTimesCircle, FaDownload } from "react-icons/fa";
+import _default from "react-bootstrap/esm/Accordion";
 
 const Perfil = () => {
   const NIVEL = 1;
@@ -35,7 +36,7 @@ const Perfil = () => {
       .then((res) => res.json())
       .then((data) => {
         // setQuestoes(data);
-        setQuestoes(data.filter((d, i) => i < 4));
+        setQuestoes(data.filter((d, i) => i < 1));
       })
       .catch((err) => console.error("Erro ao carregar questões:", err));
   }, []);
@@ -98,6 +99,10 @@ const Perfil = () => {
       if (!response.ok) {
         throw new Error("Erro ao baixar certificado");
       }
+
+      // const data = await response.json();
+      // console.log('certificado');
+      // console.log(data);
 
       // Recebe o arquivo como blob
       const blob = await response.blob();

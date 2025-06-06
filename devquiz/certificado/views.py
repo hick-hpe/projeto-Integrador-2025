@@ -46,46 +46,55 @@ def gerar_certificado(request):
     """
     pass
 
+def certificado(request):
+    return render(request, 'certificado_pdf.html')
+
 @api_view(['GET'])
 @permission_classes([AllowAny]) # erro: rever as permissões ;-;
-def certificados_download(request, codigo=None):
+def certificado_download(request, codigo=None):
     # if codigo:
         print('sera???')
         try:
-            print("--- Disciplinas ---")
-            print((d.id, d.nome) for d in Disciplina.objects.all())
-            print("----------------------")
-            
+            print('> disciplina ------------')
             disciplina = Disciplina.objects.get(pk=1) # teste
             # disciplina.logo
             
-            print("--- Certificado ---")
-            print(c for c in Certificado.objects.all())
-            print("----------------------")
-            
+            print('> certificado ------------')
             certificado = Certificado.objects.get(
-                # usuario=request.user,
-                # codigo=codigo,
+                usuario=request.user,
                 disciplina=disciplina # teste
             )
-            nome = request.user
+            nome = request.user.username
             percentual_acertos = certificado.percentual_acertos
 
+            print('> formatar data ------------')
             data_formatada = data_extenso(datetime.today())
-            logo_path = os.path.join('static', 'logo.png')
+            logo_path = os.path.join('static', 'img', 'logo.png')
+            
+            print('> logo_path ------------')
+            print(logo_path)
             logo_base64 = imagem_para_base64(logo_path)
+            print('> logo_path OK ---------')
 
+            print('> criar contexto ------------')
             contexto = {
                 "nome": nome.upper(),
                 "data": data_formatada,
                 "logo_base64": logo_base64,
                 "percentual_acertos": percentual_acertos
             }
+            print(contexto)
+            print('> criar contexto OK ---------')
 
+            print('> renderizar ------------')
             rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
             pdf_path = f'certificado_{nome.replace(" ", "_")}.pdf'
             pdfkit.from_string(rendered, pdf_path, options={'enable-local-file-access': ''})
+            print('> renderizar OK ---------')
 
+            
+            print('> retornar ao frontend ------------')
+            # return Response({'detail':'certificado'})
             return FileResponse(open(pdf_path, 'rb'), as_attachment=True)
         
         except Certificado.DoesNotExist:

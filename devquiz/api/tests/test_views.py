@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import Disciplina, Quiz, Questao, Alternativa, Resposta, Desempenho, Certificado
 from rest_framework import status
 
-
+# atualizar os testes de aplicação: atualização de headers para cookies
 class QuizTestCase(APITestCase):
     def setUp(self):
         self.username = 'teste'
