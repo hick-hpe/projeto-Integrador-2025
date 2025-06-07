@@ -7,7 +7,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const AUTH_URL = "http://192.168.3.27:8000/auth/token/";
+    const AUTH_URL = "http://localhost:8000/auth/token/";
 
     const handleSubmit = async (e) => {
         e.preventDefault();

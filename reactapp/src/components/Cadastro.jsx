@@ -8,7 +8,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const navigate = useNavigate();
-    const AUTH_URL = "http://192.168.3.27:8000/auth/cadastro/";
+    const AUTH_URL = "http://localhost:8000/auth/cadastro/";
 
     const handleSubmit = async (e) => {
         e.preventDefault();

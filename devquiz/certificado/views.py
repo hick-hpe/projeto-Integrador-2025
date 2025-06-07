@@ -4,12 +4,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 from api.models import Certificado, Disciplina # teste
 from api.serializers import CertificadoSerializer
-# import pdfkit
+import pdfkit
 import os
 import base64
 from datetime import datetime
 from django.shortcuts import render
 from django.http import FileResponse
+import random
 
 
 @api_view(['GET'])
@@ -39,12 +40,29 @@ def data_extenso(data: datetime):
     return f"{data.day} de {meses[data.month - 1]} de {data.year}"
 
 
-@api_view(['POST'])
-def gerar_certificado(request):
+def gerar_codigo_certificado():
+    codigo = ""
+    alfabeto = [chr(i) for i in range(65, 91)]
+    x = 5
+    while x > 0:
+        codigo += random.choice(alfabeto)
+        x -= 1
+    codigo += random.randint(11111, 99999)
+    return codigo
+
+
+def gerar_certificado(data):
     """
     Gerar apenas se o aluno obteve pelo menos 70% de acertos
     """
-    pass
+    Certificado.objects.get_or_create(
+        codigo=gerar_codigo_certificado(),
+        usuario=data['user'],
+        quiz=data['quiz'],
+        disciplina=data['disciplina'],
+        acertos=data['acertos']
+    )
+
 
 def certificado(request):
     return render(request, 'certificado_pdf.html')

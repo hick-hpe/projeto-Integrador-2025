@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from devquiz.certificado.views import gerar_certificado
 from .models import models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -27,12 +28,39 @@ def disciplina_quizzes(request, disciplina_id):
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def quiz_questoes(request, quiz_id):
-    questoes = list(Questao.objects.filter(quiz_id=quiz_id))
-    random.shuffle(questoes)
-    questoes_aleatorias = questoes[:10]
+    """
+    Veirficar se atingiu pelo 70% de acertos no nível anterior
+    """
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+
+    if quiz.nivel == "Intermediário":
+        desempenho = Desempenho.objects.filter(
+            usuario=request.user,
+            quiz__nivel="Iniciante"
+        )
+        if desempenho:
+            if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
+                return Response({'detail': 'Nivel liberado!!'})
+        else:
+            return Response({'detail': 'Vc n pode fazer o nivel Intermediário!!'})
     
-    serializer = QuestaoSerializer(questoes_aleatorias, many=True)
-    return Response(serializer.data)
+    elif quiz.nivel == "Avançado":
+        desempenho = Desempenho.objects.filter(
+            usuario=request.user,
+            quiz__nivel="Intermediário"
+        )
+        if desempenho:
+            if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
+                return Response({'detail': 'Nivel liberado!!'})
+        else:
+            return Response({'detail': 'Vc n pode fazer o nivel Avançado!!'})
+    else:
+        questoes = list(Questao.objects.filter(quiz_id=quiz_id))
+        random.shuffle(questoes)
+        questoes_aleatorias = questoes[:10]
+        
+        serializer = QuestaoSerializer(questoes_aleatorias, many=True)
+        return Response(serializer.data)
 
 
 @permission_classes([IsAuthenticated])
@@ -217,9 +245,9 @@ def concluir_quiz(request, quiz_id):
         disciplina=quiz.disciplina
     ).order_by('-id')
     
-    if desempenhos.count() > 3:
-        for d in desempenhos[3:]:
-            d.delete()
+    # if desempenhos.count() > 3:
+    #     for d in desempenhos[3:]:
+    #         d.delete()
 
     desempenho = desempenhos.first()
     if not desempenho:
@@ -229,17 +257,18 @@ def concluir_quiz(request, quiz_id):
     print("desempenho -------")
 
     data = {
-        "mensagem": "Quiz concluído com sucesso!",
+        # "mensagem": "Quiz concluído com sucesso!",
         "usuario": str(request.user),
         "quiz": quiz.nivel,
         "disciplina": quiz.disciplina.nome,
         "acertos": desempenho.num_acertos,
-        "total_questoes": quiz.questoes.count(),
-        "pontuacao": desempenho.num_acertos * 10
     }
 
-    RespostaAluno.objects.filter(user=request.user, quiz=quiz).delete()
+    if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
+        if quiz.nivel == "Avançado":
+            gerar_certificado(data)
 
+    # pq return isso ????
     return Response(data)
 
 

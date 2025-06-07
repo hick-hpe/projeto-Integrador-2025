@@ -7,14 +7,14 @@ import _default from "react-bootstrap/esm/Accordion";
 
 const Perfil = () => {
   const QUIZ = 2;
-  const API_URL = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/questoes/`;
-  const URL_INICIAR_QUIZ = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/iniciar/`;
-  const URL_DESISTIR_QUIZ = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/desistir/`;
-  const URL_CONCLUIR_QUIZ = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/concluir/`;
-  const AUTH_URL = "http://192.168.3.27:8000/auth/";
+  const API_URL = `http://localhost:8000/api/quizzes/${QUIZ}/questoes/`;
+  const URL_INICIAR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/iniciar/`;
+  const URL_DESISTIR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/desistir/`;
+  const URL_CONCLUIR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/concluir/`;
+  const AUTH_URL = "http://localhost:8000/auth/";
   const URL_GET_USER = `${AUTH_URL}teste-autenticacao/`;
   const URL_LOGOUT = `${AUTH_URL}logout/`;
-  const URL_DOWNLOAD_CERTIFICADO = `http://192.168.3.27:8000/certificados/download/`;
+  const URL_DOWNLOAD_CERTIFICADO = `http://localhost:8000/certificados/download/`;
 
   const [usuario, setUsuario] = useState("");
   const [questoes, setQuestoes] = useState([]);
@@ -75,7 +75,7 @@ const Perfil = () => {
 
   const irParaProxima = () => {
     if (questaoAtual < questoes.length - 1) {
-      const URL_ENVIAR_RESPOSTA = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/questoes/${questaoAtual+1}/`;
+      const URL_ENVIAR_RESPOSTA = `http://localhost:8000/api/quizzes/${QUIZ}/questoes/${questaoAtual+1}/`;
       fetch(URL_ENVIAR_RESPOSTA, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -101,7 +101,7 @@ const Perfil = () => {
       if (!respostaId) continue;
 
       try {
-        const res = await fetch(`http://192.168.3.27:8000/api/quizzes/${QUIZ}/questoes/${questao.id}/resposta/`, {
+        const res = await fetch(`http://localhost:8000/api/quizzes/${QUIZ}/questoes/${questao.id}/resposta/`, {
           credentials: "include",
         });
         const data = await res.json();
