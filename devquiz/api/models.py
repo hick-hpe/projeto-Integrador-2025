@@ -34,7 +34,7 @@ class Quiz(models.Model):
     descricao = models.TextField()
 
     def __str__(self):
-        return self.descricao[:50] + '...'
+        return self.descricao[:30] + '...'
 
 
 class Aluno(models.Model):
@@ -75,10 +75,10 @@ class RespostaAluno(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
     alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
+    tentativa = models.IntegerField(default=1)  # <-- novo campo
 
     def __str__(self):
-        return f"{self.aluno.user.username} - Questão {self.questao.id} - Alternativa: {self.alternativa.texto}"
-    
+        return f"{self.user.username} - Questão {self.questao.id} - Alternativa: {self.alternativa.texto} (Tentativa {self.tentativa})" 
 
 class Desempenho(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -87,7 +87,7 @@ class Desempenho(models.Model):
     num_acertos = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"{self.disciplina} '{self.quiz[:30]}': acertou {self.num_acertos} questão(ões)"    
+        return f"{self.disciplina} '{self.quiz}': acertou {self.num_acertos} questão(ões)"    
     
     
 # class Pontuacao(models.Model):

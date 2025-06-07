@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Card, Container, Row, Col, Alert, Spinner } from "react-bootstrap";
+import { Button, Form, Card, Container, Row, Col, Alert, Spinner, NavLink } from "react-bootstrap";
 import { FaRedo, FaSignOutAlt, FaCheckCircle, FaTimesCircle, FaDownload } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import _default from "react-bootstrap/esm/Accordion";
 
 const Perfil = () => {
-  const NIVEL = 1;
-  const API_URL = `http://localhost:8000/api/quizzes/${NIVEL}/questoes/`;
-  const AUTH_URL = "http://localhost:8000/auth/";
+  const QUIZ = 2;
+  const API_URL = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/questoes/`;
+  const URL_INICIAR_QUIZ = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/iniciar/`;
+  const URL_DESISTIR_QUIZ = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/desistir/`;
+  const URL_CONCLUIR_QUIZ = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/concluir/`;
+  const AUTH_URL = "http://192.168.3.27:8000/auth/";
   const URL_GET_USER = `${AUTH_URL}teste-autenticacao/`;
   const URL_LOGOUT = `${AUTH_URL}logout/`;
-  const URL_DOWNLOAD_CERTIFICADO = `http://localhost:8000/certificados/download/`;
+  const URL_DOWNLOAD_CERTIFICADO = `http://192.168.3.27:8000/certificados/download/`;
 
   const [usuario, setUsuario] = useState("");
   const [questoes, setQuestoes] = useState([]);
   const [questaoAtual, setQuestaoAtual] = useState(0);
+  const [alternativaAtual, setAlternativaAtual] = useState(0);
   const [respostas, setRespostas] = useState({});
   const [resultados, setResultados] = useState([]);
   const [loadingResultados, setLoadingResultados] = useState(false);
@@ -35,8 +40,21 @@ const Perfil = () => {
     fetch(API_URL, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        // setQuestoes(data);
-        setQuestoes(data.filter((d, i) => i < 1));
+        setQuestoes(data);
+        // setQuestoes(data.filter((d, i) => i < 2));
+      })
+      .catch((err) => console.error("Erro ao carregar questões:", err));
+  }, []);
+
+  useEffect(() => {
+    fetch(URL_INICIAR_QUIZ, {
+      credentials: "include",
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Iniciando...');
+        console.log(data.detail);
       })
       .catch((err) => console.error("Erro ao carregar questões:", err));
   }, []);
@@ -48,6 +66,7 @@ const Perfil = () => {
       ...prev,
       [questaoId]: alternativaId,
     }));
+    setAlternativaAtual(alternativaId)
   };
 
   const irParaAnterior = () => {
@@ -56,8 +75,19 @@ const Perfil = () => {
 
   const irParaProxima = () => {
     if (questaoAtual < questoes.length - 1) {
+      const URL_ENVIAR_RESPOSTA = `http://192.168.3.27:8000/api/quizzes/${QUIZ}/questoes/${questaoAtual+1}/`;
+      fetch(URL_ENVIAR_RESPOSTA, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 'alternativa_id': (alternativaAtual+1) }),
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => { })
+        .catch((err) => console.error("Erro ao responder a questão: ", err));
       setQuestaoAtual(questaoAtual + 1);
     } else {
+      concluirQuiz();
       buscarResultados();
     }
   };
@@ -71,7 +101,7 @@ const Perfil = () => {
       if (!respostaId) continue;
 
       try {
-        const res = await fetch(`http://localhost:8000/api/quizzes/${NIVEL}/questoes/${questao.id}/resposta/`, {
+        const res = await fetch(`http://192.168.3.27:8000/api/quizzes/${QUIZ}/questoes/${questao.id}/resposta/`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -99,10 +129,6 @@ const Perfil = () => {
       if (!response.ok) {
         throw new Error("Erro ao baixar certificado");
       }
-
-      // const data = await response.json();
-      // console.log('certificado');
-      // console.log(data);
 
       // Recebe o arquivo como blob
       const blob = await response.blob();
@@ -146,10 +172,63 @@ const Perfil = () => {
     }
   };
 
+  const desistirQuiz = async () => {
+    try {
+      const response = await fetch(URL_DESISTIR_QUIZ, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.detail);
+        navigate("/");
+      } else {
+        alert("Erro ao sair: " + (data.detail || "Erro desconhecido"));
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro de rede ou resposta inválida.");
+    }
+  };
+
+  const concluirQuiz = async () => {
+    try {
+      const response = await fetch(URL_CONCLUIR_QUIZ, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('quiz concluido -------------');
+        console.log(data);
+        // navigate("/");
+      } else {
+        alert("Erro ao sair: " + (data.detail || "Erro desconhecido"));
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro de rede ou resposta inválida.");
+    }
+  };
+
   return (
     <Container className="my-4">
       <h1 className="text-center">Quiz de Desenvolvimento Web II</h1>
-      <p>Bem vindo, <strong>{usuario.toUpperCase()}</strong></p>
+      <p>
+        Bem vindo, <strong>{usuario.toUpperCase()}</strong>
+        <Button
+          as="a"
+          variant="link"
+          className="text-primary p-0 ms-2 align-baseline"
+          style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+          onClick={makeLogout}
+        > Logout
+        </Button>
+      </p>
 
       {loadingResultados ? (
         <div className="text-center mt-5">
@@ -239,15 +318,25 @@ const Perfil = () => {
         >
           <FaRedo className="me-2" /> Recomeçar
         </Button>
-        <Button
-          disabled={!resultados.length}
-          variant="primary"
-          onClick={downloadCertificado}
+        <div
+          title={
+            resultados.length === 0
+              ? "Responda o questionário antes"
+              : ((resultados.filter(r => r.respostaMarcada === r.respostaCorreta).length) / questoes.length) < 0.7
+                ? "Acerte pelo menos 70% das questões"
+                : ""
+          }
         >
-          <FaDownload className="me-2" /> Download
-        </Button>
-        <Button variant="danger" onClick={makeLogout}>
-          <FaSignOutAlt className="me-2" /> Logout
+          <Button
+            disabled={resultados.length === 0 || ((resultados.filter(r => r.respostaMarcada === r.respostaCorreta).length) / questoes.length) < 0.7}
+            variant="primary"
+            onClick={downloadCertificado}
+          >
+            <FaDownload className="me-2" /> Download
+          </Button>
+        </div>
+        <Button variant="danger" onClick={desistirQuiz}>
+          <IoMdClose className="me-2" /> Desistir
         </Button>
       </div>
     </Container>

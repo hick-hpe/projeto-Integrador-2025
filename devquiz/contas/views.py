@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from random import randint
 from api.models import Codigo
+from api.serializers import UserSerializer
 
 class CookieTokenObtainPairView(TokenObtainPairView):
     """
@@ -153,3 +154,16 @@ def validar_codigo(request):
             return Response({'detail': 'Código expirado'}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({'detail': 'Código válido'})
+
+
+@api_view(['PUT', 'DELETE'])
+def conta(request):
+    if request.method == 'PUT':
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': 'Dados atualizados'})
+    elif request.method == 'DELETE':
+        request.user.delete()
+        return Response({'detail': 'Conta excluída com sucesso'})
+    

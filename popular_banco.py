@@ -100,6 +100,59 @@ questoes_iniciante = [
             {'texto': 'Verdadeiro', 'correta': True},
             {'texto': 'Falso', 'correta': False},
         ],
+    }, {   'descricao': 'O que significa o comando "python manage.py migrate"?',
+        'alternativas': [
+            {'texto': 'Aplica migrações para criar ou atualizar o banco de dados', 'correta': True},
+            {'texto': 'Cria um novo app', 'correta': False},
+            {'texto': 'Roda o servidor de desenvolvimento', 'correta': False},
+            {'texto': 'Cria um superusuário', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Em Django, o que é um modelo (model)?',
+        'alternativas': [
+            {'texto': 'Uma representação de uma tabela do banco de dados', 'correta': True},
+            {'texto': 'Um arquivo HTML', 'correta': False},
+            {'texto': 'Uma rota de URL', 'correta': False},
+            {'texto': 'Uma classe de configuração do Django', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Qual arquivo é responsável por registrar os modelos para o painel administrativo do Django?',
+        'alternativas': [
+            {'texto': 'models.py', 'correta': False},
+            {'texto': 'views.py', 'correta': False},
+            {'texto': 'admin.py', 'correta': True},
+            {'texto': 'urls.py', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Verdadeiro ou falso? O Django usa o banco de dados SQLite por padrão em novos projetos.',
+        'alternativas': [
+            {'texto': 'Verdadeiro', 'correta': True},
+            {'texto': 'Falso', 'correta': False},
+        ],
+    },
+    {   'descricao': 'O que o comando "python manage.py startapp" faz?',
+        'alternativas': [
+            {'texto': 'Cria um novo app Django', 'correta': True},
+            {'texto': 'Cria o banco de dados', 'correta': False},
+            {'texto': 'Roda o servidor de desenvolvimento', 'correta': False},
+            {'texto': 'Cria uma migração', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Qual estrutura de dados Django usa para armazenar informações do banco de dados?',
+        'alternativas': [
+            {'texto': 'Dictionaries', 'correta': False},
+            {'texto': 'QuerySets', 'correta': True},
+            {'texto': 'Tuplas', 'correta': False},
+            {'texto': 'Listas', 'correta': False},
+        ],
+    },
+    {   'descricao': 'O que a função "reverse" faz em Django?',
+        'alternativas': [
+            {'texto': 'Inverte a ordem de elementos em uma lista', 'correta': False},
+            {'texto': 'Reverte uma URL para uma view', 'correta': True},
+            {'texto': 'Realiza uma consulta no banco', 'correta': False},
+            {'texto': 'Muda a ordem dos parâmetros de uma URL', 'correta': False},
+        ],
     },
 ]
 
@@ -192,6 +245,45 @@ questoes_intermediario = [
             {'texto': 'Define os modelos de dados', 'correta': False},
             {'texto': 'Define as URLs', 'correta': False},
             {'texto': 'Define as views', 'correta': False},
+        ],
+    },{   'descricao': 'O que o Django faz ao executar "python manage.py makemigrations"?',
+        'alternativas': [
+            {'texto': 'Cria um arquivo de migração que descreve as alterações no modelo', 'correta': True},
+            {'texto': 'Aplica migrações no banco de dados', 'correta': False},
+            {'texto': 'Inicia o servidor de desenvolvimento', 'correta': False},
+            {'texto': 'Cria um novo app Django', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Em Django, qual é a principal diferença entre "models.CharField" e "models.TextField"?',
+        'alternativas': [
+            {'texto': 'CharField é usado para textos curtos, enquanto TextField é para textos longos', 'correta': True},
+            {'texto': 'CharField é para campos de data, e TextField é para números', 'correta': False},
+            {'texto': 'CharField é para campos de relação entre modelos', 'correta': False},
+            {'texto': 'Não há diferença entre os dois', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Em uma View baseada em função (FBV), qual método HTTP é usado para capturar dados de um formulário?',
+        'alternativas': [
+            {'texto': 'POST', 'correta': True},
+            {'texto': 'GET', 'correta': False},
+            {'texto': 'PUT', 'correta': False},
+            {'texto': 'DELETE', 'correta': False},
+        ],
+    },
+    {   'descricao': 'O que o "Django ORM" faz?',
+        'alternativas': [
+            {'texto': 'Permite trabalhar com o banco de dados usando Python', 'correta': True},
+            {'texto': 'Permite trabalhar com arquivos JSON', 'correta': False},
+            {'texto': 'Realiza renderização de templates HTML', 'correta': False},
+            {'texto': 'Configura rotas de URL', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Qual a principal diferença entre "ForeignKey" e "ManyToManyField" em Django?',
+        'alternativas': [
+            {'texto': 'ForeignKey é uma relação de muitos para um, enquanto ManyToManyField é uma relação de muitos para muitos', 'correta': True},
+            {'texto': 'ForeignKey cria um campo de texto, enquanto ManyToManyField cria uma chave primária', 'correta': False},
+            {'texto': 'Não há diferença entre os dois', 'correta': False},
+            {'texto': 'ForeignKey é usado apenas em views, enquanto ManyToManyField é para modelos', 'correta': False},
         ],
     },
 ]
@@ -286,17 +378,58 @@ questoes_avancado = [
             {'texto': 'Um template customizado', 'correta': False},
             {'texto': 'Um middleware', 'correta': False},
         ],
+    },{   'descricao': 'O que é o "Django Signals" e como ele pode ser utilizado em projetos Django?',
+        'alternativas': [
+            {'texto': 'É um sistema para enviar notificações e permitir que componentes desacoplados respondam a eventos', 'correta': True},
+            {'texto': 'É um sistema de cache para melhorar o desempenho', 'correta': False},
+            {'texto': 'É uma ferramenta para autenticação de usuários', 'correta': False},
+            {'texto': 'É um módulo para realizar backup do banco de dados', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Qual a principal diferença entre o uso de "prefetch_related" e "select_related" no Django ORM?',
+        'alternativas': [
+            {'texto': 'select_related é usado para relações ForeignKey e OneToOne, enquanto prefetch_related é para ManyToMany e reverse ForeignKey', 'correta': True},
+            {'texto': 'select_related é mais eficiente, enquanto prefetch_related pode gerar consultas desnecessárias', 'correta': False},
+            {'texto': 'prefetch_related é usado apenas em consultas com filtros, e select_related sem filtros', 'correta': False},
+            {'texto': 'Não há diferença entre os dois, eles fazem a mesma coisa', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Quando usar o método "annotate" em um QuerySet do Django?',
+        'alternativas': [
+            {'texto': 'Quando você precisa adicionar informações agregadas (como soma ou contagem) a cada objeto retornado no QuerySet', 'correta': True},
+            {'texto': 'Quando você quer modificar os dados do banco diretamente', 'correta': False},
+            {'texto': 'Quando você precisa filtrar os resultados', 'correta': False},
+            {'texto': 'Quando você precisa ordenar os resultados', 'correta': False},
+        ],
+    },
+    {   'descricao': 'O que o arquivo "wsgi.py" faz em um projeto Django?',
+        'alternativas': [
+            {'texto': 'Define o ponto de entrada para servidores web que utilizam o protocolo WSGI', 'correta': True},
+            {'texto': 'Define as rotas de URL do projeto', 'correta': False},
+            {'texto': 'Configura os modelos de dados do projeto', 'correta': False},
+            {'texto': 'Configura as migrações do banco de dados', 'correta': False},
+        ],
+    },
+    {   'descricao': 'Como você pode melhorar a performance de consultas em Django quando estiver lidando com grandes volumes de dados?',
+        'alternativas': [
+            {'texto': 'Usando select_related e prefetch_related para otimizar as consultas e reduzir o número de queries ao banco de dados', 'correta': True},
+            {'texto': 'Usando o método "all()" em todos os modelos', 'correta': False},
+            {'texto': 'Desativando o uso de indexes no banco de dados', 'correta': False},
+            {'texto': 'Executando consultas SQL diretamente no banco de dados sem passar pelo ORM', 'correta': False},
+        ],
     },
 ]
 
 # Função para popular questões em cada quiz
 def popular_questoes(quiz, questoes):
     for q in questoes:
-        questao = Questao.objects.create(quiz=quiz, descricao=q['descricao'])
-        for alt in q['alternativas']:
-            alternativa = Alternativa.objects.create(questao=questao, texto=alt['texto'])
-            if alt['correta']:
-                Resposta.objects.create(questao=questao, alternativa=alternativa, explicacao="Resposta correta.")
+        questao, q_created = Questao.objects.get_or_create(quiz=quiz, descricao=q['descricao'])
+        if not q_created:
+            for alt in q['alternativas']:
+                alternativa, a_created = Alternativa.objects.get_or_create(questao=questao, texto=alt['texto'])
+                if not a_created:
+                    if alt['correta']:
+                        Resposta.objects.create(questao=questao, alternativa=alternativa, explicacao="")
 
 # Popular os quizzes
 popular_questoes(quiz_iniciante, questoes_iniciante)

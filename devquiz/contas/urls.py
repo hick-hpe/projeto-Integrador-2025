@@ -1,5 +1,3 @@
-# contas/urls.py
-
 from django.urls import path
 from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -10,6 +8,7 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('enviar-email/', views.enviar_mail, name='enviar_mail'),
     path('valida-codigo/', views.validar_codigo, name='validar_codigo'),
+    path('conta/', views.conta, name='conta'),
 
     # JWT com cookies
     path('token/', views.CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
