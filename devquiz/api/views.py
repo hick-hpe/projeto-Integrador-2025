@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from devquiz.certificado.views import gerar_certificado
+from certificado.views import gerar_certificado
 from .models import models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
 from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -32,35 +32,36 @@ def quiz_questoes(request, quiz_id):
     Veirficar se atingiu pelo 70% de acertos no nível anterior
     """
     quiz = get_object_or_404(Quiz, id=quiz_id)
+    print('---- quiz ----')
+    print(f'[{quiz.id}] {quiz.nivel}')
 
     if quiz.nivel == "Intermediário":
         desempenho = Desempenho.objects.filter(
-            usuario=request.user,
-            quiz__nivel="Iniciante"
-        )
-        if desempenho:
-            if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
-                return Response({'detail': 'Nivel liberado!!'})
-        else:
+            user=request.user,
+            quiz__nivel="Iniciante",
+            num_acertos__gte=7
+        ).first()
+        if not desempenho:
             return Response({'detail': 'Vc n pode fazer o nivel Intermediário!!'})
-    
+        
     elif quiz.nivel == "Avançado":
         desempenho = Desempenho.objects.filter(
-            usuario=request.user,
-            quiz__nivel="Intermediário"
-        )
-        if desempenho:
-            if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
-                return Response({'detail': 'Nivel liberado!!'})
-        else:
+            user=request.user,
+            quiz__nivel="Intermediário",
+            num_acertos__gte=7
+        ).first()
+        if not desempenho:
             return Response({'detail': 'Vc n pode fazer o nivel Avançado!!'})
-    else:
-        questoes = list(Questao.objects.filter(quiz_id=quiz_id))
-        random.shuffle(questoes)
-        questoes_aleatorias = questoes[:10]
-        
-        serializer = QuestaoSerializer(questoes_aleatorias, many=True)
-        return Response(serializer.data)
+
+    # else:
+    print('------- entregando... ------')
+    questoes = list(Questao.objects.filter(quiz_id=quiz_id))
+    random.shuffle(questoes)
+    questoes_aleatorias = questoes[:10]
+    
+    serializer = QuestaoSerializer(questoes_aleatorias, many=True)
+    print('--- 0 -> ini')
+    return Response(serializer.data)
 
 
 @permission_classes([IsAuthenticated])
@@ -101,19 +102,36 @@ def questoes_detail(request, quiz_id, questao_id):
 
         res_questao = get_object_or_404(Resposta, questao=questao)
         correto = res_questao.alternativa == alternativa
+        
+        print('> Questão')
+        print(f'[{questao.id}] {questao.descricao}')
+        print()
+        print('> Respostas')
+        print('RC:', res_questao.alternativa)
+        print('IM:', alternativa)
 
         if correto:
             desempenho = Desempenho.objects.filter(
                 user=request.user,
                 disciplina=quiz.disciplina,
-                quiz=quiz,
+                quiz=quiz
             ).order_by('-id').first()
+
+            if not desempenho:
+                desempenho = Desempenho.objects.create(
+                    user=request.user,
+                    disciplina=quiz.disciplina,
+                    quiz=quiz,
+                    num_acertos=0
+                )
+
             desempenho.num_acertos += 1
             desempenho.save()
+            print(f"[DEBUG] {'Criado' if created else 'Atualizado'} desempenho: {desempenho.num_acertos}")
+        else:
+            print("[DEBUG] Alternativa incorreta.")
 
-        # serializer = RespostaSerializer(res_questao)
         return Response({
-            # 'correto': correto, **serializer.data
             'detail': 'Respondida!'
         })
 
@@ -135,59 +153,13 @@ def resposta_questao(request, quiz_id, questao_id):
         return Response({'detail': 'ID da questao e do quiz não fornecido!!'})
 
 
-# @permission_classes([IsAuthenticated])
-# @api_view(['POST', 'PUT', 'DELETE'])
-# def crud_quiz(request, quiz_id=None):
-#     disciplina = request.data.get('disciplina_id')
-#     nivel = request.data.get('nivel')
-#     descricao = request.data.get('descricao')
-#     alternativas = []
-#     # for a in request.data.get('alternativas'):
-#         # alternativas.append(a)
-
-#     if not all([disciplina, descricao, nivel]):
-#         return Response({'error': 'Campos obrigatórios não enviados.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#     if request.method == "POST":
-#         quiz = Quiz.objects.create(disciplina, nivel, descricao)
-#         return Response({'detail': 'Quiz criado com sucesso!'})
-
-#     elif request.method == "PUT":
-#         quiz = get_object_or_404(Quiz, id=quiz_id)
-
-#         if quiz:
-#             Quiz.objects.update_or_create(
-#                 id=quiz_id,
-#                 disciplina=disciplina,
-#                 defaults={
-#                     'descricao': descricao
-#                 }
-#             )
-
-#             return Response({'detail': 'Quiz atualizado com sucesso!'})
-#         else:
-#             return Response({'error': 'Quiz não encontrado!'})
-        
-    
-#     elif request.method == 'DELETE':
-#         quiz = get_object_or_404(Quiz, id=quiz_id)
-
-#         if quiz:
-#             quiz.delete()
-#             return Response({'detail': 'Quiz excluído com sucesso!'})
-#         else:
-#             return Response({'error': 'Quiz não encontrado!'})
-
-
 @permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def iniciar_quiz(request, quiz_id):
     """
     Montar o objeto de controle para iniciar o quiz
     """
-    # Desempenho.objects.all().delete() # remover depois ;-;
-    # RespostaAluno.objects.all().delete() # remover depois ;-;
-    
+
     if not quiz_id:
         return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -233,11 +205,9 @@ def concluir_quiz(request, quiz_id):
     Concluir quiz e mostrar desempenho
     """
     if not quiz_id:
-        print("not quiz -------")
         return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
 
     quiz = get_object_or_404(Quiz, id=quiz_id)
-    print("obteve quiz -------")
 
     desempenhos = Desempenho.objects.filter(
         user=request.user,
@@ -245,19 +215,11 @@ def concluir_quiz(request, quiz_id):
         disciplina=quiz.disciplina
     ).order_by('-id')
     
-    # if desempenhos.count() > 3:
-    #     for d in desempenhos[3:]:
-    #         d.delete()
-
     desempenho = desempenhos.first()
     if not desempenho:
-        print("desempenho -------")
         return Response({"error": "Quiz não iniciado!"}, status=status.HTTP_404_NOT_FOUND)
 
-    print("desempenho -------")
-
     data = {
-        # "mensagem": "Quiz concluído com sucesso!",
         "usuario": str(request.user),
         "quiz": quiz.nivel,
         "disciplina": quiz.disciplina.nome,

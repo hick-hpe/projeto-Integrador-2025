@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Define o diretório de trabalho dentro do container
-WORKDIR /app
+WORKDIR /devquiz
 
 # Instala dependências do sistema necessárias para o wkhtmltopdf e bibliotecas de renderização
 RUN apt-get update && \

@@ -6,7 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import _default from "react-bootstrap/esm/Accordion";
 
 const Perfil = () => {
-  const QUIZ = 2;
+  const QUIZ = 3;
   const API_URL = `http://localhost:8000/api/quizzes/${QUIZ}/questoes/`;
   const URL_INICIAR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/iniciar/`;
   const URL_DESISTIR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/desistir/`;
@@ -19,6 +19,7 @@ const Perfil = () => {
   const [usuario, setUsuario] = useState("");
   const [questoes, setQuestoes] = useState([]);
   const [questaoAtual, setQuestaoAtual] = useState(0);
+  const [questaoIdAtual, setQuestaoIdAtual] = useState(0);
   const [alternativaAtual, setAlternativaAtual] = useState(0);
   const [respostas, setRespostas] = useState({});
   const [resultados, setResultados] = useState([]);
@@ -41,6 +42,7 @@ const Perfil = () => {
       .then((res) => res.json())
       .then((data) => {
         setQuestoes(data);
+        console.log(data)
         // setQuestoes(data.filter((d, i) => i < 2));
       })
       .catch((err) => console.error("Erro ao carregar questões:", err));
@@ -66,7 +68,8 @@ const Perfil = () => {
       ...prev,
       [questaoId]: alternativaId,
     }));
-    setAlternativaAtual(alternativaId)
+    setQuestaoIdAtual(questaoId);
+    setAlternativaAtual(alternativaId);
   };
 
   const irParaAnterior = () => {
@@ -74,19 +77,19 @@ const Perfil = () => {
   };
 
   const irParaProxima = () => {
-    if (questaoAtual < questoes.length - 1) {
-      const URL_ENVIAR_RESPOSTA = `http://localhost:8000/api/quizzes/${QUIZ}/questoes/${questaoAtual+1}/`;
-      fetch(URL_ENVIAR_RESPOSTA, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 'alternativa_id': (alternativaAtual+1) }),
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => { })
-        .catch((err) => console.error("Erro ao responder a questão: ", err));
-      setQuestaoAtual(questaoAtual + 1);
-    } else {
+    const URL_ENVIAR_RESPOSTA = `http://localhost:8000/api/quizzes/${QUIZ}/questoes/${questaoIdAtual}/`;
+    fetch(URL_ENVIAR_RESPOSTA, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 'alternativa_id': (alternativaAtual) }),
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => { })
+      .catch((err) => console.error("Erro ao responder a questão: ", err));
+    setQuestaoAtual(questaoAtual + 1);
+
+    if (questaoAtual == questoes.length - 1) {
       concluirQuiz();
       buscarResultados();
     }

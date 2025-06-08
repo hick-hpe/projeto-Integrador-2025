@@ -9,18 +9,12 @@ git:
 	@echo "Autenticado!!!"
 	@echo "----------------------"
 
-venv:
-	@echo "Ativando ambiente virtual..."
-	@. venv/bin/activate
-
-django:
-	@echo "Iniciando setup do Django..."
-	@. venv/bin/activate && \
-	cd devquiz && \
-	pip install -r requirements.txt && \
-	python manage.py makemigrations && \
-	python manage.py migrate
-
 start:
 	@echo "Inicializando containers Docker..."
-	@docker compose up --build
+	@docker compose up --build -d
+
+	@echo "Iniciando React..."
+	@cd reactapp && \
+	npm install && \
+	npm run dev
+

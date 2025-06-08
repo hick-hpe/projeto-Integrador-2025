@@ -1,17 +1,18 @@
-FROM node:20-alpine AS build
+# FROM node:20-alpine AS build
 
-WORKDIR /app
+# WORKDIR /app
 
-COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-RUN npm install
+# COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
+# RUN npm install
 
-COPY . .
-RUN npm run build
+# COPY . .
+# RUN npm run build
 
 # Etapa 2: imagem final, usando Nginx para servir os arquivos estáticos
 FROM nginx:alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
+# COPY --from=build /app/dist /usr/share/nginx/html
+COPY ./dist /usr/share/nginx/html
 
 # Remove o arquivo de configuração padrão do Nginx
 RUN rm /etc/nginx/conf.d/default.conf

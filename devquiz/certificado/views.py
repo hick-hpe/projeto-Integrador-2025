@@ -1,10 +1,10 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework import status
-from api.models import Certificado, Disciplina # teste
+# from rest_framework import status
+from api.models import Certificado#, Disciplina # teste
 from api.serializers import CertificadoSerializer
-import pdfkit
+# import pdfkit
 import os
 import base64
 from datetime import datetime
