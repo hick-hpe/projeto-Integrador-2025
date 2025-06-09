@@ -6,25 +6,15 @@ services:
     container_name: django
     ports:
       - "8000:8000"
-    # networks:
-    #   - rede_publica
-    #   - rede_privada
-    # volumes:
-    #   - ./devquiz:/app
+    volumes:
+      - ./devquiz:/app
 
-  # react:
-  #   build: ./reactapp/
-  #   container_name: react
-  #   ports:
-  #     - "5173:80"
-  #   # networks:
-  #   #   - rede_publica
-  #   #   - rede_privada
-  #   depends_on:
-  #     - django
-    # volumes:
-    #   - ./reactapp:/app
-
-# networks:
-#   rede_privada:
-#   rede_publica:
+  react:
+    build: ./reactapp/
+    container_name: react
+    ports:
+      - "5173:5173"
+    depends_on:
+      - django
+    volumes:
+      - ./reactapp:/app

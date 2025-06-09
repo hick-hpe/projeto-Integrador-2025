@@ -1,20 +1,24 @@
-.PHONY: all git venv django start
+.PHONY: all git start
 
-all: git venv django start
+all: git start
 
 git:
 	@git config --global user.email ""
 	@git config --global user.name "hick-hpe"
-	@echo "----------------------"
-	@echo "Autenticado!!!"
-	@echo "----------------------"
+	@echo "+---------------------+"
+	@echo "|   Autenticado!!!"   |
+	@echo "+---------------------+"
 
 start:
-	@echo "Inicializando containers Docker..."
+	@echo "+----------------------------------------+"
+	@echo "|  Inicializando containers Docker...    |"
+	@echo "+----------------------------------------+"
 	@docker compose up --build -d
 
-	@echo "Iniciando React..."
-	@cd reactapp && \
-	npm install && \
-	npm run dev
+	# @echo "+-------------------------+"
+	# @echo "|   Iniciando React...    |"
+	# @echo "+-------------------------+"
+	# @cd reactapp && \
+	# npm install && \
+	# npm run dev
 

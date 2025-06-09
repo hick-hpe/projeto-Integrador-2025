@@ -1,25 +1,13 @@
-# FROM node:20-alpine AS build
+FROM node:20-alpine
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-# RUN npm install
+COPY package*.json* ./
 
-# COPY . .
-# RUN npm run build
+RUN npm install
 
-# Etapa 2: imagem final, usando Nginx para servir os arquivos estáticos
-FROM nginx:alpine
+COPY . .
 
-# COPY --from=build /app/dist /usr/share/nginx/html
-COPY ./dist /usr/share/nginx/html
+EXPOSE 5173
 
-# Remove o arquivo de configuração padrão do Nginx
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Adiciona um arquivo de configuração customizado para React SPA
-COPY nginx.conf /etc/nginx/conf.d
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "dev", "--", "--host"]

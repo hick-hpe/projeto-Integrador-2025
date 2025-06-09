@@ -6,7 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import _default from "react-bootstrap/esm/Accordion";
 
 const Perfil = () => {
-  const QUIZ = 3;
+  const QUIZ = 1;
   const API_URL = `http://localhost:8000/api/quizzes/${QUIZ}/questoes/`;
   const URL_INICIAR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/iniciar/`;
   const URL_DESISTIR_QUIZ = `http://localhost:8000/api/quizzes/${QUIZ}/desistir/`;
@@ -42,7 +42,8 @@ const Perfil = () => {
       .then((res) => res.json())
       .then((data) => {
         setQuestoes(data);
-        console.log(data)
+        if ('detail' in data) console.log('detail level error');
+        // console.log(data)
         // setQuestoes(data.filter((d, i) => i < 2));
       })
       .catch((err) => console.error("Erro ao carregar questões:", err));
