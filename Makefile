@@ -6,7 +6,7 @@ git:
 	@git config --global user.email ""
 	@git config --global user.name "hick-hpe"
 	@echo "+---------------------+"
-	@echo "|   Autenticado!!!"   |
+	@echo "|   Autenticado!!!   |"
 	@echo "+---------------------+"
 
 start:
@@ -14,11 +14,4 @@ start:
 	@echo "|  Inicializando containers Docker...    |"
 	@echo "+----------------------------------------+"
 	@docker compose up --build -d
-
-	# @echo "+-------------------------+"
-	# @echo "|   Iniciando React...    |"
-	# @echo "+-------------------------+"
-	# @cd reactapp && \
-	# npm install && \
-	# npm run dev
 
