@@ -33,6 +33,9 @@ urlpatterns = [
 
     # Meus desempenhos (3 últimos)
     path('meus-desempenhos/', views.ultimos_desempenhos, name='ultimos_desempenhos'),
+    
+    # Enviar feedbacks
+    path('feedbacks/', views.feedbacks, name='feedbacks'),
 ]
 
 

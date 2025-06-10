@@ -3,10 +3,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from certificado.views import gerar_certificado
 from .models import models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
-from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer
-from rest_framework.permissions import IsAuthenticated
+from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 import random
+from django.core.mail import send_mail
+from django.conf import settings
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -250,4 +252,38 @@ def ultimos_desempenhos(request):
         for d in desempenhos
     ]
     return Response(data)
-    
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def feedbacks(request):
+    serializer = FeedbackSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
+
+    serializer.save()
+
+    email = request.data.get('email')
+    assunto_admin = request.data.get('assunto')
+    mensagem_admin = request.data.get('mensagem')
+
+    if not email or not assunto_admin or not mensagem_admin:
+        return Response({'error': 'Campos obrigatórios ausentes'}, status=400)
+
+    # Email para o usuário
+    send_mail(
+        'Feedback enviado!!!',
+        'Seu feedback foi enviado!! Aguarde a resposta dos administradores!',
+        settings.EMAIL_HOST_USER,
+        [email]
+    )
+
+    # Email para os administradores
+    send_mail(
+        f'Novo feedback: {assunto_admin}',
+        f'Mensagem: {mensagem_admin}\nEmail do remetente: {email}',
+        settings.EMAIL_HOST_USER,
+        [settings.EMAIL_HOST_USER]
+    )
+
+    return Response({'detail': 'Feedback enviado com sucesso!'})

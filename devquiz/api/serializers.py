@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import (
     Aluno, Disciplina, Quiz, Questao,
     Alternativa, Resposta, RespostaAluno,
-    # Pontuacao,
+    Feedback,
     Certificado
 )
 
@@ -102,3 +102,9 @@ class CertificadoSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         return data
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ['email', 'assunto', 'mensagem']

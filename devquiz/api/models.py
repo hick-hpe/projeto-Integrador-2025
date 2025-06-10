@@ -89,16 +89,6 @@ class Desempenho(models.Model):
     def __str__(self):
         return f"{self.disciplina} '{self.quiz}': acertou {self.num_acertos} questão(ões)"    
     
-    
-# class Pontuacao(models.Model):
-#     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-#     pontuacao = models.IntegerField(default=0)
-
-#     def __str__(self):
-#         return f"{self.usuario.username} - {self.pontuacao} pontos"
-
-
 class Certificado(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -110,3 +100,10 @@ class Certificado(models.Model):
     def __str__(self):
         return f"{self.usuario.username} - {self.disciplina.nome} - {self.data_emissao}"
 
+class Feedback(models.Model):
+    assunto = models.CharField(max_length=20, null=True)
+    mensagem = models.TextField(max_length=300, null=True)
+    email = models.EmailField(max_length=30, null=True)
+    
+    def __str__(self):
+        return self.descricao
