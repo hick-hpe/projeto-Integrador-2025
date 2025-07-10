@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from certificado.views import gerar_certificado
 from .models import models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
@@ -10,66 +10,83 @@ import random
 from django.core.mail import send_mail
 from django.conf import settings
 
-@permission_classes([IsAuthenticated])
-@api_view(['GET'])
-def disciplinas_lista(request):
-    if request.method == 'GET':
+   
+class DisciplinaListView(APIView):
+    """
+    View para listar todas as disciplinas disponíveis.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
         disciplinas = Disciplina.objects.all()
         serializer = DisciplinaSerializer(disciplinas, many=True)
         return Response(serializer.data)
 
 
-@permission_classes([IsAuthenticated])
-@api_view(['GET'])
-def disciplina_quizzes(request, disciplina_id):
-    quizzes = Quiz.objects.filter(disciplina_id=disciplina_id)
-    serializer = QuizSerializer(quizzes, many=True)
-    return Response(serializer.data)
+class DisciplinaQuizzesView(APIView):
+    """
+    View para listar todos os quizzes de uma disciplina específica.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, disciplina_id):
+        quizzes = Quiz.objects.filter(disciplina_id=disciplina_id)
+        serializer = QuizSerializer(quizzes, many=True)
+        return Response(serializer.data)
 
 
-@permission_classes([IsAuthenticated])
-@api_view(['GET'])
-def quiz_questoes(request, quiz_id):
+class QuizQuestoesView(APIView):
     """
     Veirficar se atingiu pelo 70% de acertos no nível anterior
     """
-    quiz = get_object_or_404(Quiz, id=quiz_id)
-    print('---- quiz ----')
-    print(f'[{quiz.id}] {quiz.nivel}')
+    permission_classes = [IsAuthenticated]
 
-    if quiz.nivel == "Intermediário":
-        desempenho = Desempenho.objects.filter(
-            user=request.user,
-            quiz__nivel="Iniciante",
-            num_acertos__gte=7
-        ).first()
-        if not desempenho:
-            return Response({'detail': 'Vc n pode fazer o nivel Intermediário!!'})
+    def get(self, request, quiz_id):
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        print('---- quiz ----')
+        print(f'[{quiz.id}] {quiz.nivel}')
+
+        if quiz.nivel == "Intermediário":
+            desempenho = Desempenho.objects.filter(
+                user=request.user,
+                quiz__nivel="Iniciante",
+                num_acertos__gte=7
+            ).first()
+            if not desempenho:
+                return Response({'detail': 'Vc n pode fazer o nivel Intermediário!!'})
+            
+        elif quiz.nivel == "Avançado":
+            desempenho = Desempenho.objects.filter(
+                user=request.user,
+                quiz__nivel="Intermediário",
+                num_acertos__gte=7
+            ).first()
+            if not desempenho:
+                return Response({'detail': 'Vc n pode fazer o nivel Avançado!!'})
+
+        # else:
+        print('------- entregando... ------')
+        questoes = list(Questao.objects.filter(quiz_id=quiz_id))
+        random.shuffle(questoes)
+        questoes_aleatorias = questoes[:10]
         
-    elif quiz.nivel == "Avançado":
-        desempenho = Desempenho.objects.filter(
-            user=request.user,
-            quiz__nivel="Intermediário",
-            num_acertos__gte=7
-        ).first()
-        if not desempenho:
-            return Response({'detail': 'Vc n pode fazer o nivel Avançado!!'})
-
-    # else:
-    print('------- entregando... ------')
-    questoes = list(Questao.objects.filter(quiz_id=quiz_id))
-    random.shuffle(questoes)
-    questoes_aleatorias = questoes[:10]
-    
-    serializer = QuestaoSerializer(questoes_aleatorias, many=True)
-    print('--- 0 -> ini')
-    return Response(serializer.data)
+        serializer = QuestaoSerializer(questoes_aleatorias, many=True)
+        print('--- 0 -> ini')
+        return Response(serializer.data)
 
 
-@permission_classes([IsAuthenticated])
-@api_view(['GET', 'POST'])
-def questoes_detail(request, quiz_id, questao_id):
-    if request.method == "POST":
+class QuestoesDetailView(APIView):
+    """
+    View para obter detalhes de uma questão específica de um quiz e registrar a resposta do aluno.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, quiz_id, questao_id):
+        questao = get_object_or_404(Questao, quiz_id=quiz_id, id=questao_id)
+        serializer = QuestaoSerializer(questao)
+        return Response(serializer.data)
+
+    def post(self, request, quiz_id, questao_id):
         """
         request.data = {
             "alternativa_id": 1
@@ -137,153 +154,166 @@ def questoes_detail(request, quiz_id, questao_id):
             'detail': 'Respondida!'
         })
 
-    questao = get_object_or_404(Questao, quiz_id=quiz_id, id=questao_id)
-    serializer = QuestaoSerializer(questao)
-    return Response(serializer.data)
 
-
-@api_view(['GET'])
 # arrumar permissao pra nao permititr o aluno
-def resposta_questao(request, quiz_id, questao_id):
-    if quiz_id and questao_id:
-        questao = get_object_or_404(Questao, quiz_id=quiz_id, id=questao_id)
-        print('quiz.respostas')
-        print(resposta := questao.resposta)
-        serializer = RespostaSerializer(resposta)
-        return Response({'detail': serializer.data})
-    else:
-        return Response({'detail': 'ID da questao e do quiz não fornecido!!'})
-
-
-@permission_classes([IsAuthenticated])
-@api_view(['POST'])
-def iniciar_quiz(request, quiz_id):
+class RespostaQuestaoView(APIView):
     """
-    Montar o objeto de controle para iniciar o quiz
+    View para retornar a resposta correta de uma questão específica de um quiz.
     """
+    # permission_classes = []???
 
-    if not quiz_id:
-        return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
-
-    quiz = get_object_or_404(Quiz, id=quiz_id)
-
-    Desempenho.objects.create(
-        user=request.user,
-        quiz=quiz,
-        disciplina=quiz.disciplina,
-    )
-
-    return Response({"detail": "Você iniciou o quiz!"})
+    def get(self, request, quiz_id, questao_id):
+        if quiz_id and questao_id:
+            questao = get_object_or_404(Questao, quiz_id=quiz_id, id=questao_id)
+            print('quiz.respostas')
+            print(resposta := questao.resposta)
+            serializer = RespostaSerializer(resposta)
+            return Response({'detail': serializer.data})
+        else:
+            return Response({'detail': 'ID da questao e do quiz não fornecido!!'})
 
 
-@permission_classes([IsAuthenticated])
-@api_view(['POST'])
-def desistir_quiz(request, quiz_id):
+class IniciarQuizView(APIView):
+    """
+    Iniciar o quiz
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, quiz_id):
+        if not quiz_id:
+            return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+
+        Desempenho.objects.create(
+            user=request.user,
+            quiz=quiz,
+            disciplina=quiz.disciplina,
+        )
+
+        return Response({"detail": "Você iniciou o quiz!"})
+    
+
+class DesistirQuizView(APIView):
     """
     Excluir os objetos "RespostaAluno" e "Desempenho" relacionados ao usuário e ao quiz.
     """
-    if not quiz_id:
-        return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
+    permission_classes = [IsAuthenticated]
 
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    def post(self, request, quiz_id):
+        if not quiz_id:
+            return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
 
-    desempenho = Desempenho.objects.filter(
-        user=request.user,
-        quiz=quiz,
-        disciplina=quiz.disciplina
-    ).order_by('-id').first()
-    desempenho.delete()
+        quiz = get_object_or_404(Quiz, id=quiz_id)
 
-    respostas = RespostaAluno.objects.filter(user=request.user, quiz=quiz)
-    respostas.delete()
+        desempenho = Desempenho.objects.filter(
+            user=request.user,
+            quiz=quiz,
+            disciplina=quiz.disciplina
+        ).order_by('-id').first()
+        desempenho.delete()
 
-    return Response({"detail": "Você desistiu do quiz!"})
+        respostas = RespostaAluno.objects.filter(user=request.user, quiz=quiz)
+        respostas.delete()
+
+        return Response({"detail": "Você desistiu do quiz!"})
 
 
-@permission_classes([IsAuthenticated])
-@api_view(['POST'])
-def concluir_quiz(request, quiz_id):
+class ConcluirQuizView(APIView):
     """
-    Concluir quiz e mostrar desempenho
+    Concluir o quiz e mostrar o desempenho do usuário.
     """
-    if not quiz_id:
-        return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
+    permission_classes = [IsAuthenticated]
 
-    quiz = get_object_or_404(Quiz, id=quiz_id)
+    def post(self, request, quiz_id):
+        """
+        Concluir quiz e mostrar desempenho
+        """
+        if not quiz_id:
+            return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
 
-    desempenhos = Desempenho.objects.filter(
-        user=request.user,
-        quiz=quiz,
-        disciplina=quiz.disciplina
-    ).order_by('-id')
-    
-    desempenho = desempenhos.first()
-    if not desempenho:
-        return Response({"error": "Quiz não iniciado!"}, status=status.HTTP_404_NOT_FOUND)
+        quiz = get_object_or_404(Quiz, id=quiz_id)
 
-    data = {
-        "usuario": str(request.user),
-        "quiz": quiz.nivel,
-        "disciplina": quiz.disciplina.nome,
-        "acertos": desempenho.num_acertos,
-    }
+        desempenhos = Desempenho.objects.filter(
+            user=request.user,
+            quiz=quiz,
+            disciplina=quiz.disciplina
+        ).order_by('-id')
+        
+        desempenho = desempenhos.first()
+        if not desempenho:
+            return Response({"error": "Quiz não iniciado!"}, status=status.HTTP_404_NOT_FOUND)
 
-    if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
-        if quiz.nivel == "Avançado":
-            gerar_certificado(data)
+        data = {
+            "usuario": str(request.user),
+            "quiz": quiz.nivel,
+            "disciplina": quiz.disciplina.nome,
+            "acertos": desempenho.num_acertos,
+        }
 
-    # pq return isso ????
-    return Response(data)
+        if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
+            if quiz.nivel == "Avançado":
+                gerar_certificado(data)
+
+        # pq return isso ????
+        return Response(data)
 
 
-@api_view(['GET'])
-def ultimos_desempenhos(request):
+class UltimosDesempenhosView(APIView):
     """
     Retorna os 3 últimos desempenhos do usuário autenticado.
     """
-    desempenhos = Desempenho.objects.filter(user=request.user).order_by('-id')[:3]
-    data = [
-        {
-            'quiz': d.quiz.nivel,
-            'disciplina': d.quiz.disciplina.nome,
-            'acertos': d.num_acertos,
-            'total_questoes': d.quiz.questoes.count(),
-        }
-        for d in desempenhos
-    ]
-    return Response(data)
+    permission_classes = [IsAuthenticated]
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def feedbacks(request):
-    serializer = FeedbackSerializer(data=request.data)
+    def get(self, request):
+        desempenhos = Desempenho.objects.filter(user=request.user).order_by('-id')[:3]
+        data = [
+            {
+                'quiz': d.quiz.nivel,
+                'disciplina': d.quiz.disciplina.nome,
+                'acertos': d.num_acertos,
+                'total_questoes': d.quiz.questoes.count(),
+            }
+            for d in desempenhos
+        ]
+        return Response(data)
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
 
-    serializer.save()
+class FeedbackView(APIView):
+    permission_classes = [AllowAny]
+    """
+    View para receber feedbacks dos usuários.
+    """
 
-    email = request.data.get('email')
-    assunto_admin = request.data.get('assunto')
-    mensagem_admin = request.data.get('mensagem')
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data)
 
-    if not email or not assunto_admin or not mensagem_admin:
-        return Response({'error': 'Campos obrigatórios ausentes'}, status=400)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
 
-    # Email para o usuário
-    send_mail(
-        'Feedback enviado!!!',
-        'Seu feedback foi enviado!! Aguarde a resposta dos administradores!',
-        settings.EMAIL_HOST_USER,
-        [email]
-    )
+        serializer.save()
 
-    # Email para os administradores
-    send_mail(
-        f'Novo feedback: {assunto_admin}',
-        f'Mensagem: {mensagem_admin}\nEmail do remetente: {email}',
-        settings.EMAIL_HOST_USER,
-        [settings.EMAIL_HOST_USER]
-    )
+        email = request.data.get('email')
+        assunto_admin = request.data.get('assunto')
+        mensagem_admin = request.data.get('mensagem')
 
-    return Response({'detail': 'Feedback enviado com sucesso!'})
+        if not email or not assunto_admin or not mensagem_admin:
+            return Response({'error': 'Campos obrigatórios ausentes'}, status=400)
+
+        # Email para o usuário
+        send_mail(
+            'Feedback enviado!!!',
+            'Seu feedback foi enviado!! Aguarde a resposta dos administradores!',
+            settings.EMAIL_HOST_USER,
+            [email]
+        )
+
+        # Email para os administradores
+        send_mail(
+            f'Novo feedback: {assunto_admin}',
+            f'Mensagem: {mensagem_admin}\nEmail do remetente: {email}',
+            settings.EMAIL_HOST_USER,
+            [settings.EMAIL_HOST_USER]
+        )
+
+        return Response({'detail': 'Feedback enviado com sucesso!'})

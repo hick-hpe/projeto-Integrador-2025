@@ -1,19 +1,19 @@
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
     # Listar disiciplinas
-    path('disciplinas/', views.disciplinas_lista, name='disciplinas_list'),
+    path('disciplinas/', DisciplinaListView.as_view(), name='disciplinas_list'),
     
     # Listar quizzes da disiciplina
-    path('disciplinas/<int:disciplina_id>/quizzes/', views.disciplina_quizzes, name='disciplina_quizzes'),
+    path('disciplinas/<int:disciplina_id>/quizzes/', DisciplinaQuizzesView.as_view(), name='disciplina_quizzes'),
 
     # Listar questão(ões) de um quiz
-    path('quizzes/<int:quiz_id>/questoes/', views.quiz_questoes, name='quizzes_questoes'),
+    path('quizzes/<int:quiz_id>/questoes/', QuizQuestoesView.as_view(), name='quizzes_questoes'),
 
     # Listar detalhes da questão + Receber resposta do aluno
-    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', views.questoes_detail, name='questoes_detail'),
-    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/', views.resposta_questao, name='resposta_questao'),
+    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestoesDetailView.as_view(), name='questoes_detail'),
+    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/', RespostaQuestaoView.as_view(), name='resposta_questao'),
 
     # Criar, atualizar e deletar quiz
     # path('quizzes/', views.crud_quiz, name='crud_quiz'),
@@ -23,19 +23,19 @@ urlpatterns = [
     # path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', views.crud_question, name='crud_question'),
 
     # Iniciar quiz
-    path('quizzes/<int:quiz_id>/iniciar/', views.iniciar_quiz, name='iniciar_quiz'),
+    path('quizzes/<int:quiz_id>/iniciar/', IniciarQuizView.as_view(), name='iniciar_quiz'),
 
     # Desistir do quiz
-    path('quizzes/<int:quiz_id>/desistir/', views.desistir_quiz, name='desistir_quiz'),
+    path('quizzes/<int:quiz_id>/desistir/', DesistirQuizView.as_view(), name='desistir_quiz'),
 
     # Concluir quiz
-    path('quizzes/<int:quiz_id>/concluir/', views.concluir_quiz, name='concluir_quiz'),
+    path('quizzes/<int:quiz_id>/concluir/', ConcluirQuizView.as_view(), name='concluir_quiz'),
 
     # Meus desempenhos (3 últimos)
-    path('meus-desempenhos/', views.ultimos_desempenhos, name='ultimos_desempenhos'),
+    path('meus-desempenhos/', UltimosDesempenhosView.as_view(), name='ultimos_desempenhos'),
     
     # Enviar feedbacks
-    path('feedbacks/', views.feedbacks, name='feedbacks'),
+    path('feedbacks/', FeedbackView.as_view(), name='feedbacks'),
 ]
 
 
