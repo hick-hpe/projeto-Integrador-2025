@@ -8,6 +8,15 @@ A plataforma também oferece a emissão de certificados digitais, que atestam a 
 
 Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando os métodos tradicionais e potencializando os resultados do aprendizado, além de ter grande potencial de escalabilidade para outros cursos e áreas.
 
+## Tecnologias Utilizadas
+
+- **Backend:** Django, Django REST Framework  
+- **Frontend:** React.js, Vite (em desenvolvimento separado)
+- **Banco de Dados:** SQLite, (futuramente, PostgreSQL com Docker)
+- **Containerização:** Docker, Docker Compose  
+- **Autenticação:** JWT (JSON Web Tokens)  
+- **Controle de Versão:** Git e GitHub
+
 ## Funcionalidades
 <!-- - Criação de quizzes (em desenvolvimento) -->
 - Realização de quizzes
@@ -227,3 +236,36 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
     ```
     http://localhost:5173/
     ```
+
+
+<!-- ## Como Contribuir
+
+Contribuições são bem-vindas! Para contribuir com o DevQuiz:
+
+1. Faça um fork do projeto  
+2. Crie uma branch para sua feature ou correção (`git checkout -b minha-feature`)  
+3. Faça commit das suas alterações (`git commit -m "Descrição da feature"`)  
+4. Envie para seu fork (`git push origin minha-feature`)  
+5. Abra um Pull Request aqui no repositório original  
+6. Aguarde a revisão e feedback dos mantenedores -->
+
+<!-- ## Roadmap
+
+- [x] Criação e listagem de quizzes  
+- [x] Responder questões e avaliar respostas  
+- [x] Emissão de certificados digitais  
+- [ ] Implementar sistema de ranking entre participantes  
+- [ ] Criar sistema de emblemas e conquistas  
+- [ ] Adicionar compartilhamento de conquistas em redes sociais  
+- [ ] Melhorias na interface e experiência do usuário (UX/UI)  
+- [ ] Implementar notificações em tempo real   -->
+
+---
+
+<!-- ## Contato
+
+Em caso de dúvidas ou sugestões, entre em contato com:
+
+- Henrique Palermo – [e-mail@example.com](mailto:e-mail@example.com)  
+- GitHub: [https://github.com/hick-hpe](https://github.com/hick-hpe)   -->
+
