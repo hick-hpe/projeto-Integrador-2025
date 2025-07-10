@@ -1,16 +1,35 @@
 # Projeto Integrador - 2025
 
-O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, com o objetivo de complementar os estudos dos alunos.
+O **DevQuiz** é uma plataforma online de quizzes desenvolvida para apoiar os alunos do curso de Tecnologia em Análise e Desenvolvimento de Sistemas (TADS) na fixação dos conteúdos abordados durante o curso. A proposta do DevQuiz é baseada em estudos que comprovam a eficácia da gamificação como ferramenta para aumentar o engajamento e a motivação dos estudantes.
+
+Ao oferecer quizzes interativos, o DevQuiz estimula a aprendizagem ativa, permitindo que os alunos testem seus conhecimentos de forma contínua e prática. Esse método auxilia na identificação de pontos que precisam ser reforçados, tornando o estudo mais focado e eficiente. Além disso, a diversidade dos níveis de dificuldade (iniciante, intermediário e avançado) atende a diferentes perfis de alunos, respeitando seu ritmo e conhecimento prévio.
+
+A plataforma também oferece a emissão de certificados digitais, que atestam a conclusão dos quizzes e o esforço dos alunos dentro do ambiente do DevQuiz. Esses certificados funcionam como um incentivo interno e ferramenta de autoavaliação, sem caráter oficial ou validade reconhecida externamente. O formato online possibilita acesso fácil e flexível, permitindo que o estudo ocorra a qualquer momento e lugar, adequando-se à rotina dos estudantes.
+
+Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando os métodos tradicionais e potencializando os resultados do aprendizado, além de ter grande potencial de escalabilidade para outros cursos e áreas.
 
 ## Funcionalidades
-- Criação de quizzes
+<!-- - Criação de quizzes (em desenvolvimento) -->
 - Realização de quizzes
 - Quizzes divididos em três níveis:
     - Iniciante
     - Intermediário
     - Avançado
 - Emissão de certificados para os alunos
-- Futuramente, espera-se implementar uma funcionalidade de ranking
+
+## Funcionalidades futuras
+- Sistema de ranking entre os participantes
+- Emblemas sugeridos:
+  - **Conclusão de Nível**: Recebido ao completar todos os quizzes de um nível (Iniciante, Intermediário, Avançado)
+  - **Sequência de Acertos**: Para quem acerta um número X de perguntas seguidas sem errar
+  - **Participação Frequente**: Concedido a usuários que realizam quizzes diariamente por um período contínuo (ex: 7 dias)
+  - **Especialista em Disciplina**: Ao atingir uma pontuação mínima em quizzes de uma disciplina específica
+  - **Primeiro Quiz**: Recebido ao completar o primeiro quiz na plataforma
+  <!-- - **Top do Ranking**: Para os usuários que alcançam as melhores posições no sistema de ranking -->
+- Notificações visuais para conquistas, como pop-ups ou animações ao ganhar um emblema
+- Área dedicada no perfil do usuário para exibição dos emblemas conquistados
+<!-- - Possibilidade de compartilhar conquistas em redes sociais para aumentar o engajamento -->
+
 
 ## Rotas da API
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>

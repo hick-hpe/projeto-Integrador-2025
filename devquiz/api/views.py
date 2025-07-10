@@ -153,12 +153,10 @@ class QuestoesDetailView(APIView):
         })
 
 
-# arrumar permissao pra nao permititr o aluno -> criar permissoes (permissions.py)
 class RespostaQuestaoView(APIView):
     """
     View para retornar a resposta correta de uma questão específica de um quiz.
     """
-    # permission_classes = []???
 
     def get(self, request, quiz_id, questao_id):
         if quiz_id and questao_id:

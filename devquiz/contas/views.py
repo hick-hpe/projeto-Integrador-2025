@@ -106,6 +106,9 @@ class LogoutView(APIView):
 
 
 def gerar_codigo_recuperacao():
+    """
+    Gera um código de recuperação aleatório.
+    """
     return str(randint(100000, 999999))
 
 
@@ -187,4 +190,3 @@ class ContaDetailView(APIView):
     def delete(self, request):
         request.user.delete()
         return Response({'detail': 'Conta excluída com sucesso'})
-    

@@ -1,7 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+import pytz
 
-data = datetime(2025, 6, 3)
+# UTC agora
+utc_now = datetime.now(pytz.utc)
+print("UTC:", utc_now)
 
-# formatar em dd/MM/YYYY
-print(data.strftime('%d/%m/%Y'))  # Saída: 03/06/2025
-print(data.day)
+# Converter para horário de São Paulo
+sp = utc_now.astimezone(pytz.timezone('America/Sao_Paulo'))
+print("São Paulo:", sp)

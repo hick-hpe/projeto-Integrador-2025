@@ -95,7 +95,6 @@ class Certificado(models.Model):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     percentual_acertos = models.IntegerField(default=0)
     data_emissao = models.DateField(auto_now_add=True)
-    # adicionar qr_code
 
     def __str__(self):
         return f"{self.usuario.username} - {self.disciplina.nome} - {self.data_emissao}"

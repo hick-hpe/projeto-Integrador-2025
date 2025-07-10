@@ -31,11 +31,17 @@ class CertificadoDetailView(APIView):
 
 
 def converter_imagem_para_base64(caminho):
+    """
+    Converte uma imagem em um caminho para uma string base64.
+    """
     with open(caminho, 'rb') as img_file:
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 
 def converter_data_para_extenso(data: datetime):
+    """
+    Converte uma data para o formato "dia de mês de ano".
+    """
     meses = [
         "janeiro", "fevereiro", "março", "abril",
         "maio", "junho", "julho", "agosto",
@@ -45,13 +51,13 @@ def converter_data_para_extenso(data: datetime):
 
 
 def gerar_codigo_certificado():
+    """
+    Gera um código único para o certificado.
+    """
     codigo = ""
     alfabeto = [chr(i) for i in range(65, 91)]
-    x = 5
-    while x > 0:
-        codigo += random.choice(alfabeto)
-        x -= 1
-    codigo += random.randint(11111, 99999)
+    random.shuffle(alfabeto)
+    codigo += "".join(random.choices(alfabeto, k=5)) + random.randint(11111, 99999)
     return codigo
 
 
@@ -68,7 +74,7 @@ def gerar_certificado(data):
     )
 
 
-class CertificadoView(APIView):
+class CertificadoPDFView(APIView):
     """
     View para renderizar o certificado em PDF.
     """
@@ -77,7 +83,6 @@ class CertificadoView(APIView):
         return render(request, 'certificado_pdf.html')
 
 
-# erro: rever as permissões ;-;
 class CertificadoDownloadView(APIView):
     """
     View para gerar e baixar o certificado em PDF.
@@ -86,16 +91,14 @@ class CertificadoDownloadView(APIView):
     
     def get(self, request, codigo=None):
         if codigo:
-            print('sera???')
             try:
                 print('> disciplina ------------')
-                disciplina = Disciplina.objects.get(pk=1) # teste
-                # disciplina.logo
+                disciplina = Disciplina.objects.get(pk=1)
                 
                 print('> certificado ------------')
                 certificado = Certificado.objects.get(
                     usuario=request.user,
-                    disciplina=disciplina # teste
+                    disciplina=disciplina
                 )
                 nome = request.user.username
                 percentual_acertos = certificado.percentual_acertos
@@ -127,7 +130,6 @@ class CertificadoDownloadView(APIView):
 
                 
                 print('> retornar ao frontend ------------')
-                # return Response({'detail':'certificado'})
                 return FileResponse(open(pdf_path, 'rb'), as_attachment=True)
             
             except Certificado.DoesNotExist:
