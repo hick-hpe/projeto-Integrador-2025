@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
     # Certificado
-    path('<str:codigo>/', views.certificados, name='certificado'),
-    # path('<str:codigo>/download/', views.certificado_download, name='certificados_download'),
-    path('', views.certificado, name='certificado'),
+    path('<str:codigo>/', CertificadoDetailView.as_view(), name='certificado'),
+    path('<str:codigo>/download/', CertificadoDownloadView.as_view(), name='certificados_download'),
+    path('', CertificadoView.as_view(), name='certificado'),
 ]
