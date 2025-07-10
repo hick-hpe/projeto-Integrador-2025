@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
@@ -60,7 +60,7 @@ class CadastroView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        confirm_password = request.data.get('confirmPassword')
+        confirm_password = request.data.get('confirm-password')
 
         if username and password and confirm_password:
             if User.objects.filter(username=username).exists():
@@ -105,8 +105,9 @@ class LogoutView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def gerar_codigo():
+def gerar_codigo_recuperacao():
     return str(randint(100000, 999999))
+
 
 class EnviarEmailView(APIView):
     """
@@ -127,7 +128,7 @@ class EnviarEmailView(APIView):
         except User.DoesNotExist:
             return Response({'detail': 'Erro inesperado ao buscar o usuário!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        codigo_gerado = gerar_codigo()
+        codigo_gerado = gerar_codigo_recuperacao()
         assunto = "Código enviado!"
         mensagem = f"Seu código de recuperação é: {codigo_gerado}"
 
@@ -175,6 +176,7 @@ class ContaDetailView(APIView):
     """
     View para atualizar ou excluir a conta do usuário autenticado.
     """
+    permission_classes = [IsAuthenticated]
 
     def put(self, request):
         serializer = UserSerializer(request.user, data=request.data, partial=True)

@@ -53,7 +53,7 @@ class QuizQuestoesView(APIView):
                 num_acertos__gte=7
             ).first()
             if not desempenho:
-                return Response({'detail': 'Vc n pode fazer o nivel Intermediário!!'})
+                return Response({'detail': 'Você não pode fazer o nível Intermediário!!'})
             
         elif quiz.nivel == "Avançado":
             desempenho = Desempenho.objects.filter(
@@ -62,9 +62,8 @@ class QuizQuestoesView(APIView):
                 num_acertos__gte=7
             ).first()
             if not desempenho:
-                return Response({'detail': 'Vc n pode fazer o nivel Avançado!!'})
+                return Response({'detail': 'Você não pode fazer o nível Avançado!!'})
 
-        # else:
         print('------- entregando... ------')
         questoes = list(Questao.objects.filter(quiz_id=quiz_id))
         random.shuffle(questoes)
@@ -87,20 +86,19 @@ class QuestoesDetailView(APIView):
         return Response(serializer.data)
 
     def post(self, request, quiz_id, questao_id):
-        """
-        request.data = {
-            "alternativa_id": 1
-        }
-        """
         alternativa_id = request.data.get('alternativa_id')
         if not alternativa_id:
-            return Response({'detail': 'alternativa_id não informado'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': '"alternativa_id" não informado'}, status=status.HTTP_400_BAD_REQUEST)
 
         quiz = get_object_or_404(Quiz, id=quiz_id)
         questao = get_object_or_404(Questao, id=questao_id)
         alternativa = get_object_or_404(Alternativa, id=alternativa_id)
 
-        ultima_tentativa = RespostaAluno.objects.filter(user=request.user, quiz=quiz).aggregate(models.Max('tentativa'))['tentativa__max'] or 0
+        ultima_tentativa = RespostaAluno.objects.filter(
+            user=request.user, quiz=quiz
+            ).aggregate(
+                models.Max('tentativa')
+                )['tentativa__max'] or 0
         nova_tentativa = ultima_tentativa + 1
         resposta_aluno, created = RespostaAluno.objects.get_or_create(
             user=request.user,
@@ -113,7 +111,7 @@ class QuestoesDetailView(APIView):
         )
 
         if not created:
-            print('ja respondeu')
+            print('Questão já respondida')
             return Response({'detail': 'Questão já respondida'}, status=status.HTTP_403_FORBIDDEN)
 
         resposta_aluno.alternativa = alternativa
@@ -155,7 +153,7 @@ class QuestoesDetailView(APIView):
         })
 
 
-# arrumar permissao pra nao permititr o aluno
+# arrumar permissao pra nao permititr o aluno -> criar permissoes (permissions.py)
 class RespostaQuestaoView(APIView):
     """
     View para retornar a resposta correta de uma questão específica de um quiz.
@@ -175,23 +173,24 @@ class RespostaQuestaoView(APIView):
 
 class IniciarQuizView(APIView):
     """
-    Iniciar o quiz
+    Iniciar um quiz e registrar o desempenho.
     """
     permission_classes = [IsAuthenticated]
 
     def post(self, request, quiz_id):
-        if not quiz_id:
-            return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
 
         quiz = get_object_or_404(Quiz, id=quiz_id)
 
-        Desempenho.objects.create(
+        desempenho, criado = Desempenho.objects.get_or_create(
             user=request.user,
             quiz=quiz,
-            disciplina=quiz.disciplina,
+            defaults={'disciplina': quiz.disciplina}
         )
+        
+        if not criado:
+            return Response({"detail": "Você já iniciou este quiz."}, status=status.HTTP_200_OK)
 
-        return Response({"detail": "Você iniciou o quiz!"})
+        return Response({"detail": "Você iniciou o quiz com sucesso!"}, status=status.HTTP_201_CREATED)
     
 
 class DesistirQuizView(APIView):
@@ -226,9 +225,6 @@ class ConcluirQuizView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, quiz_id):
-        """
-        Concluir quiz e mostrar desempenho
-        """
         if not quiz_id:
             return Response({"error": "ID do quiz não enviado"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -255,7 +251,6 @@ class ConcluirQuizView(APIView):
             if quiz.nivel == "Avançado":
                 gerar_certificado(data)
 
-        # pq return isso ????
         return Response(data)
 
 
