@@ -182,25 +182,9 @@ O projeto DevQuiz é um site de quizzes, voltado aos alunos do curso de TADS, co
             source venv/bin/activate
             ```
 - Ambiente Django:
-    - Instalar dependências:
+    - Iniciar container docker:
         ```
-        pip install -r requirements.txt
-        ```
-    - Acessar o projeto:
-        ```
-        cd devquiz
-        ```
-    - Criar as migrações:
-        ```
-        python manage.py makemigrations
-        ```
-    - Criar as tabelas:
-        ```
-        python manage.py migrate
-        ```
-    - Iniciar servidor:
-        ```
-        python manage.py runserver
+        docker compose up
         ```
 - Ambiente React:
     - Acessar o projeto:
