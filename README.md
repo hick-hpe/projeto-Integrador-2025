@@ -23,7 +23,7 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
   - **Conclusão de Nível**: Recebido ao completar todos os quizzes de um nível (Iniciante, Intermediário, Avançado)
   - **Sequência de Acertos**: Para quem acerta um número X de perguntas seguidas sem errar
   - **Participação Frequente**: Concedido a usuários que realizam quizzes diariamente por um período contínuo (ex: 7 dias)
-  - **Especialista em Disciplina**: Ao atingir uma pontuação mínima em quizzes de uma disciplina específica
+- **Especialista em Disciplina**: Recebido ao concluir com sucesso todos os quizzes de uma disciplina específica (níveis Iniciante, Intermediário e Avançado).
   - **Primeiro Quiz**: Recebido ao completar o primeiro quiz na plataforma
   <!-- - **Top do Ranking**: Para os usuários que alcançam as melhores posições no sistema de ranking -->
 - Notificações visuais para conquistas, como pop-ups ou animações ao ganhar um emblema
