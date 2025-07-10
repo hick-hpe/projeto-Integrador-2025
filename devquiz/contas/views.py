@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -51,119 +52,139 @@ class CookieTokenObtainPairView(TokenObtainPairView):
         return response
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def cadastro(request):
+class CadastroView(APIView):
     """
     View de registro de usuário.
     """
-    username = request.data.get('username')
-    password = request.data.get('password')
-    confirm_password = request.data.get('confirmPassword')
+    permission_classes = [AllowAny]
 
-    if username and password and confirm_password:
-        if User.objects.filter(username=username).exists():
-            return Response({'detail': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        confirm_password = request.data.get('confirmPassword')
 
-        if password != confirm_password:
-            return Response({'detail': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
+        if username and password and confirm_password:
+            if User.objects.filter(username=username).exists():
+                return Response({'detail': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
 
-        User.objects.create_user(username=username, password=password)
-        return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
-    else:
-        return Response({'detail': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
+            if password != confirm_password:
+                return Response({'detail': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
+
+            User.objects.create_user(username=username, password=password)
+            return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'detail': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-def usuario_autenticado(request):
-    return Response({'user': request.user.username})
+class UserDetailView(APIView):
+    """
+    View para obter detalhes do usuário autenticado.
+    """
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-def logout(request):
+
+class LogoutView(APIView):
     """
     Invalida o refresh token e remove os cookies.
     """
-    try:
-        refresh_token = request.COOKIES.get("refresh_token")
-        if refresh_token:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
 
-        response = Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token')
-        response.delete_cookie('refresh_token')
-        return response
+    def post(self, request):
+        try:
+            refresh_token = request.COOKIES.get("refresh_token")
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            response = Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
+            return response
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def gerar_codigo():
     return str(randint(100000, 999999))
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def enviar_mail(request):
-    email = request.data.get('email')
-    if not email:
-        return Response({'detail': 'Email é obrigatório!'}, status=status.HTTP_400_BAD_REQUEST)
+class EnviarEmailView(APIView):
+    """
+    View para enviar um código de recuperação por e-mail.
+    """
+    permission_classes = [AllowAny]
 
-    if not User.objects.filter(email=email).exists():
-        return Response({'detail': 'Email não cadastrado!'}, status=status.HTTP_404_NOT_FOUND)
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'detail': 'Email é obrigatório!'}, status=status.HTTP_400_BAD_REQUEST)
 
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return Response({'detail': 'Erro inesperado ao buscar o usuário!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        if not User.objects.filter(email=email).exists():
+            return Response({'detail': 'Email não cadastrado!'}, status=status.HTTP_404_NOT_FOUND)
 
-    codigo_gerado = gerar_codigo()
-    assunto = "Código enviado!"
-    mensagem = f"Seu código de recuperação é: {codigo_gerado}"
-
-    try:
-        send_mail(assunto, mensagem, settings.EMAIL_HOST_USER, [email])
-        Codigo.objects.create(user=user, codigo=codigo_gerado)
-        return Response({'detail': 'Código enviado com sucesso'}, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({'detail': f'Erro ao enviar o e-mail: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def validar_codigo(request):
-    email = request.data.get('email')
-    codigo_recebido = request.data.get('codigo')
-
-    if not email or not codigo_recebido:
-        return Response({'detail': 'Email e código são obrigatórios'}, status=status.HTTP_400_BAD_REQUEST)
-    
-    if not User.objects.filter(email=email).exists():
-        return Response({'detail': 'Email não cadastrado'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({'detail': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'Erro inesperado ao buscar o usuário!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        codigo_obj = Codigo.objects.filter(user=user, codigo=codigo_recebido).first()
+        codigo_gerado = gerar_codigo()
+        assunto = "Código enviado!"
+        mensagem = f"Seu código de recuperação é: {codigo_gerado}"
 
-        if not codigo_obj:
-            return Response({'detail': 'Código inválido'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            send_mail(assunto, mensagem, settings.EMAIL_HOST_USER, [email])
+            Codigo.objects.create(user=user, codigo=codigo_gerado)
+            return Response({'detail': 'Código enviado com sucesso'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': f'Erro ao enviar o e-mail: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        if codigo_obj.expirado():
-            return Response({'detail': 'Código expirado'}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({'detail': 'Código válido'})
+class ValidarCodigoView(APIView):
+    """
+    View para validar o código recebido por e-mail.
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        email = request.data.get('email')
+        codigo_recebido = request.data.get('codigo')
+
+        if not email or not codigo_recebido:
+            return Response({'detail': 'Email e código são obrigatórios'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not User.objects.filter(email=email).exists():
+            return Response({'detail': 'Email não cadastrado'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({'detail': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+            codigo_obj = Codigo.objects.filter(user=user, codigo=codigo_recebido).first()
+
+            if not codigo_obj:
+                return Response({'detail': 'Código inválido'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if codigo_obj.expirado():
+                return Response({'detail': 'Código expirado'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'detail': 'Código válido'})
 
 
 @api_view(['PUT', 'DELETE'])
-def conta(request):
-    if request.method == 'PUT':
+class ContaDetailView(APIView):
+    """
+    View para atualizar ou excluir a conta do usuário autenticado.
+    """
+
+    def put(self, request):
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response({'detail': 'Dados atualizados'})
-    elif request.method == 'DELETE':
+    
+    def delete(self, request):
         request.user.delete()
         return Response({'detail': 'Conta excluída com sucesso'})
     
