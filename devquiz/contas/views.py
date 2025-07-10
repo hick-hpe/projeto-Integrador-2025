@@ -188,3 +188,5 @@ class ContaDetailView(APIView):
         request.user.delete()
         return Response({'detail': 'Conta excluída com sucesso'})
     
+
+fix(serializers): mudar para incluir todos os campos de UserSerializer; fix(views): atualizar mensagens do response; refactor(views): renomear função gerar_codigo para gerar_codigo_recuperacao; feat(views): adicionar permissão IsAuthenticated em ContaDetailView
