@@ -108,11 +108,51 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
         }
         ```
 - EXCLUIR CONTA
-    - `DELETE /auth/conta-detail/` - Excluir a conta
+    - `DELETE /auth/conta-detail/` - Excluir a conta.
     - Formato de resposta de sucesso: <br/>
         ```
         {
             "detail": "Conta excluída com sucesso!!"
+        }
+        ```
+
+- LOGOUT
+    - `POST /auth/logout/` - Encerra a sessão.
+    - Formato de resposta de sucesso: <br/>
+        ```
+        {
+            "detail": "Logout realizado com sucesso!!"
+        }
+        ```
+
+- ENVIAR EMAIL
+    - `POST /auth/enviar-email/` - Envia um código de recuperação de conta para o email cadastrado no sistema.
+    - Formato de envio: <br/>
+        ```
+        {
+            "email": "email"
+        }
+        ```
+    - Formato de resposta de sucesso: <br/>
+        ```
+        {
+            "detail": "Código enviado com sucesso!!"
+        }
+        ```
+
+- VALIDAR CÓDIGO
+    - `POST /auth/validar-codigo/` - Verifica se código informado foi o mesmo que foi enviado para o email do usuário.
+    - Formato de envio: <br/>
+        ```
+        {
+            "email": "email",
+            "codigo": "codigo"
+        }
+        ```
+    - Formato de resposta de sucesso: <br/>
+        ```
+        {
+            "detail": "Código enviado com sucesso!!"
         }
         ```
 

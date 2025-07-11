@@ -9,7 +9,7 @@ class Codigo(models.Model):
     criado_em = models.DateField(auto_now_add=True)
 
     def expirado(self):
-        return self.criado_em < timezone.now() - datetime.timedelta(minutes=10)
+        return self.criado_em < timezone.now() - datetime.timedelta(minutes=3)
 
     def __str__(self):
         return f"Código para {self.user.username}"

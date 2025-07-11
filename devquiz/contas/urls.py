@@ -7,7 +7,7 @@ urlpatterns = [
     path('teste-autenticacao/', UserDetailView.as_view(), name='teste_autenticacao'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('enviar-email/', EnviarEmailView.as_view(), name='enviar_mail'),
-    path('valida-codigo/', ValidarCodigoView.as_view(), name='validar_codigo'),
+    path('validar-codigo/', ValidarCodigoView.as_view(), name='validar_codigo'),
     path('conta-detail/', ContaDetailView.as_view(), name='conta'),
 
     # JWT com cookies

@@ -97,7 +97,7 @@ class LogoutView(APIView):
                 token = RefreshToken(refresh_token)
                 token.blacklist()
 
-            response = Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
+            response = Response({"detail": "Logout realizado com successo!!"}, status=status.HTTP_200_OK)
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
             return response
@@ -139,7 +139,18 @@ class EnviarEmailView(APIView):
         try:
             send_mail(assunto, mensagem, settings.EMAIL_HOST_USER, [email])
             Codigo.objects.create(user=user, codigo=codigo_gerado)
-            return Response({'detail': 'Código enviado com sucesso'}, status=status.HTTP_200_OK)
+            
+            # Salvar o email do usuário em cookies
+            response = Response({'detail': 'Código enviado com sucesso'}, status=status.HTTP_200_OK)
+            response.set_cookie(
+                key='email',
+                value=email,
+                max_age=60 * 3, # 3 minutos
+                httponly=True,
+                secure=False,  # True em produção
+                samesite='Strict'
+            )
+            return response
         except Exception as e:
             return Response({'detail': f'Erro ao enviar o e-mail: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -151,7 +162,7 @@ class ValidarCodigoView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request):
-        email = request.data.get('email')
+        email = request.COOKIES.get('email')
         codigo_recebido = request.data.get('codigo')
 
         if not email or not codigo_recebido:
