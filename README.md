@@ -117,6 +117,7 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
         ```
 
 ## Rotas da API
+Para usar a API, deve estar autenticado!
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>
     - Formato de resposta: <br/>
         ```
