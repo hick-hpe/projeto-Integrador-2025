@@ -40,6 +40,58 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
 <!-- - Possibilidade de compartilhar conquistas em redes sociais para aumentar o engajamento -->
 
 
+## Autenticação
+- CRIAR CONTA
+    - `POST /auth/cadastro/` - Criar uma conta. <br/>
+        - Formato de envio: <br/>
+            ```
+            {
+                "username": "username",
+                "email": "email",
+                "password": "password",
+                "confirm-password": "confirm-password"
+            }
+            ```
+        - Formato de resposta de sucesso: <br/>
+            ```
+            {
+                "detail": "Conta criada com sucesso!!"
+            }
+            ```
+        - Formato de resposta de erro de usuário criado: <br/>
+            ```
+            {
+                "error": "Este usuário já existe!"
+            }
+            ```
+        - Formato de resposta de erro na senha: <br/>
+            ```
+            {
+                "error": "As senhas não coindizem!"
+            }
+            ```
+        - Formato de resposta de erro de dados faltantes: <br/>
+            ```
+            {
+                "error": "Preencha os campos!"
+            }
+            ```
+    - FAZER LOGIN
+        - `POST /auth/login/` - Realizar o login na conta. <br/>
+            - Formato de envio: <br/>
+            ```
+            {
+                "username": "username",
+                "password": "password"
+            }
+            ```
+        - Formato de resposta de sucesso: <br/>
+            ```
+            {
+                "detail": "Login realizado com sucesso!!"
+            }
+            ```
+
 ## Rotas da API
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>
     - Formato de resposta: <br/>

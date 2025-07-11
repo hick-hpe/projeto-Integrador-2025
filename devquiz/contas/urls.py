@@ -11,7 +11,7 @@ urlpatterns = [
     path('conta/', ContaDetailView.as_view(), name='conta'),
 
     # JWT com cookies
-    path('token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
     

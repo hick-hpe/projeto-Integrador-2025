@@ -46,7 +46,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             # Remove tokens do corpo da resposta (uso apenas via cookie)
             response.data.pop('access', None)
             response.data.pop('refresh', None)
-            response.data['detail'] = 'Logado com sucesso!!'
+            response.data['detail'] = 'Login realizado com sucesso!!'
 
         return response
 
@@ -59,20 +59,21 @@ class CadastroView(APIView):
 
     def post(self, request):
         username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
         confirm_password = request.data.get('confirm-password')
 
-        if username and password and confirm_password:
+        if all([username, email, password, confirm_password]):
             if User.objects.filter(username=username).exists():
-                return Response({'detail': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
 
             if password != confirm_password:
-                return Response({'detail': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
 
             User.objects.create_user(username=username, password=password)
             return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'detail': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserDetailView(APIView):
