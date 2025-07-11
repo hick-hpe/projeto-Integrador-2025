@@ -168,6 +168,13 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
             "data_emissao": "2025-06-03"
         }
         ```
+- `POST /api/quizzes/<int:quiz_id>/iniciar/` - Informar à aplicação que o aluno iniciou do quiz e preparar para salvar os dados. <br/>
+    - Formato de resposta: <br/>
+        ```
+        {
+            "mensagem": "Você iniciou do quiz!"
+        }
+        ```
 - `POST /api/quizzes/<int:quiz_id>/desistir/` - Informar à aplicação que o aluno desistiu do quiz e limpa os dados temporários. <br/>
     - Formato de resposta: <br/>
         ```

@@ -22,7 +22,7 @@ COPY . .
 RUN python manage.py makemigrations
 RUN python manage.py migrate
 
-# Expõe a porta 8000 (usada pelo Gunicorn)
+# Expõe a porta 8000
 EXPOSE 8000
 
 # Comando padrão: inicia o Gunicorn como servidor WSGI para produção
