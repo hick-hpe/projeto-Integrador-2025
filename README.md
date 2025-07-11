@@ -76,21 +76,45 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
                 "error": "Preencha os campos!"
             }
             ```
-    - FAZER LOGIN
-        - `POST /auth/login/` - Realizar o login na conta. <br/>
-            - Formato de envio: <br/>
-            ```
-            {
-                "username": "username",
-                "password": "password"
-            }
-            ```
-        - Formato de resposta de sucesso: <br/>
-            ```
-            {
-                "detail": "Login realizado com sucesso!!"
-            }
-            ```
+- FAZER LOGIN
+    - `POST /auth/login/` - Realizar o login na conta. <br/>
+        - Formato de envio: <br/>
+        ```
+        {
+            "username": "username",
+            "password": "password"
+        }
+        ```
+    - Formato de resposta de sucesso: <br/>
+        ```
+        {
+            "detail": "Login realizado com sucesso!!"
+        }
+        ```
+- ATUALIZAR DADOS DA CONTA
+    - `PUT /auth/conta-detail/` - Editar dados da conta
+        - Formato de envio: <br/>
+        ```
+        {
+            "username": "username",
+            "email": "email", 
+            "password": "password"
+        }
+        ```
+    - Formato de resposta de sucesso: <br/>
+        ```
+        {
+            "detail": "Dados atualizados com sucesso!!"
+        }
+        ```
+- EXCLUIR CONTA
+    - `DELETE /auth/conta-detail/` - Excluir a conta
+    - Formato de resposta de sucesso: <br/>
+        ```
+        {
+            "detail": "Conta excluída com sucesso!!"
+        }
+        ```
 
 ## Rotas da API
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>

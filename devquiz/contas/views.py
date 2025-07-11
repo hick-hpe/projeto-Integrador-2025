@@ -186,7 +186,7 @@ class ContaDetailView(APIView):
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'detail': 'Dados atualizados'})
+            return Response({'detail': 'Dados atualizados com sucesso'})
     
     def delete(self, request):
         request.user.delete()
