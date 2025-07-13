@@ -316,10 +316,12 @@ Para usar a API, deve estar autenticado!
 - `GET /api/emblemas/` - Mostrar os emblemas conquistados pelo usuário.
     - Formato de resposta: <br/>
         ```
-        {
-            "nome": "Primeiro Quiz",
-            "descricao": "Concluiu o primeiro quiz na plataforma."
-        }
+        [
+            {
+                "nome": "Primeiro Quiz",
+                "descricao": "Concluiu o primeiro quiz na plataforma."
+            }
+        ]
         ```
 
 ## Rodar protótipo teste:
