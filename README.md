@@ -30,10 +30,11 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
 - Sistema de ranking entre os participantes
 - Emblemas sugeridos:
   - **Conclusão de Nível**: Recebido ao completar todos os quizzes de um nível (Iniciante, Intermediário, Avançado)
-  - **Sequência de Acertos**: Para quem acerta um número X de perguntas seguidas sem errar
-  - **Participação Frequente**: Concedido a usuários que realizam quizzes diariamente por um período contínuo (ex: 7 dias)
+  <!-- - **Sequência de Acertos**: Para quem acerta um número X de perguntas seguidas sem errar -->
+  <!-- - **Participação Frequente**: Concedido a usuários que realizam quizzes diariamente por um período contínuo (ex: 7 dias) -->
   - **Especialista em Disciplina**: Recebido ao concluir com sucesso todos os quizzes de uma disciplina específica (níveis Iniciante, Intermediário e Avançado).
   - **Primeiro Quiz**: Recebido ao completar o primeiro quiz na plataforma
+  - **Quiz 100%**: Recebido ao completar um quiz com 100% de acertos na plataforma
   <!-- - **Top do Ranking**: Para os usuários que alcançam as melhores posições no sistema de ranking -->
 - Notificações visuais para conquistas, como pop-ups ou animações ao ganhar um emblema
 - Área dedicada no perfil do usuário para exibição dos emblemas conquistados
@@ -312,6 +313,15 @@ Para usar a API, deve estar autenticado!
             "pontuacao": 40
         }
         ```
+- `GET /api/emblemas/` - Mostrar os emblemas conquistados pelo usuário.
+    - Formato de resposta: <br/>
+        ```
+        {
+            "nome": "Primeiro Quiz",
+            "descricao": "Concluiu o primeiro quiz na plataforma."
+        }
+        ```
+
 ## Rodar protótipo teste:
 - Instalação:
     - Clonar repositório:
