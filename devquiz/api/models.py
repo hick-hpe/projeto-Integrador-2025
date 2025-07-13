@@ -17,7 +17,6 @@ class Codigo(models.Model):
 
 class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
-    # logo
 
     def __str__(self):
         return self.nome
@@ -106,3 +105,12 @@ class Feedback(models.Model):
     
     def __str__(self):
         return self.descricao
+
+class Emblema(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=50)
+    descricao = models.TextField()
+
+    def __str__(self):
+        return f"{self.nome} - {self.aluno.user.username}"
+

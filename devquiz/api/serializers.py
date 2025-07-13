@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 from .models import (
     Aluno, Disciplina, Quiz, Questao,
     Alternativa, Resposta, RespostaAluno,
-    Feedback,
-    Certificado
+    Feedback, Certificado, Emblema
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -108,3 +107,12 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['email', 'assunto', 'mensagem']
+
+
+class EmblemaSerializer(serializers.ModelSerializer):
+    aluno = serializers.CharField(source='aluno.user.username')
+
+    class Meta:
+        model = Emblema
+        fields = ['id', 'aluno', 'nome', 'descricao']
+
