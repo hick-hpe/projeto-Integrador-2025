@@ -12,6 +12,7 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
 
 - **Backend:** Django, Django REST Framework  
 - **Frontend:** React.js, Vite (em desenvolvimento separado)
+    - *Nota: o frontend disponível neste repositório está sendo desenvolvido apenas para testes, não representando a interface real do sistema.*
 - **Banco de Dados:** SQLite, (futuramente, PostgreSQL com Docker)
 - **Containerização:** Docker, Docker Compose  
 - **Autenticação:** JWT (JSON Web Tokens)  
