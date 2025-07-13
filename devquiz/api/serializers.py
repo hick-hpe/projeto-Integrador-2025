@@ -114,5 +114,5 @@ class EmblemaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Emblema
-        fields = ['id', 'aluno', 'nome', 'descricao']
+        fields = ['nome', 'descricao']
 

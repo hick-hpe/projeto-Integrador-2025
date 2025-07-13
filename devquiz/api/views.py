@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from certificado.views import gerar_certificado
-from .models import models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho
-from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
+from .models import models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, Emblema
+from .serializers import DisciplinaSerializer, EmblemaSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 import random
@@ -245,8 +245,41 @@ class ConcluirQuizView(APIView):
             "acertos": desempenho.num_acertos,
         }
 
-        if (desempenho.num_acertos / quiz.questoes.count()) >= 0.7:
+        acertos = desempenho.num_acertos / quiz.questoes.count()
+        if acertos == 1:
+            """
+            Conceder emblema de 'Quiz 100%'
+            """
+            emblema, created = Emblema.objects.get_or_create(
+                aluno=request.user.aluno,
+                nome="Quiz 100%",
+                defaults={
+                    'descricao': 'Concluiu um quiz com 100% de acertos.'
+                }
+            )
+        elif acertos >= 0.7:
+            """
+            Verifica se o usuário já possui o emblema de "Primeiro Quiz".
+            """
+            emblema, created = Emblema.objects.get_or_create(
+                aluno=request.user.aluno,
+                nome="Primeiro Quiz",
+                defaults={
+                    'descricao': 'Concluiu o primeiro quiz na plataforma.'
+                }
+            )
+                
             if quiz.nivel == "Avançado":
+                """
+                Verifica se o usuário já possui o emblema de "Especialista em Disciplina
+                """
+                emblema, created = Emblema.objects.get_or_create(
+                    aluno=request.user.aluno,
+                    nome="Especialista em Disciplina",
+                    defaults={
+                        'descricao': 'Concluiu com sucesso todos os quizzes de uma disciplina específica.'
+                    }
+                )
                 gerar_certificado(data)
 
         return Response(data)
@@ -310,3 +343,15 @@ class FeedbackView(APIView):
         )
 
         return Response({'detail': 'Feedback enviado com sucesso!'})
+    
+
+class EmblemaListView(APIView):
+    """
+    View para listar os emblemas do usuário.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        emblemas = Emblema.objects.filter(aluno=request.user.aluno)
+        serializer = EmblemaSerializer(emblemas, many=True)
+        return Response(serializer.data)
