@@ -56,7 +56,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Modelo de usuário personalizado
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'api.Aluno'
 
 # Django REST Framework settings
 REST_FRAMEWORK = {
