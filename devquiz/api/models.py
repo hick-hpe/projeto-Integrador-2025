@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 import datetime
 
 class Codigo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=6)
     criado_em = models.DateField(auto_now_add=True)
 
@@ -36,8 +36,7 @@ class Quiz(models.Model):
         return self.descricao[:30] + '...'
 
 
-class Aluno(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Aluno(AbstractUser):
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
 
     def __str__(self):
@@ -70,7 +69,7 @@ class Resposta(models.Model):
 
 
 class RespostaAluno(models.Model):
-    user = models.ForeignKey(User, related_name='respostas_aluno', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(AbstractUser, related_name='respostas_aluno', on_delete=models.CASCADE, null=True)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
     alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
@@ -80,7 +79,7 @@ class RespostaAluno(models.Model):
         return f"{self.user.username} - Questão {self.questao.id} - Alternativa: {self.alternativa.texto} (Tentativa {self.tentativa})" 
 
 class Desempenho(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE, null=True)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     num_acertos = models.IntegerField(default=0)
@@ -90,7 +89,7 @@ class Desempenho(models.Model):
     
 class Certificado(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     percentual_acertos = models.IntegerField(default=0)
     data_emissao = models.DateField(auto_now_add=True)
