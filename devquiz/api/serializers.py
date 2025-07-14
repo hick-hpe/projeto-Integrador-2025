@@ -80,15 +80,6 @@ class RespostaAlunoSerializer(serializers.ModelSerializer):
         fields = ['id', 'aluno', 'questao', 'alternativa']
 
 
-# class PontuacaoSerializer(serializers.ModelSerializer):
-#     usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-#     quiz = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all())
-
-#     class Meta:
-#         model = Pontuacao
-#         fields = ['id', 'usuario', 'quiz', 'pontuacao']
-
-
 class CertificadoSerializer(serializers.ModelSerializer):
     usuario = serializers.CharField(source='usuario.username')
     disciplina = serializers.CharField(source='disciplina.nome')
@@ -97,10 +88,6 @@ class CertificadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificado
         fields = ['codigo', 'usuario', 'disciplina', 'data_emissao']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        return data
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
