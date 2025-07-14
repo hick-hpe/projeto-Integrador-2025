@@ -320,7 +320,8 @@ Para usar a API, deve estar autenticado!
         [
             {
                 "nome": "Primeiro Quiz",
-                "descricao": "Concluiu o primeiro quiz na plataforma."
+                "descricao": "Concluiu o primeiro quiz na plataforma.",
+                "logo": "/caminho/da/logo.png"
             }
         ]
         ```
