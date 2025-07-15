@@ -148,9 +148,7 @@ class QuestoesDetailView(APIView):
         else:
             print("[DEBUG] Alternativa incorreta.")
 
-        return Response({
-            'detail': 'Respondida!'
-        })
+        return Response({'detail': 'Respondida!' })
 
 
 class RespostaQuestaoView(APIView):

@@ -19,7 +19,7 @@ class CertificadoDetailView(APIView):
     """
     permission_classes = [AllowAny]
 
-    def get(self, request, codigo=None):
+    def get(self, request, codigo):
         if codigo:
             try:
                 certificado = Certificado.objects.get(codigo=codigo)
@@ -89,7 +89,7 @@ class CertificadoDownloadView(APIView):
     """
     permission_classes = [AllowAny]
     
-    def get(self, request, codigo=None):
+    def get(self, request, codigo):
         if codigo:
             try:
                 print('> disciplina ------------')

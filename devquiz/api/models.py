@@ -14,7 +14,7 @@ class Aluno(AbstractUser):
     
 
 class Codigo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=6)
     criado_em = models.DateTimeField(auto_now_add=True)
 
@@ -71,19 +71,8 @@ class Resposta(models.Model):
         return f"Resposta para Questão {self.questao.id} - Alternativa: {self.alternativa.texto}"
 
 
-class RespostaAluno(models.Model):
-    user = models.ForeignKey(User, related_name='respostas_aluno', on_delete=models.CASCADE, null=True)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
-    alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
-    tentativa = models.IntegerField(default=1)  # campo para controlar as tentativas
-
-    def __str__(self):
-        return f"{self.user.username} - Questão {self.questao.id} - Alternativa: {self.alternativa.texto} (Tentativa {self.tentativa})" 
-
-
 class Desempenho(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     num_acertos = models.IntegerField(default=0)
@@ -91,10 +80,19 @@ class Desempenho(models.Model):
     def __str__(self):
         return f"{self.disciplina} '{self.quiz}': acertou {self.num_acertos} questão(ões)"    
     
+    
+class RespostaAluno(models.Model):
+    desempenho = models.ForeignKey(Desempenho, on_delete=models.CASCADE)
+    questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
+    alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} - Questão {self.questao.id} - Alternativa: {self.alternativa.texto} (Tentativa {self.tentativa})" 
+
 
 class Certificado(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     percentual_acertos = models.IntegerField(default=0)
     data_emissao = models.DateField(auto_now_add=True)
