@@ -3,6 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 import datetime
 
+class Aluno(AbstractUser):
+    foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}"
+    
+    
 class Codigo(models.Model):
     user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=6)
@@ -34,13 +41,6 @@ class Quiz(models.Model):
 
     def __str__(self):
         return self.descricao[:30] + '...'
-
-
-class Aluno(AbstractUser):
-    foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.user.username}"
 
 
 class Questao(models.Model):
