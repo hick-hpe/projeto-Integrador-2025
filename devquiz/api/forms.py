@@ -34,7 +34,7 @@ class AlternativaForm(forms.ModelForm):
 class RespostaAlunoForm(forms.ModelForm):
     class Meta:
         model = RespostaAluno
-        fields = ('quiz', 'questao', 'alternativa', 'tentativa')
+        fields = ('quiz', 'questao', 'alternativa')
 
 class FeedbackForm(forms.ModelForm):
     class Meta:
