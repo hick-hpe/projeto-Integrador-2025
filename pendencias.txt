@@ -1,15 +1,10 @@
-- limitar tentativas de login
+- limitar tentativas de login?
   - django-axes
 - upload de foto de perfil?
 - colocar 3X questões
-- escolher entre iniciante, mediano e avançado
+- escolher 20 questoes para cada nivel
   - escolher 10 aleatoriamente para o quiz
-- arrumar redirecionadmento das rotas no proxy
-  - "proxy": "http://https://potential-memory-j6px6qq4jpw3pjg6-8000.app.github.dev",
-
-
-20 iniciante
-20 medio
-20 avançado
-OKAY :D
-
+- arrumar redirecionadmento das rotas no proxy?
+  - "proxy": "http://minha-api:8000/",
+- atualizar `api/views.py`, já que `api/models.py` foi atualizado
+- atualizar `api/forms.py`
