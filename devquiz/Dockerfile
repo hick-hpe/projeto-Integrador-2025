@@ -5,9 +5,11 @@ FROM python:3.11-slim
 WORKDIR /devquiz
 
 # Instala dependências do sistema necessárias para o wkhtmltopdf e bibliotecas de renderização
-RUN apt-get update && \
-    apt-get install -y wkhtmltopdf libxrender1 libfontconfig1 libxext6 && \
-    apt-get install -y curl && \
+RUN apt-get update && apt-get install -y \
+    xfonts-75dpi xfonts-base fontconfig libxrender1 libfontconfig1 libxext6 curl && \
+    curl -LO https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.debian11_amd64.deb && \
+    dpkg -i wkhtmltox_0.12.6-1.debian11_amd64.deb || apt-get -f install -y && \
+    rm wkhtmltox_0.12.6-1.debian11_amd64.deb && \
     apt-get clean
 
 # Copia o arquivo de dependências do Python para o container
