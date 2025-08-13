@@ -1,20 +1,20 @@
 version: '3.8'
 
 services:
-  django:
-    build: ./devquiz/
-    container_name: django
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./devquiz:/app
-
-  # react:
-  #   build: ./reactapp/
-  #   container_name: react
+  # django:
+  #   build: ./devquiz/
+  #   container_name: django
   #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     - django
+  #     - "8000:8000"
   #   volumes:
-  #     - ./reactapp:/app
+  #     - ./devquiz:/app
+
+  react:
+    build: ./reactapp/
+    container_name: react
+    ports:
+      - "5173:80"
+    # depends_on:
+      # - django
+    volumes:
+      - ./reactapp:/app
