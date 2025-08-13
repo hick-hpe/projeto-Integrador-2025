@@ -2,11 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import timedelta
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.contrib.auth.models import User
 
 class Aluno(AbstractUser):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
 
     def __str__(self):

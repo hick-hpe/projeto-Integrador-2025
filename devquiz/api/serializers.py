@@ -12,12 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AlunoSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+# class AlunoSerializer(serializers.ModelSerializer):
+#     user = UserSerializer()
 
-    class Meta:
-        model = Aluno
-        fields = ['id', 'user', 'foto_perfil']
+#     class Meta:
+#         model = Aluno
+#         fields = ['id', 'user', 'foto_perfil']
 
 
 class DisciplinaSerializer(serializers.ModelSerializer):

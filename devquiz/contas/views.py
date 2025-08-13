@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
 from django.conf import settings
 from random import randint
-from api.models import Codigo
+from api.models import Codigo, Aluno
 from api.serializers import UserSerializer
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -79,10 +79,35 @@ class CadastroView(APIView):
 class UserDetailView(APIView):
     """
     View para obter detalhes do usuário autenticado.
+    Atualizar dados da conta e excluir sua conta
     """
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def patch(self, request):
+        data = request.data.copy()
+        foto_perfil = data.pop('foto_perfil', None)
+        
+        serializer = UserSerializer(request.user, data=data, partial=True)
+        
+        if serializer.is_valid():
+            user = serializer.save()
+            
+            # se enviou 'foto_perfil', atualizar
+            aluno = Aluno.objects.filter(user=user).first()
+            
+            if aluno:
+                aluno.foto_perfil = foto_perfil
+                aluno.save()
+            
+            return Response({'detail':'Dados da conta atualizados com sucsso!'})
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        request.user.delete()
+        return Response({'detail':'Conta deletada com sucsso!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class LogoutView(APIView):
