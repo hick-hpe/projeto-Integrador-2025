@@ -65,7 +65,10 @@ body {
 
   .linha {
     width: 200px;
-    border-top: 2px solid #38a169;
+    text-align: center;
+    font-family: "Edu NSW ACT Cursive", cursive;
+    font-weight: bold;
+    /* border-top: 2px solid #38a169; */
     margin-bottom: 5px;
   }
 
