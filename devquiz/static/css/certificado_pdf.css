@@ -15,32 +15,47 @@ body {
     position: relative;
     color: #22543d; /* verde escuro */
     border: 30px solid #38a169; /* borda verde */
-    /* border-radius: 18px; */
     box-shadow: 0 0 24px #a0e7b6;
   }
 
   .titulo {
-    color: #2f855a;
     font-size: 32px;
     font-weight: bold;
     text-transform: uppercase;
+    font-family: 'Georgia', serif;
+    font-size: 40px;
+    color: #2e7d32;
+    text-align: center;
+    margin-bottom: 0;
   }
 
   .subtitulo {
-    font-size: 16px;
     margin-bottom: 40px;
     color: #38a169;
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    color: #388e3c;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 36px;
   }
 
   .nome {
     font-size: 28px;
     font-family: 'Georgia', cursive;
     margin: 20px 0;
+    font-size: 32px;
+    font-weight: bold;
+    color: #14532d;
+    text-align: center;
+    margin-bottom: 18px;
   }
 
   .descricao {
     font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 24px;
   }
 
   .curso {
@@ -51,16 +66,24 @@ body {
   }
 
   .data {
-    font-size: 14px;
     margin-top: 40px;
+    text-align: right;
+    margin-top: 40px;
+    color: #22543d;
+    font-size: 16px;
   }
 
   .assinatura {
     position: absolute;
-    bottom: 60px;
     right: 80px;
     text-align: center;
     font-size: 14px;
+    position: absolute;
+    bottom: 25px;
+    left: 80px;
+    text-align: left;
+    font-size: 15px;
+    color: #22543d;
   }
 
   .linha {
