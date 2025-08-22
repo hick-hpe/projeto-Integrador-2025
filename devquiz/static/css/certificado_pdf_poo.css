@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #fdfdfd;
+  }
+
+  .certificado {
+    width: 1000px;
+    height: 560px;
+    background-size: cover;
+    background-position: center;
+    padding: 60px 80px;
+    box-sizing: border-box;
+    position: relative;
+    color: #223b54; /* verde escuro */
+    border: 30px solid #3872a1; /* borda verde */
+    box-shadow: 0 0 24px #a0c0e7;
+  }
+
+  .titulo {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: 'Georgia', serif;
+    font-size: 40px;
+    color: #2e637d;
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  .subtitulo {
+    margin-bottom: 40px;
+    color: #386ba1;
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    color: #385f8e;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .nome {
+    font-size: 28px;
+    font-family: 'Georgia', cursive;
+    margin: 20px 0;
+    font-size: 32px;
+    font-weight: bold;
+    color: #143153;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .descricao {
+    font-size: 18px;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .curso {
+    font-weight: bold;
+    font-size: 20px;
+    color: #2f855a;
+    text-shadow: 0 1px 0 #a0e7b6;
+  }
+
+  .data {
+    margin-top: 40px;
+    text-align: right;
+    margin-top: 40px;
+    color: #22543d;
+    font-size: 16px;
+  }
+
+  .assinatura {
+    position: absolute;
+    right: 80px;
+    text-align: center;
+    font-size: 14px;
+    position: absolute;
+    bottom: 25px;
+    left: 80px;
+    text-align: left;
+    font-size: 15px;
+    color: #22543d;
+  }
+
+  .linha {
+    width: 200px;
+    text-align: center;
+    font-family: "Edu NSW ACT Cursive", cursive;
+    font-weight: bold;
+    /* border-top: 2px solid #38a169; */
+    margin-bottom: 5px;
+  }
+
+  .logo {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+  }
+
+  .logo img {
+    width: 120px;
+  }
