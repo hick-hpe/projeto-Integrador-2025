@@ -1,136 +1,67 @@
-{% load static %}
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <title>Certificado</title>
-  <link rel="stylesheet" href="{% static 'css/certificado_pdf.css' %}">
-  <!-- <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #fdfdfd;
-    }
-
-    .certificado {
-      width: 1000px;
-      height: 560px;
-      background-size: cover;
-      background-position: center;
-      padding: 60px 80px;
-      box-sizing: border-box;
-      position: relative;
-      color: #22543d; /* verde escuro */
-      border: 4px solid #38a169; /* borda verde */
-      border-radius: 18px;
-      box-shadow: 0 0 24px #a0e7b6;
-      background: linear-gradient(120deg, #e8f5e9 100%,rgb(163, 73, 38) 100%);
-    }
-
-    .titulo {
-      color: #2f855a;
-      font-size: 32px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .subtitulo {
-      font-size: 16px;
-      margin-bottom: 40px;
-      color: #38a169;
-    }
-
-    .nome {
-      font-size: 28px;
-      font-family: 'Georgia', cursive;
-      margin: 20px 0;
-    }
-
-    .descricao {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
-    .curso {
-      font-weight: bold;
-      font-size: 20px;
-      color: #2f855a;
-      text-shadow: 0 1px 0 #a0e7b6;
-    }
-
-    .data {
-      font-size: 14px;
-      margin-top: 40px;
-    }
-
-    .assinatura {
-      position: absolute;
-      bottom: 60px;
-      right: 80px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .linha {
-      width: 200px;
-      border-top: 2px solid #38a169;
-      margin-bottom: 5px;
-    }
-
-    .logo {
-      position: absolute;
-      top: 60px;
-      right: 80px;
-    }
-
-    .logo img {
-      width: 120px;
-    }
-  </style> -->
+  <!-- <link rel="stylesheet" href="{% static 'css/certificado_pdf.css' %}"> -->
+  <link rel="stylesheet" href="../../static/css/certificado_pdf.css">
 </head>
+
 <body>
+
   <body>
-  <div class="certificado">
-    <div class="titulo" style="font-family: 'Georgia', serif; font-size: 40px; color: #2e7d32; text-align: center; margin-bottom: 0;">
-      Certificado
-    </div>
-    <div class="subtitulo" style="font-family: 'Georgia', serif; font-size: 28px; color: #388e3c; font-style: italic; text-align: center; margin-bottom: 36px;">
-      de Conclusão
-    </div>
+    <div class="certificado">
+      <div class="titulo"
+        style="font-family: 'Georgia', serif; font-size: 40px; color: #2e7d32; text-align: center; margin-bottom: 0;">
+        Certificado
+      </div>
+      <div class="subtitulo"
+        style="font-family: 'Georgia', serif; font-size: 28px; color: #388e3c; font-style: italic; text-align: center; margin-bottom: 36px;">
+        de Conclusão
+      </div>
 
-    <div style="font-size: 20px; text-align: center; margin-bottom: 32px; font-family: 'Georgia', serif;">
-      A plataforma DevQuiz confere o presente certificado a
-    </div>
+      <div style="font-size: 20px; text-align: center; margin-bottom: 32px; font-family: 'Georgia', serif;">
+        A plataforma DevQuiz confere o presente certificado a
+      </div>
 
-    <div class="nome" style="font-size: 32px; font-weight: bold; color: #14532d; text-align: center; margin-bottom: 18px;">
-      {{ nome }}
-    </div>
+      <div class="nome"
+        style="font-size: 32px; font-weight: bold; color: #14532d; text-align: center; margin-bottom: 18px;">
+        <!-- {{ nome }} -->
+          Henrique Palermo Emerick
+      </div>
 
-    <div class="descricao" style="font-size: 20px; text-align: center; margin-bottom: 24px;">
-      pela conclusão e desempenho no curso<br>
-      <span class="curso" style="font-size: 24px; color: #2e7d32; font-weight: bold;">Desenvolvimento Web com Django</span>
-    </div>
+      <div class="descricao" style="font-size: 20px; text-align: center; margin-bottom: 24px;">
+        pela conclusão e desempenho no curso<br>
+        <span class="curso" style="font-size: 24px; color: #2e7d32; font-weight: bold;">Desenvolvimento Web com
+          Django</span>
+      </div>
 
-    <div class="descricao" style="font-size: 18px; text-align: center; margin-bottom: 24px;">
-      O participante obteve <strong style="color:#388e3c">{{ percentual_acertos }}%</strong> de acertos no quiz final de avaliação.<br>
-      Ao atingir esse desempenho, demonstrou domínio dos conhecimentos abordados e está oficialmente certificado.
-    </div>
+      <div class="descricao" style="font-size: 18px; text-align: center; margin-bottom: 24px;">
+        <!-- O participante obteve <strong style="color:#388e3c">{{ percentual_acertos }}%</strong> de acertos no quiz final -->
+        O participante obteve <strong style="color:#388e3c">80%</strong> de acertos no quiz final
+        de avaliação.<br>
+        Ao atingir esse desempenho, demonstrou domínio dos conhecimentos abordados e está oficialmente certificado.
+      </div>
 
-    <div class="data" style="text-align: right; margin-top: 40px; color: #22543d; font-size: 16px;">
-      {{ data }}
-    </div>
+      <div class="data" style="text-align: right; margin-top: 40px; color: #22543d; font-size: 16px;">
+        <!-- {{ data }} -->
+          22/08/2025
+      </div>
 
-    <div class="assinatura" style="position: absolute; bottom: 60px; left: 80px; text-align: left; font-size: 15px; color: #22543d;">
-      <div class="linha" style="width: 220px; border-top: 2px solid #388e3c; margin-bottom: 5px;"></div>
-      Plataforma DevQuiz
-    </div>
+      <div class="assinatura"
+        style="position: absolute; bottom: 60px; left: 80px; text-align: left; font-size: 15px; color: #22543d;">
+        <div class="linha" style="width: 220px; border-top: 2px solid #388e3c; margin-bottom: 5px;"></div>
+        Plataforma DevQuiz
+      </div>
 
-    <div class="logo">
-      <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo">
-      <!-- <img src="../static/image.png" alt="Logo"> -->
+      <div class="logo">
+        <!-- <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo"> -->
+        <img src="../../static/img/logo.png" alt="Logo">
+      </div>
     </div>
-  </div>
+  </body>
 </body>
-</body>
+
 </html>
