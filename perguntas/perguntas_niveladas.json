@@ -1,0 +1,338 @@
+{
+    "iniciante": [
+        {
+            "descricao": "O que é Django e seu principal uso?",
+            "alternativas": [
+                "Um framework de front-end",
+                "Um sistema de gerenciamento de banco de dados",
+                "Um framework web de alto nível para desenvolvimento rápido",
+                "Uma biblioteca para manipulação de imagens"
+            ],
+            "resposta": "Um framework web de alto nível para desenvolvimento rápido",
+            "explicacao": "Django é um framework web de alto nível que permite o desenvolvimento rápido e limpo de aplicações web."
+        },
+        {
+            "descricao": "Qual comando é usado para criar um novo projeto Django?",
+            "alternativas": [
+                "django-startproject",
+                "django-admin startproject",
+                "django-createproject",
+                "django-newproject"
+            ],
+            "resposta": "django-admin startproject",
+            "explicacao": "O comando correto para criar um novo projeto Django é 'django-admin startproject nome_do_projeto'."
+        },
+        {
+            "descricao": "Qual o arquivo de configurações do Django?",
+            "alternativas": [
+                "config.py",
+                "settings.py",
+                "main.py",
+                "app.py"
+            ],
+            "resposta": "settings.py",
+            "explicacao": "O arquivo de configurações do Django é o settings.py, onde você define várias configurações do seu projeto."
+        },
+        {
+            "descricao": "Qual comando é usado para iniciar o servidor de desenvolvimento do Django?",
+            "alternativas": [
+                "python manage.py runserver",
+                "django runserver",
+                "startserver",
+                "python startserver.py"
+            ],
+            "resposta": "python manage.py runserver",
+            "explicacao": "O comando correto para iniciar o servidor de desenvolvimento do Django é 'python manage.py runserver'."
+        },
+        {
+            "descricao": "Como você cria uma nova aplicação dentro de um projeto Django?",
+            "alternativas": [
+                "django-admin startapp nome_da_app",
+                "python manage.py startapp nome_da_app",
+                "createapp nome_da_app",
+                "newapp nome_da_app"
+            ],
+            "resposta": "python manage.py startapp nome_da_app",
+            "explicacao": "Para criar uma nova aplicação dentro de um projeto Django, você usa o comando 'python manage.py startapp nome_da_app'."
+        },
+        {
+            "descricao": "Qual comando é usado para aplicar migrações no banco de dados?",
+            "alternativas": [
+                "python manage.py migrate",
+                "python manage.py makemigrations",
+                "django migrate",
+                "db migrate"
+            ],
+            "resposta": "python manage.py migrate",
+            "explicacao": "O comando 'python manage.py migrate' é usado para aplicar migrações no banco de dados."
+        },
+        {
+            "descricao": "Onde você define os modelos (models) em uma aplicação Django?",
+            "alternativas": [
+                "views.py",
+                "models.py",
+                "urls.py",
+                "admin.py"
+            ],
+            "resposta": "models.py",
+            "explicacao": "Os modelos (models) são definidos no arquivo models.py dentro da aplicação Django."
+        },
+        {
+            "descricao": "Qual comando é usado para criar migrações após modificar os modelos?",
+            "alternativas": [
+                "python manage.py migrate",
+                "python manage.py makemigrations",
+                "django makemigrations",
+                "db makemigrations"
+            ],
+            "resposta": "python manage.py makemigrations",
+            "explicacao": "O comando 'python manage.py makemigrations' é usado para criar migrações após modificar os modelos."
+        },
+        {
+            "descricao": "Como você registra um modelo no admin do Django?",
+            "alternativas": [
+                "Adicionando o modelo em admin.py e registrando com admin.site.register(Modelo)",
+                "Adicionando o modelo em models.py",
+                "Adicionando o modelo em views.py",
+                "Adicionando o modelo em urls.py"
+            ],
+            "resposta": "Adicionando o modelo em admin.py e registrando com admin.site.register(Modelo)",
+            "explicacao": "Para registrar um modelo no admin do Django, você deve adicioná-lo em admin.py e usar admin.site.register(Modelo)."
+        },
+        {
+            "descricao": "Qual arquivo é usado para definir as rotas (URLs) em uma aplicação Django?",
+            "alternativas": [
+                "views.py",
+                "models.py",
+                "urls.py",
+                "settings.py"
+            ],
+            "resposta": "urls.py",
+            "explicacao": "As rotas (URLs) são definidas no arquivo urls.py dentro da aplicação Django."
+        }
+    ],
+    "intermediario": [
+        {
+            "descricao": "Como você importa uma view em urls.py?",
+            "alternativas": [
+                "from . import views",
+                "import views",
+                "from views import *",
+                "import .views"
+            ],
+            "resposta": "from . import views",
+            "explicacao": "Para importar uma view em urls.py, você deve usar 'from . import views'."
+        },
+        {
+            "descricao": "Qual função é usada para renderizar um template em uma view?",
+            "alternativas": [
+                "render_template()",
+                "render()",
+                "load_template()",
+                "get_template()"
+            ],
+            "resposta": "render()",
+            "explicacao": "A função usada para renderizar um template em uma view é 'render()'."
+        },
+        {
+            "descricao": "Como você passa dados para um template ao renderizar?",
+            "alternativas": [
+                "Usando o parâmetro context no render()",
+                "Usando o parâmetro data no render()",
+                "Usando o parâmetro template no render()",
+                "Não é possível passar dados para um template"
+            ],
+            "resposta": "Usando o parâmetro context no render()",
+            "explicacao": "Para passar dados para um template, você usa o parâmetro 'context' na função 'render()'."
+        },
+        {
+            "descricao": "O que é um template em Django?",
+            "alternativas": [
+                "Um arquivo de configuração",
+                "Um arquivo HTML com marcações especiais para renderização",
+                "Um modelo de banco de dados",
+                "Uma view"
+            ],
+            "resposta": "Um arquivo HTML com marcações especiais para renderização",
+            "explicacao": "Um template em Django é um arquivo HTML que pode conter marcações especiais para renderizar dados dinâmicos."
+        },
+        {
+            "descricao": "Como você inclui um template dentro de outro template?",
+            "alternativas": [
+                "{% include 'template.html' %}",
+                "{% load 'template.html' %}",
+                "{% extend 'template.html' %}",
+                "{% import 'template.html' %}"
+            ],
+            "resposta": "{% include 'template.html' %}",
+            "explicacao": "Para incluir um template dentro de outro, você usa a tag {% include 'template.html' %}."
+        },
+        {
+            "descricao": "O que é uma QuerySet em Django?",
+            "alternativas": [
+                "Uma coleção de modelos",
+                "Uma consulta ao banco de dados que retorna um conjunto de objetos",
+                "Um tipo de formulário",
+                "Um arquivo de configuração"
+            ],
+            "resposta": "Uma consulta ao banco de dados que retorna um conjunto de objetos",
+            "explicacao": "Uma QuerySet é uma coleção de objetos do banco de dados que pode ser filtrada, ordenada e manipulada."
+        },
+        {
+            "descricao": "Como você filtra objetos em uma QuerySet?",
+            "alternativas": [
+                "Usando o método filter()",
+                "Usando o método get()",
+                "Usando o método all()",
+                "Usando o método exclude()"
+            ],
+            "resposta": "Usando o método filter()",
+            "explicacao": "Você pode filtrar objetos em uma QuerySet usando o método filter(), passando condições como argumentos."
+        },
+        {
+            "descricao": "O que é um Form em Django?",
+            "alternativas": [
+                "Um modelo de banco de dados",
+                "Uma classe para lidar com formulários HTML e validação de dados",
+                "Um tipo de view",
+                "Um arquivo de configuração"
+            ],
+            "resposta": "Uma classe para lidar com formulários HTML e validação de dados",
+            "explicacao": "Um Form em Django é uma classe que facilita a criação e validação de formulários HTML."
+        },
+        {
+            "descricao": "Como você cria um formulário baseado em um modelo (ModelForm)?",
+            "alternativas": [
+                "Herda de forms.Form",
+                "Herda de forms.ModelForm",
+                "Herda de models.Model",
+                "Herda de views.View"
+            ],
+            "resposta": "Herda de forms.ModelForm",
+            "explicacao": "Para criar um formulário baseado em um modelo, você deve herdar da classe forms.ModelForm."
+        },
+        {
+            "descricao": "O que é uma View baseada em classe (Class-Based View) em Django?",
+            "alternativas": [
+                "Uma função que lida com requisições HTTP",
+                "Uma classe que lida com requisições HTTP e pode ser reutilizada",
+                "Um modelo de banco de dados",
+                "Um arquivo de configuração"
+            ],
+            "resposta": "Uma classe que lida com requisições HTTP e pode ser reutilizada",
+            "explicacao": "Uma View baseada em classe é uma classe que lida com requisições HTTP, permitindo reutilização e organização do código."
+        }
+    ],
+    "avancado": [
+        {
+            "descricao": "Como você redireciona para outra URL em uma view?",
+            "alternativas": [
+                "Usando HttpResponseRedirect",
+                "Usando redirect()",
+                "Usando render()",
+                "Usando get_object_or_404()"
+            ],
+            "resposta": "Usando redirect()",
+            "explicacao": "Para redirecionar para outra URL em uma view, você pode usar a função redirect()."
+        },
+        {
+            "descricao": "O que é o middleware em Django?",
+            "alternativas": [
+                "Um tipo de modelo",
+                "Uma camada que processa requisições e respostas",
+                "Um tipo de formulário",
+                "Um arquivo de configuração"
+            ],
+            "resposta": "Uma camada que processa requisições e respostas",
+            "explicacao": "Middleware é uma camada que processa requisições e respostas, permitindo modificar ou adicionar funcionalidades."
+        },
+        {
+            "descricao": "Como você adiciona um middleware personalizado em Django?",
+            "alternativas": [
+                "Adicionando a classe do middleware na lista MIDDLEWARE no settings.py",
+                "Adicionando a classe do middleware em models.py",
+                "Adicionando a classe do middleware em views.py",
+                "Adicionando a classe do middleware em urls.py"
+            ],
+            "resposta": "Adicionando a classe do middleware na lista MIDDLEWARE no settings.py",
+            "explicacao": "Para adicionar um middleware personalizado, você deve incluir a classe do middleware na lista MIDDLEWARE no arquivo settings.py."
+        },
+        {
+            "descricao": "O que é o sistema de autenticação do Django?",
+            "alternativas": [
+                "Um sistema para gerenciar usuários, grupos e permissões",
+                "Um sistema para gerenciar formulários",
+                "Um sistema para gerenciar modelos",
+                "Um sistema para gerenciar URLs"
+            ],
+            "resposta": "Um sistema para gerenciar usuários, grupos e permissões",
+            "explicacao": "O sistema de autenticação do Django é usado para gerenciar usuários, grupos e permissões de acesso."
+        },
+        {
+            "descricao": "Como você cria um superusuário (admin) em Django?",
+            "alternativas": [
+                "Usando o comando python manage.py createsuperuser",
+                "Usando o comando python manage.py createadmin",
+                "Usando o comando django-admin createsuperuser",
+                "Usando o comando django-admin createadmin"
+            ],
+            "resposta": "Usando o comando python manage.py createsuperuser",
+            "explicacao": "Para criar um superusuário em Django, você deve usar o comando 'python manage.py createsuperuser'."
+        },
+        {
+            "descricao": "O que é o Django Rest Framework (DRF)?",
+            "alternativas": [
+                "Uma biblioteca para criar APIs RESTful em Django",
+                "Um sistema de autenticação",
+                "Um tipo de middleware",
+                "Um sistema de gerenciamento de banco de dados"
+            ],
+            "resposta": "Uma biblioteca para criar APIs RESTful em Django",
+            "explicacao": "O Django Rest Framework (DRF) é uma biblioteca poderosa para criar APIs RESTful de forma rápida e fácil em Django."
+        },
+        {
+            "descricao": "Como você define uma rota para uma API usando o DRF?",
+            "alternativas": [
+                "Usando a classe APIView",
+                "Usando a classe View",
+                "Usando a classe ModelView",
+                "Usando a classe TemplateView"
+            ],
+            "resposta": "Usando a classe APIView",
+            "explicacao": "Para definir uma rota para uma API no DRF, você geralmente usa a classe APIView."
+        },
+        {
+            "descricao": "O que é um Serializer no DRF?",
+            "alternativas": [
+                "Uma classe para serializar e desserializar dados",
+                "Uma classe para gerenciar usuários",
+                "Uma classe para gerenciar modelos",
+                "Uma classe para gerenciar URLs"
+            ],
+            "resposta": "Uma classe para serializar e desserializar dados",
+            "explicacao": "Um Serializer no DRF é usado para converter dados complexos, como QuerySets e modelos, em tipos de dados nativos do Python, e vice-versa."
+        },
+        {
+            "descricao": "Como você define um Serializer para um modelo?",
+            "alternativas": [
+                "Herda de serializers.Serializer",
+                "Herda de serializers.ModelSerializer",
+                "Herda de models.Model",
+                "Herda de views.View"
+            ],
+            "resposta": "Herda de serializers.ModelSerializer",
+            "explicacao": "Para definir um Serializer para um modelo, você deve herdar da classe serializers.ModelSerializer."
+        },
+        {
+            "descricao": "Como você valida dados em um Serializer?",
+            "alternativas": [
+                "Usando o método validate() no Serializer",
+                "Usando o método clean() no Serializer",
+                "Usando o método is_valid() no Serializer",
+                "Não é possível validar dados em um Serializer"
+            ],
+            "resposta": "Usando o método validate() no Serializer",
+            "explicacao": "Você pode validar dados em um Serializer usando o método validate(), onde você pode definir regras de validação personalizadas."
+        }
+    ]
+}
