@@ -1,36 +1,39 @@
-# Usar uma imagem base do Node.js
-FROM node:latest
+# =========================
+# Stage 1: Build / Development
+# =========================
+FROM node:latest AS build
 
-# Definir o diretório de trabalho no container
+# Diretório de trabalho
 WORKDIR /app
 
-# Copiar os ficheiros do projeto para o container
+# Copiar package.json e package-lock.json
 COPY package*.json ./
 
-# Instalar as dependências do projeto
+# Instalar dependências
 RUN npm install
 
-# Copiar o resto do código da aplicação
+# Copiar o restante do código
 COPY . .
 
-# Expor a porta que o servidor de desenvolvimento do React usa
+# Expor porta do Vite (React dev server)
 EXPOSE 5173
 
-# Comando para iniciar o servidor de desenvolvimento
+# Comando para desenvolvimento
 CMD ["npm", "run", "dev", "--", "--host"]
 
-# Production Stage
-# RUN rm -rf /usr/share/nginx/html/*
+# =========================
+# Stage 2: Production
+# =========================
+FROM nginx:stable-alpine AS production
 
-# FROM nginx:stable-alpine AS production
+# Copiar build do React para Nginx
+COPY --from=build /app/dist/ /usr/share/nginx/html
 
-# COPY --from=build /app/dist/ /usr/share/nginx/html
+# Substituir configuração padrão do Nginx, se houver
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# # Copia o arquivo nginx.conf para substituir o padrão
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Expor porta HTTP
+EXPOSE 80
 
-# EXPOSE 80
-
-# CMD ["nginx", "-g", "daemon off;"]
-
-
+# Comando para rodar Nginx em foreground
+CMD ["nginx", "-g", "daemon off;"]

@@ -261,9 +261,6 @@ class ConcluirQuizView(APIView):
             "acertos": desempenho.num_acertos,
         }
 
-        # apenas teste, retirar depois
-        gerar_certificado(data)
-
         """
         Conceder emblema de 'Primeiro Quiz'
         """

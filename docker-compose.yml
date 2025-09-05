@@ -5,31 +5,22 @@ services:
     container_name: django
     ports:
       - "8000:8000"
+    env_file:
+      - ./devquiz/.env
     volumes:
       - ./devquiz:/app
-  #   networks:
-  #     - backend_net
 
   react:
     build: ./reactapp/
     container_name: react
-    # command: nginx -g 'daemon off;'
     command: npm run dev -- --host 0.0.0.0
     ports:
       - "5173:5173"
-      # - "5173:80"
     depends_on:
       - django
     env_file:
       - ./reactapp/.env
     volumes:
       - ./reactapp:/app
-      # Evita que os node_modules do host interfiram com os do container
       - /app/node_modules
-    # networks:
-    #   - backend_net
-
-# networks:
-#   backend_net:
-#     driver: bridge
   
