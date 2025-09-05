@@ -344,7 +344,7 @@ Para usar a API, deve estar autenticado!
             ```
         - `reactapp/.env`:
             ```bash
-            REACT_APP_API_URL=http://localhost:8000/api/
+            VITE_REACT_APP_API_URL=http://localhost:8000/api/
             ```
     - Executar
         ```bash
