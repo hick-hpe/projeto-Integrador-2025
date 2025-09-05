@@ -344,7 +344,7 @@ Para usar a API, deve estar autenticado!
             ```
         - `reactapp/.env`:
             ```bash
-            REACT_APP_API_URL=http://django:8000/         
+            REACT_APP_API_URL=http://localhost:8000/api/
             ```
     - Executar
         ```bash
