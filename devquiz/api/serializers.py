@@ -81,13 +81,13 @@ class RespostaAlunoSerializer(serializers.ModelSerializer):
 
 
 class CertificadoSerializer(serializers.ModelSerializer):
-    usuario = serializers.CharField(source='usuario.username')
+    aluno = serializers.CharField(source='aluno.user.username')
     disciplina = serializers.CharField(source='disciplina.nome')
-    data_emissao = serializers.DateField(format="%d/%m/%Y")
+    data_emissao = serializers.DateField(format="%d/%m/%Y", read_only=True)
 
     class Meta:
         model = Certificado
-        fields = ['codigo', 'usuario', 'disciplina', 'data_emissao']
+        fields = ['codigo', 'aluno', 'disciplina', 'data_emissao']
 
 
 class FeedbackSerializer(serializers.ModelSerializer):

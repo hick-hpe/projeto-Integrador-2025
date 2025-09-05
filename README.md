@@ -203,7 +203,7 @@ Para usar a API, deve estar autenticado!
             }
         ]
         ```
-- `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Exibe os detalhes de uma questão. Pde ser em múltipla escolha ou verdadeiro e falso. <br/>
+- `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Exibe os detalhes de uma questão. Pode ser em múltipla escolha ou verdadeiro e falso. <br/>
     - Formato de resposta de Verdadeiro/Falso: <br/>
         ```
         {

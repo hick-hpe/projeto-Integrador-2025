@@ -8,3 +8,72 @@
   - "proxy": "http://minha-api:8000/",
 - atualizar `api/views.py`, já que `api/models.py` foi atualizado
 - atualizar `api/forms.py`
+
+
+# Supondo que o quiz já exista
+u = User.objects.create_user(
+  username="hick",
+  email="hick@gmail.com",
+  password="hickhick"
+)
+
+Aluno.objects.create(
+  user=u
+)
+
+d = Disciplina.objects.create(nome="web")
+q = Quiz.objects.create(
+  disciplina=d,
+  descricao="Quiz para iniciantes em desenvolvimento web"
+)
+
+# Questão 1
+questao1 = Questao.objects.create(
+    quiz=q,
+    descricao="Qual das seguintes linguagens é utilizada principalmente no lado do cliente para tornar as páginas web interativas?"
+)
+
+alt1_q1 = Alternativa.objects.create(questao=questao1, texto="Python")
+alt2_q1 = Alternativa.objects.create(questao=questao1, texto="JavaScript")
+alt3_q1 = Alternativa.objects.create(questao=questao1, texto="SQL")
+alt4_q1 = Alternativa.objects.create(questao=questao1, texto="PHP")
+
+Resposta.objects.create(
+    questao=questao1,
+    alternativa=alt2_q1,
+    explicacao="JavaScript é a linguagem padrão para interatividade no lado do cliente em páginas web."
+)
+
+# Questão 2
+questao2 = Questao.objects.create(
+    quiz=q,
+    descricao="O que significa HTTP no contexto da web?"
+)
+
+alt1_q2 = Alternativa.objects.create(questao=questao2, texto="HyperText Transfer Protocol")
+alt2_q2 = Alternativa.objects.create(questao=questao2, texto="Hyperlink Text Transmission Protocol")
+alt3_q2 = Alternativa.objects.create(questao=questao2, texto="Hyper Transfer Text Page")
+alt4_q2 = Alternativa.objects.create(questao=questao2, texto="HyperText Transmission Page")
+
+Resposta.objects.create(
+    questao=questao2,
+    alternativa=alt1_q2,
+    explicacao="HTTP significa HyperText Transfer Protocol e é o protocolo usado para comunicação na web."
+)
+
+# Questão 3
+questao3 = Questao.objects.create(
+    quiz=q,
+    descricao="Qual elemento HTML é usado para criar um link clicável para outra página?"
+)
+
+alt1_q3 = Alternativa.objects.create(questao=questao3, texto="<link>")
+alt2_q3 = Alternativa.objects.create(questao=questao3, texto="<a>")
+alt3_q3 = Alternativa.objects.create(questao=questao3, texto="<href>")
+alt4_q3 = Alternativa.objects.create(questao=questao3, texto="<url>")
+
+Resposta.objects.create(
+    questao=questao3,
+    alternativa=alt2_q3,
+    explicacao="O elemento <a> é usado para criar links clicáveis em HTML."
+)

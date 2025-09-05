@@ -1,12 +1,11 @@
-<!-- {% load static %} -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <title>Certificado</title>
-  <!-- <link rel="stylesheet" href="{% static 'css/certificado_pdf.css' %}"> -->
-  <link rel="stylesheet" href="../../static/css/certificado_pdf.css">
+  <link rel="stylesheet" href="http://localhost:8000/static/css/certificado_pdf.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap" rel="stylesheet">
@@ -28,8 +27,7 @@
       </div>
 
       <div class="nome">
-        <!-- {{ nome }} -->
-        Henrique Palermo Emerick
+        {{ nome }}
       </div>
 
       <div class="descricao">
@@ -39,15 +37,11 @@
       </div>
 
       <div class="descricao">
-        <!-- O participante obteve <strong style="color:#388e3c">{{ percentual_acertos }}%</strong> de acertos no quiz final -->
-        O participante obteve <strong style="color:#388e3c">80%</strong> de acertos no quiz final
-        de avaliação.<br>
-        Ao atingir esse desempenho, demonstrou domínio dos conhecimentos abordados e está oficialmente certificado.
+        O aluno demonstrou domínio dos conhecimentos abordados e está oficialmente certificado pela plataforma DevQuiz.
       </div>
 
       <div class="data">
-        <!-- {{ data }} -->
-        22/08/2025
+        {{ data }}
       </div>
 
       <div class="assinatura">
@@ -56,8 +50,7 @@
       </div>
 
       <div class="logo">
-        <!-- <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo"> -->
-        <img src="../../static/img/logo.png" alt="Logo">
+        <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo">
       </div>
     </div>
   </body>

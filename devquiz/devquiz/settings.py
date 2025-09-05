@@ -55,9 +55,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
 ]
 
-# Modelo de usuário personalizado
-AUTH_USER_MODEL = 'api.Aluno'
-
 # Django REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -155,7 +152,7 @@ TIME_ZONE = 'America/Sao_Paulo'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR)    
+    os.path.join(BASE_DIR, 'static')
 ]
 
 # Default primary key field type
@@ -172,5 +169,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', default='default_email')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', default='default_pass')
 
-print('EMAIL_HOST_USER:',EMAIL_HOST_USER)
-print('EMAIL_HOST_PASSWORD:',EMAIL_HOST_PASSWORD)
+# print('EMAIL_HOST_USER:',EMAIL_HOST_USER)
+# print('EMAIL_HOST_PASSWORD:',EMAIL_HOST_PASSWORD)

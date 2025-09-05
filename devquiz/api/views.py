@@ -86,23 +86,28 @@ class QuestoesDetailView(APIView):
         return Response(serializer.data)
 
     def post(self, request, quiz_id, questao_id):
+        print('------- responder questão -------')
         alternativa_id = request.data.get('alternativa_id')
         if not alternativa_id:
             return Response({'detail': '"alternativa_id" não informado'}, status=status.HTTP_400_BAD_REQUEST)
 
+        print('------- get objects -------')
         quiz = get_object_or_404(Quiz, id=quiz_id)
         questao = get_object_or_404(Questao, id=questao_id)
         alternativa = get_object_or_404(Alternativa, id=alternativa_id)
 
         ultima_tentativa = RespostaAluno.objects.filter(
-            user=request.user, quiz=quiz
-            ).aggregate(
-                models.Max('tentativa')
-                )['tentativa__max'] or 0
+            desempenho__quiz=quiz,
+            alternativa=alternativa,
+            questao=questao
+        ).aggregate(
+            models.Max('tentativa')
+            )['tentativa__max'] or 0
+        
         nova_tentativa = ultima_tentativa + 1
         resposta_aluno, created = RespostaAluno.objects.get_or_create(
-            user=request.user,
-            quiz=quiz,
+            desempenho__aluno__user=request.user,
+            questao__quiz=quiz,
             questao=questao,
             tentativa=nova_tentativa,
             defaults={
@@ -129,14 +134,14 @@ class QuestoesDetailView(APIView):
 
         if correto:
             desempenho = Desempenho.objects.filter(
-                user=request.user,
+                aluno=request.user.aluno,
                 disciplina=quiz.disciplina,
                 quiz=quiz
             ).order_by('-id').first()
 
             if not desempenho:
                 desempenho = Desempenho.objects.create(
-                    user=request.user,
+                    aluno=request.user.aluno,
                     disciplina=quiz.disciplina,
                     quiz=quiz,
                     num_acertos=0
@@ -148,7 +153,15 @@ class QuestoesDetailView(APIView):
         else:
             print("[DEBUG] Alternativa incorreta.")
 
-        return Response({'detail': 'Respondida!' })
+        resp = {
+            'detail': 'Respondida!',
+            "correto": correto,
+            "id": questao_id,
+            "questao": questao.descricao,
+            "alternativa": alternativa.texto,
+            "explicacao": res_questao.explicacao
+        }
+        return Response(resp)
 
 
 class RespostaQuestaoView(APIView):
@@ -178,7 +191,7 @@ class IniciarQuizView(APIView):
         quiz = get_object_or_404(Quiz, id=quiz_id)
 
         desempenho, criado = Desempenho.objects.get_or_create(
-            user=request.user,
+            aluno=request.user.aluno,
             quiz=quiz,
             defaults={'disciplina': quiz.disciplina}
         )
@@ -202,15 +215,20 @@ class DesistirQuizView(APIView):
         quiz = get_object_or_404(Quiz, id=quiz_id)
 
         desempenho = Desempenho.objects.filter(
-            user=request.user,
+            aluno=request.user.aluno,
             quiz=quiz,
             disciplina=quiz.disciplina
         ).order_by('-id').first()
+
+        # verifica se iniciou o quiz
+        if not desempenho:
+            return Response({"error": "Quiz não iniciado!"}, status=status.HTTP_404_NOT_FOUND)
+
         desempenho.delete()
 
         respostas = RespostaAluno.objects.filter(user=request.user, quiz=quiz)
         respostas.delete()
-
+    
         return Response({"detail": "Você desistiu do quiz!"})
 
 
@@ -226,22 +244,28 @@ class ConcluirQuizView(APIView):
 
         quiz = get_object_or_404(Quiz, id=quiz_id)
 
-        desempenhos = Desempenho.objects.filter(
-            user=request.user,
+        desempenho = Desempenho.objects.filter(
+            aluno=request.user.aluno,
             quiz=quiz,
             disciplina=quiz.disciplina
-        ).order_by('-id')
+        ).order_by('-id').first()
         
-        desempenho = desempenhos.first()
+        # verifica se iniciou o quiz
         if not desempenho:
             return Response({"error": "Quiz não iniciado!"}, status=status.HTTP_404_NOT_FOUND)
 
+        print('>_ montar data')
         data = {
-            "usuario": str(request.user),
-            "quiz": quiz.nivel,
+            "aluno": request.user.username,
             "disciplina": quiz.disciplina.nome,
             "acertos": desempenho.num_acertos,
         }
+
+        # apenas teste, retirar depois
+        print('--------- >_certificado iniciante ---------')
+        gerar_certificado(data)
+        data['gerado'] = True
+        print('gerado:',data['gerado'])
 
         acertos = desempenho.num_acertos / quiz.questoes.count()
         if acertos == 1:
@@ -267,18 +291,18 @@ class ConcluirQuizView(APIView):
                 }
             )
                 
-            if quiz.nivel == "Avançado":
-                """
-                Verifica se o usuário já possui o emblema de "Especialista em Disciplina
-                """
-                emblema, created = Emblema.objects.get_or_create(
-                    aluno=request.user.aluno,
-                    nome="Especialista em Disciplina",
-                    defaults={
-                        'descricao': 'Concluiu com sucesso todos os quizzes de uma disciplina específica.'
-                    }
-                )
-                gerar_certificado(data)
+            # if quiz.nivel == "Avançado":
+            #     """
+            #     Verifica se o usuário já possui o emblema de "Especialista em Disciplina
+            #     """
+            #     emblema, created = Emblema.objects.get_or_create(
+            #         aluno=request.user.aluno,
+            #         nome="Especialista em Disciplina",
+            #         defaults={
+            #             'descricao': 'Concluiu com sucesso todos os quizzes de uma disciplina específica.'
+            #         }
+            #     )
+            #     gerar_certificado(data)
 
         return Response(data)
 

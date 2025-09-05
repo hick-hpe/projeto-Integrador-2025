@@ -54,6 +54,14 @@ class CookieTokenObtainPairView(TokenObtainPairView):
 class CadastroView(APIView):
     """
     View de registro de usuário.
+
+    Formato de requisição: \n
+    \{
+        "username": "username",
+        "email": "email",
+        "password": "password",
+        "confirm-password": "confirm-password"
+    \}
     """
     permission_classes = [AllowAny]
 
@@ -70,7 +78,8 @@ class CadastroView(APIView):
             if password != confirm_password:
                 return Response({'error': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
 
-            User.objects.create_user(username=username, password=password)
+            user = User.objects.create_user(username=username, email=email, password=password)
+            Aluno.objects.create(user=user)
             return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -97,7 +106,7 @@ class UserDetailView(APIView):
             # se enviou 'foto_perfil', atualizar
             aluno = Aluno.objects.filter(user=user).first()
             
-            if aluno:
+            if aluno and foto_perfil:
                 aluno.foto_perfil = foto_perfil
                 aluno.save()
             
