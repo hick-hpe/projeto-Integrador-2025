@@ -3,12 +3,12 @@ services:
     build: ./devquiz/
     command: python manage.py runserver 0.0.0.0:8000
     container_name: django
-    # ports:
-      # - "8000:8000"
+    ports:
+      - "8000:8000"
     volumes:
       - ./devquiz:/app
-    networks:
-      - backend_net
+  #   networks:
+  #     - backend_net
 
   react:
     build: ./reactapp/
@@ -20,12 +20,16 @@ services:
       # - "5173:80"
     depends_on:
       - django
+    env_file:
+      - ./reactapp/.env
     volumes:
       - ./reactapp:/app
-    networks:
-      - backend_net
+      # Evita que os node_modules do host interfiram com os do container
+      - /app/node_modules
+    # networks:
+    #   - backend_net
 
-networks:
-  backend_net:
-    driver: bridge
+# networks:
+#   backend_net:
+#     driver: bridge
   

@@ -4,8 +4,8 @@ function App() {
   const [message, setMessage] = useState('Carregando...');
 
   useEffect(() => {
-    // URL da API dentro da rede Docker
-    const apiUrl = process.env.REACT_APP_API_URL; // ajuste conforme sua rota
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    console.log(apiUrl);
 
     fetch(apiUrl)
       .then((res) => res.json())

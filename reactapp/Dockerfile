@@ -1,20 +1,23 @@
-# Build Stag
-FROM node:20-alpine AS build
+# Usar uma imagem base do Node.js
+FROM node:latest
 
+# Definir o diretório de trabalho no container
 WORKDIR /app
 
-COPY package*.json* ./
+# Copiar os ficheiros do projeto para o container
+COPY package*.json ./
 
+# Instalar as dependências do projeto
 RUN npm install
 
+# Copiar o resto do código da aplicação
 COPY . .
 
-# RUN npm run build
+# Expor a porta que o servidor de desenvolvimento do React usa
+EXPOSE 5173
 
-# EXPOSE 5173
-
-# Development
-# CMD ["npm", "run", "dev", "--", "--host"]
+# Comando para iniciar o servidor de desenvolvimento
+CMD ["npm", "run", "dev", "--", "--host"]
 
 # Production Stage
 # RUN rm -rf /usr/share/nginx/html/*
@@ -29,3 +32,5 @@ COPY . .
 # EXPOSE 80
 
 # CMD ["nginx", "-g", "daemon off;"]
+
+
