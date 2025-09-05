@@ -113,7 +113,7 @@ class Emblema(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     nome = models.CharField(max_length=50)
     descricao = models.TextField()
-    logo = models.ImageField(blank=True, null=True)
+    logo = models.CharField(max_length=200)
 
     def __str__(self):
         return f"{self.nome} - {self.aluno.user.username}"

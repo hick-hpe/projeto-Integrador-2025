@@ -97,9 +97,11 @@ class FeedbackSerializer(serializers.ModelSerializer):
 
 
 class EmblemaSerializer(serializers.ModelSerializer):
-    aluno = serializers.CharField(source='aluno.user.username')
+    aluno = serializers.SerializerMethodField()
 
     class Meta:
         model = Emblema
-        fields = ['nome', 'descricao', 'logo']
+        fields = ['aluno', 'nome', 'descricao', 'logo']
 
+    def get_aluno(self, obj):
+        return obj.aluno.user.username

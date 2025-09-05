@@ -336,34 +336,9 @@ Para usar a API, deve estar autenticado!
         ```
         cd projeto-Integrador-2025
         ```
-    - Criar e ativar ambiente virtual:
-        - Windows:
-            ```
-            python -m venv venv
-            venv\Scripts\activate
-            ```
-        - Linux/MacOS:
-            ```
-            python3 -m venv venv
-            source venv/bin/activate
-            ```
-- Ambiente Django:
-    - Iniciar container docker:
-        ```
+    - Executar
+        ```bash
         docker compose up
-        ```
-- Ambiente React:
-    - Acessar o projeto:
-        ```
-        cd devquiz/reactapp
-        ```
-    - Instalar dependências:
-        ```
-        npm install
-        ```
-    - Iniciar servidor:
-        ```
-        npm run dev
         ```
 ## Servidores
 - Servidor Django:

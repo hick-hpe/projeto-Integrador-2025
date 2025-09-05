@@ -69,10 +69,12 @@ def gerar_certificado(data):
     disciplina = get_object_or_404(Disciplina, nome=data['disciplina'])
 
     Certificado.objects.get_or_create(
-        codigo=gerar_codigo_certificado(),
         aluno=aluno,
         disciplina=disciplina,
-        percentual_acertos=data['acertos']
+        percentual_acertos=data['acertos'],
+        defaults={
+            'codigo': gerar_codigo_certificado()
+        }
     )
 
 
@@ -83,7 +85,6 @@ class CertificadoPDFView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        print('list certificados')
         certificados = list(Certificado.objects.all().values())
         return JsonResponse({
             'certificados': certificados

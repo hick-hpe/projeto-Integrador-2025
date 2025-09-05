@@ -77,3 +77,15 @@ Resposta.objects.create(
     alternativa=alt2_q3,
     explicacao="O elemento <a> é usado para criar links clicáveis em HTML."
 )
+
+Emblema.objects.get_or_create(
+    aluno=Aluno.objects.get(pk=1),
+    nome="Primeiro Quiz",
+    defaults={
+        'descricao': 'Você completou seu primeiro quiz!'
+    }
+)
+
+
+
+

@@ -262,21 +262,36 @@ class ConcluirQuizView(APIView):
         }
 
         # apenas teste, retirar depois
-        print('--------- >_certificado iniciante ---------')
         gerar_certificado(data)
-        data['gerado'] = True
-        print('gerado:',data['gerado'])
+
+        """
+        Conceder emblema de 'Primeiro Quiz'
+        """
+        desempenhos = Desempenho.objects.filter(
+            aluno=request.user.aluno,
+            quiz=quiz,
+            disciplina=quiz.disciplina
+        ).order_by('-id').first()
+
+        if desempenhos:
+            Emblema.objects.get_or_create(
+                aluno=request.user.aluno,
+                nome="Primeiro Quiz",
+                defaults={
+                    'descricao': 'Você completou seu primeiro quiz!'
+                }
+            )
 
         acertos = desempenho.num_acertos / quiz.questoes.count()
         if acertos == 1:
             """
             Conceder emblema de 'Quiz 100%'
             """
-            emblema, created = Emblema.objects.get_or_create(
+            Emblema.objects.get_or_create(
                 aluno=request.user.aluno,
                 nome="Quiz 100%",
                 defaults={
-                    'descricao': 'Concluiu um quiz com 100% de acertos.'
+                    'descricao': 'Concluiu um quiz com 100% de acertos!'
                 }
             )
         elif acertos >= 0.7:
