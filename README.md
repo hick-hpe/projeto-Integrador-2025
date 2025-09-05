@@ -336,6 +336,16 @@ Para usar a API, deve estar autenticado!
         ```
         cd projeto-Integrador-2025
         ```
+    - Adicione as variáveis de ambiente:
+        - `devquiz/.env`:
+            ```bash
+            EMAIL_HOST_USER='email'
+            EMAIL_HOST_PASSWORD='senha de app'
+            ```
+        - `reactapp/.env`:
+            ```bash
+            REACT_APP_API_URL=http://django:8000/         
+            ```
     - Executar
         ```bash
         docker compose up

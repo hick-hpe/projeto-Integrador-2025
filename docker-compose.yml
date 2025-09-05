@@ -3,18 +3,29 @@ services:
     build: ./devquiz/
     command: python manage.py runserver 0.0.0.0:8000
     container_name: django
-    ports:
-      - "8000:8000"
+    # ports:
+      # - "8000:8000"
     volumes:
       - ./devquiz:/app
+    networks:
+      - backend_net
 
-  # react:
-  #   build: ./reactapp/
-  #   container_name: react
-  #   ports:
-  #     - "5173:80"
-  #   depends_on:
-  #     - django
-  #   volumes:
-  #     - ./reactapp:/app
+  react:
+    build: ./reactapp/
+    container_name: react
+    # command: nginx -g 'daemon off;'
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "5173:5173"
+      # - "5173:80"
+    depends_on:
+      - django
+    volumes:
+      - ./reactapp:/app
+    networks:
+      - backend_net
+
+networks:
+  backend_net:
+    driver: bridge
   
