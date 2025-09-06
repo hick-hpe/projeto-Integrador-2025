@@ -40,7 +40,8 @@ urlpatterns = [
     path('feedbacks/', FeedbackView.as_view(), name='feedbacks'),
 
     # Emblemas
-    path('emblemas/<int:user_id>/', EmblemaListView.as_view(), name='emblemas_list'),
+    path('emblemas/user/<str:username>/', EmblemaListView.as_view(), name='emblemas_user'),
+    path('emblemas/', EmblemaListView.as_view(), name='emblemas_list'),
 
     # Pontuação
     path('pontuacao/<str:username>/', PontuacaoListView.as_view(), name='pontuacao_user'),

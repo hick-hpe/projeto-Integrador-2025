@@ -314,7 +314,7 @@ Para usar a API, deve estar autenticado!
             "pontuacao": 40
         }
         ```
-- `GET /api/emblemas/user/<int:user_id>/` - Mostrar os emblemas conquistados pelo usuário.
+- `GET /api/emblemas/user/<str:username>/` - Mostrar os emblemas conquistados pelo usuário.
     - Formato de resposta: <br/>
         ```
         [

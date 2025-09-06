@@ -482,9 +482,14 @@ class EmblemaListView(APIView):
     """
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, user_id):
-        aluno = get_object_or_404(Aluno, user__id=user_id)
-        emblemas = Emblema.objects.filter(aluno=aluno)
+    def get(self, request, username=None):
+        if username:
+            aluno = get_object_or_404(Aluno, user__username=username)
+            emblemas = Emblema.objects.filter(aluno=aluno)
+            serializer = EmblemaSerializer(emblemas, many=True)
+            return Response(serializer.data)
+        
+        emblemas = Emblema.objects.all()
         serializer = EmblemaSerializer(emblemas, many=True)
         return Response(serializer.data)
 
