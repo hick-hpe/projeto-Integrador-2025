@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from certificado.views import gerar_certificado
-from .models import Aluno, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
+from .models import Aluno, Emblema, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
 from .serializers import DisciplinaSerializer, EmblemaUserSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
@@ -457,7 +457,7 @@ class EmblemaListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        emblemas = EmblemaUser.objects.values("nome", "descricao", "logo").distinct()
+        emblemas = Emblema.objects.values("nome", "descricao", "logo").distinct()
         return Response(emblemas)
     
 
