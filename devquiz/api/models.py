@@ -119,13 +119,20 @@ class Feedback(models.Model):
 
 
 class Emblema(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     nome = models.CharField(max_length=50)
     descricao = models.TextField()
     logo = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nome} - {self.aluno.user.username}"
+        return f"{self.nome}: {self.descricao}"
+    
+
+class EmblemaUser(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    emblema = models.ForeignKey(Emblema, on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return f"{self.nome} - {self.emblema}"
 
 
 class Pontuacao(models.Model):

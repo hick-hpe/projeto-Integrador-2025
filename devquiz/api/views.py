@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from certificado.views import gerar_certificado
-from .models import Aluno, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, Emblema
-from .serializers import DisciplinaSerializer, EmblemaSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
+from .models import Aluno, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
+from .serializers import DisciplinaSerializer, EmblemaUserSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 import random
@@ -318,16 +318,6 @@ class ConcluirQuizView(APIView):
             "acertos": desempenho.num_acertos,
         }
 
-        # Conceder emblema de 'Primeiro Quiz'
-        Emblema.objects.get_or_create(
-            aluno=request.user.aluno,
-            nome="Primeiro Quiz",
-            defaults={
-                'descricao': 'Você completou seu primeiro quiz!',
-                'logo': 'static/img/emblemas/primeiro-quiz.png'
-            }
-        )
-
         acertos = desempenho.num_acertos / quiz.questoes.count()
         print('+--------------------+')
         print(f'>_ acertos: {(acertos*100):.2f}%')
@@ -337,13 +327,9 @@ class ConcluirQuizView(APIView):
             """
             Conceder emblema de 'Quiz 100%'
             """
-            Emblema.objects.get_or_create(
+            EmblemaUser.objects.get_or_create(
                 aluno=request.user.aluno,
-                nome="Quiz 100%",
-                defaults={
-                    'descricao': 'Concluiu um quiz com 100% de acertos!',
-                    'logo': 'static/img/emblemas/quiz-100.png'
-                }
+                emblema__nome="Quiz 100%",
             )
             print('100% do quiz -------')
 
@@ -355,36 +341,25 @@ class ConcluirQuizView(APIView):
                 """
                 Verifica se o usuário já possui o emblema de "Especialista em Disciplina
                 """
-                emblema, _ = Emblema.objects.get_or_create(
+                emblema, _ = EmblemaUser.objects.get_or_create(
                     aluno=request.user.aluno,
-                    nome="Especialista em Disciplina",
-                    defaults={
-                        'descricao': 'Concluiu com sucesso todos os quizzes de uma disciplina específica.',
-                        'logo': 'static/img/emblemas/especialista-disciplina.png' # a fazer
-                    }
+                    emblema__nome="Especialista em Disciplina"
                 )
                 gerar_certificado(data)
 
             elif quiz.nivel == "Intermediário":
-                emblema, _ = Emblema.objects.get_or_create(
+                emblema, _ = EmblemaUser.objects.get_or_create(
                     aluno=request.user.aluno,
-                    nome="Primeiro Nível Avançado",
-                    defaults={
-                        'descricao': 'Concluiu com sucesso o primeiro quiz de nível avançado.',
-                        'logo': 'static/img/emblemas/primeiro-avancado.png'
-                    }
+                    emblema__nome="Primeiro Nível Intermediário"
                 )
             
             elif quiz.nivel == "Iniciante":
                 """
                 Verifica se o usuário já possui o emblema de "Primeiro Quiz".
                 """
-                emblema, _ = Emblema.objects.get_or_create(
+                emblema, _ = EmblemaUser.objects.get_or_create(
                     aluno=request.user.aluno,
-                    nome="Primeiro Quiz",
-                    defaults={
-                        'descricao': 'Concluiu o primeiro quiz na plataforma.'
-                    }
+                    emblema__nome="Primeiro Quiz"
                 )
                 print('1st emblema -----')
 
@@ -475,22 +450,27 @@ class FeedbackView(APIView):
 
         return Response({'detail': 'Feedback enviado com sucesso!'})
     
-
 class EmblemaListView(APIView):
     """
     View para listar os emblemas do usuário.
     """
     permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        emblemas = EmblemaUser.objects.values("nome", "descricao", "logo").distinct()
+        return Response(emblemas)
+    
+
+class EmblemaUserListView(APIView):
+    """
+    View para listar os emblemas do usuário.
+    """
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, username=None):
-        if username:
-            aluno = get_object_or_404(Aluno, user__username=username)
-            emblemas = Emblema.objects.filter(aluno=aluno)
-            serializer = EmblemaSerializer(emblemas, many=True)
-            return Response(serializer.data)
-        
-        emblemas = Emblema.objects.all()
-        serializer = EmblemaSerializer(emblemas, many=True)
+        aluno = get_object_or_404(Aluno, user__username=username)
+        emblemas = EmblemaUser.objects.filter(aluno=aluno)
+        serializer = EmblemaUserSerializer(emblemas, many=True)
         return Response(serializer.data)
 
 

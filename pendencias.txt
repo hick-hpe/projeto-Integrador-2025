@@ -68,6 +68,41 @@ Resposta.objects.create(
 )
 
 
+Emblema.objects.get_or_create(
+    nome="Primeiro Quiz",
+    defaults={
+        'descricao': 'Você completou seu primeiro quiz!',
+        'logo': 'static/img/emblemas/primeiro-quiz.png'
+    }
+)
+
+Emblema.objects.get_or_create(
+    nome="Quiz 100%",
+    defaults={
+        'descricao': 'Concluiu um quiz com 100% de acertos!',
+        'logo': 'static/img/emblemas/quiz-100.png'
+    }
+)
+
+EmblemaUser.objects.get_or_create(
+  nome="Especialista em Disciplina",
+  defaults={
+      'descricao': 'Concluiu com sucesso todos os quizzes de uma disciplina.',
+      'logo': 'static/img/emblemas/especialista-disciplina.png' # a fazer
+  }
+)
+
+EmblemaUser.objects.get_or_create(
+  nome="Primeiro Nível Intermediário",
+  defaults={
+      'descricao': 'Concluiu com sucesso todos os quizzes de uma disciplina específica.',
+      'logo': 'static/img/emblemas/especialista-disciplina.png' # a fazer
+  }
+)
+
+
+
+
 
 
 

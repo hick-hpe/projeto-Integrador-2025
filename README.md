@@ -314,6 +314,18 @@ Para usar a API, deve estar autenticado!
             "pontuacao": 40
         }
         ```
+- `GET /api/emblemas/` - Mostrar todos os emblemas disponíveis.
+    - Formato de resposta: <br/>
+        ```
+        [
+            {
+                "nome": "Primeiro Quiz",
+                "descricao": "Concluiu o primeiro quiz na plataforma.",
+                "logo": "/caminho/da/logo.png"
+            }
+        ]
+        ```
+
 - `GET /api/emblemas/user/<str:username>/` - Mostrar os emblemas conquistados pelo usuário.
     - Formato de resposta: <br/>
         ```
