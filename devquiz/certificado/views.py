@@ -78,7 +78,7 @@ def gerar_certificado(data):
     )
 
 
-class CertificadoPDFView(APIView):
+class CertificadoListView(APIView):
     """
     View para exibir a lista de certificados.
     """

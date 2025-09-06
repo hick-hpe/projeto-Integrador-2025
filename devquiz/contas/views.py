@@ -56,12 +56,12 @@ class CadastroView(APIView):
     View de registro de usuário.
 
     Formato de requisição: \n
-    \{
+    {
         "username": "username",
-        "email": "email",
+        "email": "username@gmail.com",
         "password": "password",
-        "confirm-password": "confirm-password"
-    \}
+        "confirm-password": "password"
+    }
     """
     permission_classes = [AllowAny]
 

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    Aluno, Disciplina, Quiz, Questao,
+    Aluno, Disciplina, Pontuacao, Quiz, Questao,
     Alternativa, Resposta, RespostaAluno,
     Feedback, Certificado, Emblema
 )
@@ -102,6 +102,17 @@ class EmblemaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emblema
         fields = ['aluno', 'nome', 'descricao', 'logo']
+
+    def get_aluno(self, obj):
+        return obj.aluno.user.username
+
+
+class PontuacaoSerializer(serializers.ModelSerializer):
+    aluno = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Pontuacao
+        fields = ['aluno', 'pontos']
 
     def get_aluno(self, obj):
         return obj.aluno.user.username

@@ -1,16 +1,5 @@
-- limitar tentativas de login?
-  - django-axes
-- upload de foto de perfil?
-- colocar 3X questões
-- escolher 20 questoes para cada nivel
-  - escolher 10 aleatoriamente para o quiz
-- arrumar redirecionadmento das rotas no proxy?
-  - "proxy": "http://minha-api:8000/",
-- atualizar `api/views.py`, já que `api/models.py` foi atualizado
-- atualizar `api/forms.py`
-
-
 # Supondo que o quiz já exista
+from api.models import *
 u = User.objects.create_user(
   username="hick",
   email="hick@gmail.com",
@@ -78,13 +67,6 @@ Resposta.objects.create(
     explicacao="O elemento <a> é usado para criar links clicáveis em HTML."
 )
 
-Emblema.objects.get_or_create(
-    aluno=Aluno.objects.get(pk=1),
-    nome="Primeiro Quiz",
-    defaults={
-        'descricao': 'Você completou seu primeiro quiz!'
-    }
-)
 
 
 

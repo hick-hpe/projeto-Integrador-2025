@@ -2,6 +2,8 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    path('', IndexView.as_view(), name='index'),
+
     # Listar disiciplinas
     path('disciplinas/', DisciplinaListView.as_view(), name='disciplinas_list'),
     
@@ -38,7 +40,12 @@ urlpatterns = [
     path('feedbacks/', FeedbackView.as_view(), name='feedbacks'),
 
     # Emblemas
-    path('emblemas/', EmblemaListView.as_view(), name='emblemas_list'),
+    path('emblemas/<int:user_id>/', EmblemaListView.as_view(), name='emblemas_list'),
+
+    # Pontuação
+    path('pontuacao/<str:username>/', PontuacaoListView.as_view(), name='pontuacao_user'),
+    path('pontuacao/', PontuacaoListView.as_view(), name='pontuacao_list'),
+
 ]
 
 

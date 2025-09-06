@@ -37,7 +37,7 @@ class Quiz(models.Model):
         ('Avançado', 'Avançado'),
     )
     disciplina = models.ForeignKey(Disciplina, related_name='quizzes', on_delete=models.CASCADE)
-    nivel = models.CharField(max_length=13, choices=NIVEIS, default='iniciante')
+    nivel = models.CharField(max_length=13, choices=NIVEIS, default='Iniciante')
     descricao = models.TextField()
 
     def __str__(self):
@@ -74,19 +74,28 @@ class Desempenho(models.Model):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     num_acertos = models.IntegerField(default=0)
+    concluiu_quiz = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.disciplina} '{self.quiz}': acertou {self.num_acertos} questão(ões)"    
+
+
+class Tentativa(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True)
+    desempenho = models.ForeignKey(Desempenho, on_delete=models.CASCADE, null=True, blank=True)
+    concluiu_quiz = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.aluno} - Tentativa {self.pk} - Concluída: {self.concluiu_quiz}'
     
-    
+
 class RespostaAluno(models.Model):
     desempenho = models.ForeignKey(Desempenho, on_delete=models.CASCADE, null=True, blank=True)
     questao = models.ForeignKey(Questao, related_name='respostas_explicativas', on_delete=models.CASCADE)
     alternativa = models.ForeignKey(Alternativa, on_delete=models.CASCADE)
-    tentativa = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.desempenho.aluno.user} - Questão {self.questao.pk} - Alternativa: {self.alternativa.texto} (Tentativa {self.tentativa})" 
+        return f"{self.desempenho.aluno.user.username} - Questão {self.questao.pk} - Alternativa: {self.alternativa.texto}" 
 
 
 class Certificado(models.Model):
@@ -101,12 +110,12 @@ class Certificado(models.Model):
 
 
 class Feedback(models.Model):
-    assunto = models.CharField(max_length=20, null=True)
+    assunto = models.CharField(max_length=20, null=True, default="Feedback sem assunto")
     mensagem = models.TextField(max_length=300, null=True)
     email = models.EmailField(max_length=30, null=True)
     
     def __str__(self):
-        return self.assunto or "Feedback sem assunto"
+        return self.assunto
 
 
 class Emblema(models.Model):
@@ -117,4 +126,13 @@ class Emblema(models.Model):
 
     def __str__(self):
         return f"{self.nome} - {self.aluno.user.username}"
+
+
+class Pontuacao(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    pontos = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.aluno} - {self.pontos} pontos'
+
 
