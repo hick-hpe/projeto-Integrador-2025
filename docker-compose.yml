@@ -1,26 +1,26 @@
 services:
   django:
-    build: ./devquiz/
+    build: ./backend/
     command: python manage.py runserver 0.0.0.0:8000
     container_name: django
     ports:
       - "8000:8000"
-    env_file:
-      - ./devquiz/.env
+    # env_file:
+      # - ./devquiz/.env
     volumes:
       - ./devquiz:/app
 
-  # react:
-  #   build: ./reactapp/
-  #   container_name: react
-  #   command: npm run dev -- --host 0.0.0.0
-  #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     - django
-  #   env_file:
-  #     - ./reactapp/.env
-  #   volumes:
-  #     - ./reactapp:/app
-  #     - /app/node_modules
+  react:
+    build: ./frontend/
+    container_name: frontend
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "5173:5173"
+    depends_on:
+      - django
+    # env_file:
+      # - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
   

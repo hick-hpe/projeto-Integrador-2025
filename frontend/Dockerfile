@@ -24,16 +24,16 @@ CMD ["npm", "run", "dev", "--", "--host"]
 # =========================
 # Stage 2: Production
 # =========================
-FROM nginx:stable-alpine AS production
+# FROM nginx:stable-alpine AS production
 
-# Copiar build do React para Nginx
-COPY --from=build /app/dist/ /usr/share/nginx/html
+# # Copiar build do React para Nginx
+# COPY --from=build /app/dist/ /usr/share/nginx/html
 
-# Substituir configuração padrão do Nginx, se houver
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# # Substituir configuração padrão do Nginx, se houver
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expor porta HTTP
-EXPOSE 80
+# # Expor porta HTTP
+# EXPOSE 80
 
-# Comando para rodar Nginx em foreground
-CMD ["nginx", "-g", "daemon off;"]
+# # Comando para rodar Nginx em foreground
+# CMD ["nginx", "-g", "daemon off;"]
