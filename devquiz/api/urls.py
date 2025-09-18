@@ -44,6 +44,7 @@ urlpatterns = [
     path('emblemas/', EmblemaListView.as_view(), name='emblemas_list'),
 
     # Pontuação
+    path('pontuacao/top3/', PontuacaoTop3ListView.as_view(), name='pontuacao_user'),
     path('pontuacao/<str:username>/', PontuacaoListView.as_view(), name='pontuacao_user'),
     path('pontuacao/', PontuacaoListView.as_view(), name='pontuacao_list'),
 

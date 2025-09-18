@@ -473,6 +473,15 @@ class EmblemaUserListView(APIView):
         serializer = EmblemaUserSerializer(emblemas, many=True)
         return Response(serializer.data)
 
+class PontuacaoTop3ListView(APIView):
+    """
+    View para listar o top 3
+    """
+    def get(self, request):
+        pontuacoes = Pontuacao.objects.all().order_by('-pontos')[:3]
+        serializer = PontuacaoSerializer(pontuacoes, many=True)
+        return Response(serializer.data)
+
 
 class PontuacaoListView(APIView):
     """
