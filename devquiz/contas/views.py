@@ -48,6 +48,9 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             response.data.pop('refresh', None)
             response.data['detail'] = 'Login realizado com sucesso!!'
 
+            print('--- COOKIESS ---')
+            print(response.cookies)
+
         return response
 
 

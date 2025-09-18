@@ -9,15 +9,7 @@ from .models import (
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
-
-
-# class AlunoSerializer(serializers.ModelSerializer):
-#     user = UserSerializer()
-
-#     class Meta:
-#         model = Aluno
-#         fields = ['id', 'user', 'foto_perfil']
+        fields = ['username', 'email']
 
 
 class DisciplinaSerializer(serializers.ModelSerializer):
