@@ -17,9 +17,9 @@ urlpatterns = [
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestoesDetailView.as_view(), name='questoes_detail'),
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/', RespostaQuestaoView.as_view(), name='resposta_questao'),
 
-    # Criar, atualizar e deletar quiz
-    # path('quizzes/', views.crud_quiz, name='crud_quiz'),
-    # path('quizzes/<int:quiz_id>/', views.crud_quiz, name='crud_quiz'),
+    # CRUD quiz
+    path('quizzes/', QuizAPIView.as_view(), name='list_create_quiz'),
+    path('quizzes/<int:id>/', QuizDetailAPIView.as_view(), name='quiz_detail'),
 
     # Criar, atualizar e deletar questão
     # path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', views.crud_question, name='crud_question'),

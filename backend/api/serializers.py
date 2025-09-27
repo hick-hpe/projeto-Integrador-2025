@@ -23,10 +23,14 @@ class QuizSerializer(serializers.ModelSerializer):
     disciplina_id = serializers.PrimaryKeyRelatedField(
         queryset=Disciplina.objects.all(), source='disciplina', write_only=True
     )
+    questoes = serializers.SerializerMethodField()
+
+    def get_questoes(self, obj):
+        return QuestaoSerializer(obj.questoes.all(), many=True).data
 
     class Meta:
         model = Quiz
-        fields = ['id', 'disciplina', 'disciplina_id', 'nivel', 'descricao']
+        fields = ['id', 'disciplina', 'disciplina_id', 'nivel', 'descricao', 'questoes']
 
 
 class AlternativaSerializer(serializers.ModelSerializer):

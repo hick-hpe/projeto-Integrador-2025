@@ -41,6 +41,47 @@ class DisciplinaQuizzesView(APIView):
         return Response(serializer.data)
 
 
+# ADMIN: GET/POST quizzes
+class QuizAPIView(APIView):
+    """
+    ADMIN: View para listar todos os quizzes disponíveis.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        quizzes = Quiz.objects.all()
+        serializer = QuizSerializer(quizzes, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = QuizSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ADMIN: GET/PUT/DELETE quiz por ID
+class QuizDetailAPIView(APIView):
+    def get(self, request, id):
+        quiz = get_object_or_404(Quiz, id=id)
+        serializer = QuizSerializer(quiz)
+        return Response(serializer.data)
+    
+    def put(self, request, quiz_id):
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        serializer = QuizSerializer(quiz, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, quiz_id):
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        quiz.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class QuizQuestoesView(APIView):
     """
     Veirficar se atingiu pelo 70% de acertos no nível anterior

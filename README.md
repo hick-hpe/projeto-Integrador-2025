@@ -159,6 +159,7 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
         ```
 
 ## Rotas da API
+### Rotas para Aluno
 Para usar a API, deve estar autenticado!
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>
     - Formato de resposta: <br/>
@@ -337,6 +338,34 @@ Para usar a API, deve estar autenticado!
             }
         ]
         ```
+
+### Rotas para admin/moderador
+Para isso, deve estar logado como admin/moderador
+- `GET /api/quizzes/` - Listar todos os quizzes criados
+    - Formato de resposta: <br/>
+        ```
+        [
+            {
+                "descricao": "Learn how to create, read, update, and delete quizzes using a RESTful API built with Django REST Framework.",
+                "disciplina": "API Development",
+                "nivel": "Intermediate",
+                "questoes": [
+                    {
+                        "descricao": "Which HTTP method is used to create a new quiz in a RESTful API?",
+                        "alternativas": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "DELETE"
+                        ],
+                        "resposta_correta": "POST",
+                        "explicacao": "The POST method is used to create new resources in a RESTful API."
+                    }
+                ]
+            }
+        ]
+        ```
+
 
 ## Rodar protótipo teste:
 - Instalação:
