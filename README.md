@@ -346,26 +346,65 @@ Para isso, deve estar logado como admin/moderador
         ```
         [
             {
-                "descricao": "Learn how to create, read, update, and delete quizzes using a RESTful API built with Django REST Framework.",
-                "disciplina": "API Development",
-                "nivel": "Intermediate",
+                "id": 1,
+                "disciplina": "web",
+                "nivel": "Iniciante",
+                "descricao": "Quiz para iniciantes em desenvolvimento web",
                 "questoes": [
                     {
-                        "descricao": "Which HTTP method is used to create a new quiz in a RESTful API?",
+                        "id": 1,
+                        "quiz": 1,
+                        "descricao": "Qual das seguintes linguagens é utilizada principalmente no lado do cliente para tornar as páginas web interativas?",
                         "alternativas": [
-                            "GET",
-                            "POST",
-                            "PUT",
-                            "DELETE"
-                        ],
-                        "resposta_correta": "POST",
-                        "explicacao": "The POST method is used to create new resources in a RESTful API."
+                            {
+                                "id": 1,
+                                "texto": "Python"
+                            },
+                            {
+                                "id": 2,
+                                "texto": "JavaScript"
+                            },
+                            {
+                                "id": 3,
+                                "texto": "SQL"
+                            },
+                            {
+                                "id": 4,
+                                "texto": "PHP"
+                            }
+                        ]
                     }
                 ]
             }
         ]
         ```
 
+- `POST /api/quizzes/` - Criar um quiz
+    - Formato de envio:
+        ```
+        {
+            "descricao": "Learn how to create, read, update, and delete quizzes using a RESTful API built with Django REST Framework.",
+            "disciplina": "API Development",
+            "nivel": "Intermediate",
+            "questoes": [
+                {
+                    "descricao": "Which HTTP method is used to create a new quiz in a RESTful API?",
+                    "alternativas": [
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE"
+                    ],
+                    "resposta_correta": "POST",
+                    "explicacao": "The POST method is used to create new resources in a RESTful API."
+                }
+            ]
+        }
+        ```
+    - Formato de resposta:
+        ```
+        {}
+        ```
 
 ## Rodar protótipo teste:
 - Instalação:

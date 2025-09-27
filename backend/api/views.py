@@ -56,11 +56,44 @@ class QuizAPIView(APIView):
     def post(self, request):
         serializer = QuizSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Cria o Quiz
+            quiz = serializer.save()
+
+            # Agora cria as questões e relacionadas
+            questoes_data = request.data.get("questoes", [])
+            for questao_data in questoes_data:
+                # criar a questão
+                descricao = questao_data.get('descricao', '')
+                questao = Questao.objects.create(quiz=quiz, descricao=descricao)
+                print(f'--- Questao criada: {questao}')
+
+                # criar as alternativas
+                alternativas_data = questao_data.get('alternativas', [])
+                for texto in alternativas_data:
+                    Alternativa.objects.create(questao=questao, texto=texto)
+                    print(f'--- Alternativa criada: {texto}')
+                
+                # salva a resposta correta
+                resposta_data = questao_data.get('resposta_correta', '')
+                explicacao = questao_data.get('explicacao', '')
+                alternativa_correta = Alternativa.objects.filter(
+                    questao=questao, texto=resposta_data
+                ).first()
+                if alternativa_correta:
+                    Resposta.objects.create(
+                        questao=questao,
+                        alternativa=alternativa_correta,
+                        explicacao=explicacao
+                    )
+                    print(f'--- Resposta correta criada: {resposta_data}')
+
+            # Recarrega o serializer para retornar as questões no JSON
+            output_serializer = QuizSerializer(quiz)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+        
 # ADMIN: GET/PUT/DELETE quiz por ID
 class QuizDetailAPIView(APIView):
     def get(self, request, id):
