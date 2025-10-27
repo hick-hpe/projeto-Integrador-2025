@@ -103,42 +103,30 @@ const QuitButton = styled.button`
 
 const QuizForm = () => {
   const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [selectedOption, setSelectedOption] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const questions = [
-    {
-      id: 1,
-      text: "Qual comando é usado para iniciar um novo projeto Django?",
-      options: [
-        "django-admin startproject",
-        "django-admin startapp",
-        "python manage.py runserver",
-        "django new project",
-      ],
-    },
-    {
-      id: 2,
-      text: "O que o arquivo `urls.py` define?",
-      options: [
-        "Estilos CSS do projeto",
-        "As rotas entre URLs e views",
-        "As configurações de banco de dados",
-        "Os templates HTML",
-      ],
-    },
-    {
-      id: 3,
-      text: "Qual comando roda o servidor local do Django?",
-      options: [
-        "python manage.py runserver",
-        "django-admin deploy",
-        "python server.py",
-        "django manage.py server",
-      ],
-    },
-  ];
+  // 🔹 Buscar perguntas do backend
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/quizzes/1/questoes/");
+        if (!response.ok) throw new Error("Erro ao buscar questões");
+        const data = await response.json();
+        setQuestions(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
@@ -147,7 +135,8 @@ const QuizForm = () => {
   const handleSubmit = () => {
     if (!selectedOption) return;
 
-    setAnswers({ ...answers, [questions[currentQuestion].id]: selectedOption });
+    const questionId = questions[currentQuestion].id;
+    setAnswers({ ...answers, [questionId]: selectedOption });
     setSelectedOption("");
 
     if (currentQuestion + 1 < questions.length) {
@@ -159,9 +148,14 @@ const QuizForm = () => {
 
   const handleQuit = () => {
     navigate("/Home/Disciplinas/Desenvolvimento_web/desistiu", {
-      state: { nomeQuiz: "Des. Web II - Básico" }
+      state: { nomeQuiz: "Des. Web II - Básico" },
     });
   };
+
+  // 🔹 Mostrar estado de carregamento ou erro
+  if (loading) return <p>Carregando perguntas...</p>;
+  if (error) return <p>Erro: {error}</p>;
+  if (questions.length === 0) return <p>Nenhuma questão encontrada.</p>;
 
   const q = questions[currentQuestion];
 
@@ -170,17 +164,18 @@ const QuizForm = () => {
       <QuizBox>
         <QuizTitle>Quiz: Des. Web II - Básico</QuizTitle>
         <QuestionNumber>Pergunta {currentQuestion + 1}</QuestionNumber>
-        <QuestionText>{q.text}</QuestionText>
-        {q.options.map((opt, idx) => (
-          <Option key={idx} selected={selectedOption === opt}>
+        <QuestionText>{q.descricao}</QuestionText>
+
+        {q.alternativas.map((alt, idx) => (
+          <Option key={alt.id} selected={selectedOption === alt.texto}>
             <input
               type="radio"
               name={`question-${q.id}`}
-              value={opt}
-              checked={selectedOption === opt}
+              value={alt.texto}
+              checked={selectedOption === alt.texto}
               onChange={handleOptionChange}
             />
-            {String.fromCharCode(65 + idx)} {opt}
+            {String.fromCharCode(65 + idx)} {alt.texto}
           </Option>
         ))}
 

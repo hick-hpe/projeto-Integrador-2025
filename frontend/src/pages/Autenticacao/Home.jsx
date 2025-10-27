@@ -89,7 +89,7 @@ export default function Home() {
     const [senha, setSenha] = useState('');
 
     const handleLogin = async () => {
-        const URL_LOGIN = 'http://palermo:8000/auth/login/';
+        const URL_LOGIN = 'http://localhost:8000/auth/login/';
         const dadosLogin = {
             username: username,
             password: senha,

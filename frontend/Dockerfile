@@ -19,7 +19,7 @@ COPY . .
 EXPOSE 5173
 
 # Comando para desenvolvimento
-CMD ["npm", "run", "dev", "--", "--host"]
+# CMD ["npm", "run", "dev", "--", "--host"]
 
 # =========================
 # Stage 2: Production

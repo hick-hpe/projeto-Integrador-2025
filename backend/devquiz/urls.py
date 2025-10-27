@@ -7,4 +7,5 @@ urlpatterns = [
     path('auth/', include('contas.urls')),
     path('api/certificados/', include('certificado.urls')),
     path('api/', include('api.urls')),
+    path('', views.index)
 ]
