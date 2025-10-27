@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaPlay, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -110,11 +110,12 @@ const QuizForm = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // 🔹 Buscar perguntas do backend
+
+  // Buscar perguntas do backend
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/quizzes/1/questoes/");
+        const response = await fetch("http://localhost:8000/api/quizzes/1/questoes/", { credentials: 'include' });
         if (!response.ok) throw new Error("Erro ao buscar questões");
         const data = await response.json();
         setQuestions(data);
@@ -152,7 +153,7 @@ const QuizForm = () => {
     });
   };
 
-  // 🔹 Mostrar estado de carregamento ou erro
+  // Mostrar estado de carregamento ou erro
   if (loading) return <p>Carregando perguntas...</p>;
   if (error) return <p>Erro: {error}</p>;
   if (questions.length === 0) return <p>Nenhuma questão encontrada.</p>;

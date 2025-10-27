@@ -18,8 +18,7 @@ import DesistenciaQuiz from './pages/Home/Disciplinas/Desenvolvimento_web/desisi
 import Programação_Quiz from './pages/Home/Disciplinas/Pasta_de_Programacao/Quiz_iniciado';
 import Desistencia_Programacao from './pages/Home/Disciplinas/Pasta_de_Programacao/desistiu_2';
 import Resultado from "./pages/Home/Disciplinas/Pasta_de_Programacao/Resultado";
-
-
+import './App.css';
 
 export default function App() {
   return (
