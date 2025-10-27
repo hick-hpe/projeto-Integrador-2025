@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { FaFilter, FaClipboardList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -97,75 +97,68 @@ const TableRow = styled.tr`
   &:nth-child(even) {
     background-color: #f0f0f0;
   }
+
+  display: flex;
 `;
 
 const TableCell = styled.td`
   padding: 10px;
   text-align: center;
+  flex: 1;
 `;
 
 export default function Quizzes_tela() {
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
+  const [listDisciplinas, setListDisciplinas] = useState([]);
+  const [chaveValorDiscQuiz, setChaveValorDiscQuiz] = useState({});
 
-  const quizzesTabela1 = [
-    {
-      titulo: "Des. Web II - Básico",
-      categoria: "Desenvolvimento Web",
-      pontuacao: 200,
-      nivel: "Iniciante",
-    },
-    {
-      titulo: "Prog. Web I",
-      categoria: "Desenvolvimento Web",
-      pontuacao: 400,
-      nivel: "Mediano",
-    },
-    {
-      titulo: "Estrutura de Dados",
-      categoria: "Programação",
-      pontuacao: 600,
-      nivel: "Avançado",
-    },
-  ];
+  const URL_DISCIPLINAS = "http://localhost:8000/api/disciplinas/";
 
-  const quizzesTabela2 = [
-    {
-      titulo: "Des. Web II - Básico",
-      categoria: "Desenvolvimento Web",
-      pontuacao: 200,
-      nivel: "Iniciante",
-    },
-    {
-      titulo: "Prog. Web I",
-      categoria: "Desenvolvimento Web",
-      pontuacao: 400,
-      nivel: "Mediano",
-    },
-    {
-      titulo: "Estrutura de Dados",
-      categoria: "Programação",
-      pontuacao: 600,
-      nivel: "Avançado",
-    },
-  ];
+  // buscar disciplinas
+  useEffect(() => {
+    const fetchDisciplinas = async () => {
+      try {
+        const response = await fetch(URL_DISCIPLINAS, { credentials: "include" });
+        const data = await response.json();
+        setListDisciplinas(data);
+      } catch (err) {
+        console.error("Erro ao buscar disciplinas:", err);
+      }
+    };
 
-  const realizarQuiz = () => {
-    navigate("/home/Disciplinas/Desenvolvimento_Web");
-  };
+    fetchDisciplinas();
+  }, []);
 
-  const Quiz_Programacao = () => {
-    navigate("/home/Disciplinas/Quiz_Programacao");
-  };
+  // buscar quizzes relacionados a cada disciplina
+  useEffect(() => {
+    if (!listDisciplinas.length) return;
 
-  const filtrarQuizzes = (quizzes) => {
-    return quizzes.filter((quiz) => {
-      if (filtro === "Todos") return true;
-      if (filtro === "Alta") return quiz.pontuacao >= 300;
-      if (filtro === "Baixa") return quiz.pontuacao < 300;
-      return quiz.nivel === filtro;
-    });
-  };
+    const fetchAllQuizzes = async () => {
+      try {
+        const promises = listDisciplinas.map(async (disciplina) => {
+          const URL_QUIZZES = `http://localhost:8000/api/disciplinas/${disciplina.id}/quizzes/`;
+          const response = await fetch(URL_QUIZZES, { credentials: "include" });
+          const data = await response.json();
+          return [disciplina.id, data];
+        });
+
+        const resultados = await Promise.all(promises);
+
+        // transforma em objeto: { id1: [...], id2: [...] }
+        const dict = Object.fromEntries(resultados);
+
+        console.log("Quizzes organizados:", dict);
+        setChaveValorDiscQuiz(dict);
+      } catch (err) {
+        console.error("Erro ao buscar quizzes:", err);
+      }
+    };
+
+    fetchAllQuizzes();
+  }, [listDisciplinas]);
+
+  const realizarQuiz = () => navigate("/home/Disciplinas/Desenvolvimento_Web");
 
   return (
     <Container>
@@ -192,61 +185,53 @@ export default function Quizzes_tela() {
           </Select>
         </FilterSection>
 
-        {/* Primeira Tabela */}
-        <TableSection>
-          <Title>Quizzes de Desenvolvimento Web</Title>
-          <QuizButton onClick={realizarQuiz}>
-            <FaClipboardList /> Realizar Quiz
-          </QuizButton>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Título</TableCell>
-                <TableCell>Disciplina/Materia</TableCell>
-                <TableCell>Pontuação</TableCell>
-                <TableCell>Nível</TableCell>
-              </TableRow>
-            </TableHead>
-            <tbody>
-              {filtrarQuizzes(quizzesTabela1).map((quiz, index) => (
-                <TableRow key={index}>
-                  <TableCell>{quiz.titulo}</TableCell>
-                  <TableCell>{quiz.categoria}</TableCell>
-                  <TableCell>{quiz.pontuacao}</TableCell>
-                  <TableCell>{quiz.nivel}</TableCell>
-                </TableRow>
-              ))}
-            </tbody>
-          </Table>
-        </TableSection>
+        {/* Renderizar tabelas de quizzes por disciplina */}
+        {!listDisciplinas.length ? (
+          <h2>Carregando disciplinas...</h2>
+        ) : (
+          listDisciplinas.map((disciplina) => (
+            <TableSection key={disciplina.id}>
+              <Title>Quizzes de {disciplina.nome}</Title>
 
-        {/* Segunda Tabela */}
-        <TableSection>
-          <Title>Quizzes de Programação</Title>
-          <QuizButton onClick={Quiz_Programacao}>
-            <FaClipboardList /> Realizar Quiz
-          </QuizButton>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Título</TableCell>
-                <TableCell>Disciplina/Materia</TableCell>
-                <TableCell>Pontuação</TableCell>
-                <TableCell>Nível</TableCell>
-              </TableRow>
-            </TableHead>
-            <tbody>
-              {filtrarQuizzes(quizzesTabela2).map((quiz, index) => (
-                <TableRow key={index}>
-                  <TableCell>{quiz.titulo}</TableCell>
-                  <TableCell>{quiz.categoria}</TableCell>
-                  <TableCell>{quiz.pontuacao}</TableCell>
-                  <TableCell>{quiz.nivel}</TableCell>
-                </TableRow>
-              ))}
-            </tbody>
-          </Table>
-        </TableSection>
+              <QuizButton onClick={realizarQuiz}>
+                <FaClipboardList /> Realizar Quiz
+              </QuizButton>
+
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Título</TableCell>
+                    <TableCell>Disciplina</TableCell>
+                    <TableCell>Pontuação</TableCell>
+                    <TableCell>Nível</TableCell>
+                  </TableRow>
+                </TableHead>
+                <tbody>
+                  {!chaveValorDiscQuiz[disciplina.id] ? (
+                    <TableRow>
+                      <TableCell colSpan="4">Carregando quizzes...</TableCell>
+                    </TableRow>
+                  ) : chaveValorDiscQuiz[disciplina.id].length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan="4">Nenhum quiz disponível.</TableCell>
+                    </TableRow>
+                  ) : (
+                    chaveValorDiscQuiz[disciplina.id].map((quiz) => (
+                      <TableRow key={quiz.id}>
+                        <TableCell
+                          style={{ overflowX: 'hidden' }}
+                        >{quiz.descricao}</TableCell>
+                        <TableCell>{disciplina.nome}</TableCell>
+                        <TableCell>{quiz.pontuacao || "-"}</TableCell>
+                        <TableCell>{quiz.nivel || "-"}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </tbody>
+              </Table>
+            </TableSection>
+          ))
+        )}
       </Content>
     </Container>
   );

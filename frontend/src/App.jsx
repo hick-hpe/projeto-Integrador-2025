@@ -42,6 +42,7 @@ export default function App() {
         <Route path="/Home/Disciplinas/Pasta_de_Programacao/Quiz_iniciado" element={<Programação_Quiz/>} />
         <Route path="/Home/Disciplinas/Pasta_de_Programacao/desistiu_2" element={<Desistencia_Programacao/>} />
         <Route path="/Home/Disciplinas/Pasta_de_Programacao/Resultado" element={<Resultado/>} />
+        
 
       </Routes>
     </BrowserRouter>
