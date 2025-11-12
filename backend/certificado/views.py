@@ -13,6 +13,90 @@ from django.http import FileResponse, JsonResponse
 import random
 from django.templatetags.static import static
 
+class ValidarCertificadoView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        print("\n===================== [VALIDAÇÃO DE CERTIFICADO] =====================")
+
+        codigo = request.data.get('codigo')
+        matricula = request.data.get('matricula')
+
+        print(f"[INPUT] Código: {codigo}")
+        print(f"[INPUT] Matrícula: {matricula}")
+
+        if not codigo or not matricula:
+            print("[ERRO] Código ou matrícula não informados.")
+            return Response(
+                {'erro': 'É necessário informar o código e a matrícula.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            print("[BUSCA] Verificando aluno e disciplina...")
+            disciplina = Disciplina.objects.get(pk=1)
+            aluno = Aluno.objects.get(matricula=matricula)
+            print(f"[OK] Aluno: {aluno.user.username} | Disciplina: {disciplina.nome}")
+
+            print("[BUSCA] Procurando certificado correspondente...")
+            certificado = get_object_or_404(Certificado, codigo=codigo, aluno=aluno, disciplina=disciplina)
+            print(f"[OK] Certificado encontrado: {certificado.codigo}")
+
+            nome = aluno.user.username
+            percentual_acertos = certificado.percentual_acertos
+
+            print("[GERAÇÃO] Preparando dados para o PDF...")
+            data_formatada = converter_data_para_extenso(datetime.today())
+            logo_path = os.path.join('static', 'img', 'logo', 'logo-teste.png')
+
+            if not os.path.exists(logo_path):
+                print(f"[AVISO] Logo não encontrado em: {logo_path}")
+            else:
+                print("[OK] Logo encontrado.")
+
+            logo_base64 = converter_imagem_para_base64(logo_path)
+            css_url = request.build_absolute_uri(static('css/certificado_pdf.css'))
+
+            contexto = {
+                "nome": nome.upper(),
+                "data": data_formatada,
+                "logo_base64": logo_base64,
+                "percentual_acertos": percentual_acertos,
+                "css_url": css_url,
+            }
+
+            print("[GERAÇÃO] Renderizando HTML do certificado...")
+            rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
+            print("[OK] HTML renderizado.")
+
+            pdf_path = f'certificado_{nome.replace(" ", "_")}.pdf'
+            print(f"[PDFKIT] Gerando PDF em: {pdf_path}")
+            pdfkit.from_string(rendered, pdf_path, options={'enable-local-file-access': ''})
+
+            if not os.path.exists(pdf_path):
+                print("[ERRO] PDF não foi gerado corretamente!")
+                return Response({'erro': 'Erro ao gerar o PDF.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            tamanho_pdf = os.path.getsize(pdf_path)
+            print(f"[OK] PDF gerado com sucesso ({tamanho_pdf} bytes)")
+
+            print("[RESPOSTA] Preparando envio do arquivo ao cliente...")
+            response = FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename=os.path.basename(pdf_path))
+            response['Content-Type'] = 'application/pdf'
+
+            print("[SUCESSO ✅] PDF pronto para download!\n=====================================================================")
+            return response
+
+        except Certificado.DoesNotExist:
+            print("[ERRO] Certificado não encontrado ou dados inválidos.\n=====================================================================")
+            return Response(
+                {'erro': 'Certificado não encontrado ou dados inválidos.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            print(f"[EXCEÇÃO] Erro inesperado: {e}\n=====================================================================")
+            return Response({'erro': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class CertificadoDetailView(APIView):
     """
     View para obter detalhes de um certificado específico.
@@ -90,6 +174,15 @@ class CertificadoListView(APIView):
             'certificados': certificados
         })
 
+# configurar e criar o certificado
+# def buscar_certificado():
+#     pass
+
+# def criar_pdf_certificado():
+#     pass
+
+# def baixar_certificado():
+#     pass
 
 class CertificadoDownloadView(APIView):
     """
@@ -107,7 +200,7 @@ class CertificadoDownloadView(APIView):
                 percentual_acertos = certificado.percentual_acertos
 
                 data_formatada = converter_data_para_extenso(datetime.today())
-                logo_path = os.path.join('static', 'img', 'logo.png')
+                logo_path = os.path.join('static', 'img', 'logo', 'logo-teste.png')
                 
                 logo_base64 = converter_imagem_para_base64(logo_path)
                 css_url = request.build_absolute_uri(static('css/certificado_pdf.css'))
