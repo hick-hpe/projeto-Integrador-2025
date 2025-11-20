@@ -36,7 +36,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 - Possibilidade de compartilhar conquistas em redes sociais para aumentar o engajamento
 
 ## 🔐 Autenticação
-- 🆕 CRIAR CONTA
+- 🆕 **CRIAR CONTA**
     - 🚀 `POST /auth/cadastro/` - Criar uma conta. <br/>
         - 📥 Formato de envio: <br/>
             ```
@@ -71,88 +71,92 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
                 "error": "Preencha os campos!"
             }
             ```
-- FAZER LOGIN
-    - `POST /auth/login/` - Realizar o login na conta. <br/>
-        - Formato de envio: <br/>
-        ```
+- 🔑 **FAZER LOGIN**
+    - 🚀 `POST /auth/login/` – Realizar o login na conta  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "username": "username",
             "password": "password"
         }
         ```
-    - Formato de resposta de sucesso: <br/>
-        ```
+    - 📤 **Formato de resposta de sucesso:**  
+        ```json
         {
             "detail": "Login realizado com sucesso!!"
         }
         ```
-- ATUALIZAR DADOS DA CONTA
-    - `PUT /auth/conta-detail/` - Editar dados da conta
-        - Formato de envio: <br/>
-        ```
+
+- ✏️ **ATUALIZAR DADOS DA CONTA**
+    - 🚀 `PUT /auth/conta-detail/` – Editar dados da conta  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "username": "username",
             "email": "email", 
             "password": "password"
         }
         ```
-    - Formato de resposta de sucesso: <br/>
-        ```
+    - 📤 **Formato de resposta de sucesso:**  
+        ```json
         {
             "detail": "Dados atualizados com sucesso!!"
         }
         ```
-- EXCLUIR CONTA
-    - `DELETE /auth/conta-detail/` - Excluir a conta.
-    - Formato de resposta de sucesso: <br/>
-        ```
+
+- ❌ **EXCLUIR CONTA**
+    - 🚀 `DELETE /auth/conta-detail/` – Excluir a conta  
+    - 📤 **Formato de resposta de sucesso:**  
+        ```json
         {
             "detail": "Conta excluída com sucesso!!"
         }
         ```
 
-- LOGOUT
-    - `POST /auth/logout/` - Encerra a sessão.
-    - Formato de resposta de sucesso: <br/>
-        ```
+- 🔒 **LOGOUT**
+    - 🚀 `POST /auth/logout/` – Encerra a sessão  
+    - 📤 **Formato de resposta de sucesso:**  
+        ```json
         {
             "detail": "Logout realizado com sucesso!!"
         }
         ```
 
-- ENVIAR EMAIL
-    - `POST /auth/enviar-email/` - Envia um código de recuperação de conta para o email cadastrado no sistema.
-    - Formato de envio: <br/>
-        ```
+
+- 📧 **ENVIAR EMAIL**
+    - 🚀 `POST /auth/enviar-email/` – Envia um código de recuperação de conta para o email cadastrado no sistema  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "email": "email"
         }
         ```
-    - Formato de resposta de sucesso: <br/>
-        ```
+    - 📤 **Formato de resposta de sucesso:**  
+        ```json
         {
             "detail": "Código enviado com sucesso!!"
         }
         ```
 
-- VALIDAR CÓDIGO
-    - `POST /auth/validar-codigo/` - Verifica se código informado foi o mesmo que foi enviado para o email do usuário.
-    - Formato de envio: <br/>
-        ```
+- 🔑 **VALIDAR CÓDIGO**
+    - 🚀 `POST /auth/validar-codigo/` – Verifica se o código informado é válido  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "email": "email",
             "codigo": "codigo"
         }
         ```
-    - Formato de resposta de sucesso: <br/>
-        ```
+    - 📤 **Formato de resposta de sucesso:**  
+        ```json
         {
-            "detail": "Código enviado com sucesso!!"
+            "detail": "Código validado com sucesso!!"
         }
         ```
 
+
 ## 🔌 Rotas da API
-### Rotas para Aluno
+### 🎓 Rotas para Aluno
 Para usar a API, deve estar autenticado!
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>
     - Formato de resposta: <br/>
@@ -332,7 +336,7 @@ Para usar a API, deve estar autenticado!
         ]
         ```
 
-### Rotas para admin/moderador
+### ⚙️ Rotas para admin/moderador
 Para isso, deve estar logado como admin/moderador.
 
 - `GET /api/adm/disciplinas/` - Listar todas as disciplinas
