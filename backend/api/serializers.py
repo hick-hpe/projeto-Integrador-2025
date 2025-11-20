@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    Aluno, Disciplina, Pontuacao, Quiz, Questao,
+    CustomUser, Disciplina, Pontuacao, Quiz, Questao,
     Alternativa, Resposta, RespostaAluno,
     Feedback, Certificado, EmblemaUser
 )
@@ -77,7 +77,7 @@ class RespostaSerializer(serializers.ModelSerializer):
 
 
 class RespostaAlunoSerializer(serializers.ModelSerializer):
-    aluno = serializers.PrimaryKeyRelatedField(queryset=Aluno.objects.all())
+    aluno = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     questao = serializers.PrimaryKeyRelatedField(queryset=Questao.objects.all())
     alternativa = serializers.PrimaryKeyRelatedField(queryset=Alternativa.objects.all())
 

@@ -3,17 +3,22 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
 
-class Aluno(models.Model):
+class CustomUser(models.Model):
+    TIPOS_USUARIOS_CHOICE = [
+        ('aluno', 'aluno'),
+        ('admin', 'admin'),
+    ]
     user = models.OneToOneField(User, related_name='aluno', on_delete=models.CASCADE)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
     matricula = models.CharField(max_length=16, blank=True, null=True)
+    tipo_usuario = models.CharField(max_length=5, choices=TIPOS_USUARIOS_CHOICE)
 
     def __str__(self):
         return f"{self.user}"
     
 
 class Codigo(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True, blank=True)
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     codigo = models.CharField(max_length=6)
     criado_em = models.DateTimeField(auto_now_add=True)
 
@@ -71,7 +76,7 @@ class Resposta(models.Model):
 
 
 class Desempenho(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True)
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     num_acertos = models.IntegerField(default=0)
@@ -82,7 +87,7 @@ class Desempenho(models.Model):
 
 
 class Tentativa(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True)
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     desempenho = models.ForeignKey(Desempenho, on_delete=models.CASCADE, null=True, blank=True)
     concluiu_quiz = models.BooleanField(default=False)
 
@@ -101,7 +106,7 @@ class RespostaAluno(models.Model):
 
 class Certificado(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, null=True, blank=True)
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     percentual_acertos = models.IntegerField(default=0)
     data_emissao = models.DateField(auto_now_add=True)
@@ -129,7 +134,7 @@ class Emblema(models.Model):
     
 
 class EmblemaUser(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     emblema = models.ForeignKey(Emblema, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
@@ -137,7 +142,7 @@ class EmblemaUser(models.Model):
 
 
 class Pontuacao(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     pontos = models.PositiveIntegerField(default=0)
 
     def __str__(self):

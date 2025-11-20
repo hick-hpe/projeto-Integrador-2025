@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from api.models import Aluno, Certificado, Disciplina
+from api.models import CustomUser, Certificado, Disciplina
 from api.serializers import CertificadoSerializer
 import pdfkit
 import os
@@ -35,8 +35,8 @@ class ValidarCertificadoView(APIView):
         try:
             print("[BUSCA] Verificando aluno e disciplina...")
             disciplina = Disciplina.objects.get(pk=1)
-            aluno = Aluno.objects.get(matricula=matricula)
-            print(f"[OK] Aluno: {aluno.user.username} | Disciplina: {disciplina.nome}")
+            aluno = CustomUser.objects.get(matricula=matricula)
+            print(f"[OK] CustomUser: {aluno.user.username} | Disciplina: {disciplina.nome}")
 
             print("[BUSCA] Procurando certificado correspondente...")
             certificado = get_object_or_404(Certificado, codigo=codigo, aluno=aluno, disciplina=disciplina)
@@ -149,7 +149,7 @@ def gerar_certificado(data):
     """
     Gerar apenas se o aluno obteve pelo menos 70% de acertos
     """
-    aluno = get_object_or_404(Aluno, user__username=data['aluno'])
+    aluno = get_object_or_404(CustomUser, user__username=data['aluno'])
     disciplina = get_object_or_404(Disciplina, nome=data['disciplina'])
 
     Certificado.objects.get_or_create(

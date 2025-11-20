@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
 from django.conf import settings
 from random import randint
-from api.models import Codigo, Aluno
+from api.models import Codigo, CustomUser
 from api.serializers import UserSerializer
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -82,7 +82,7 @@ class CadastroView(APIView):
                 return Response({'error': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
 
             user = User.objects.create_user(username=username, email=email, password=password)
-            Aluno.objects.create(user=user)
+            CustomUser.objects.create(user=user)
             return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -107,7 +107,7 @@ class UserDetailView(APIView):
             user = serializer.save()
             
             # se enviou 'foto_perfil', atualizar
-            aluno = Aluno.objects.filter(user=user).first()
+            aluno = CustomUser.objects.filter(user=user).first()
             
             if aluno and foto_perfil:
                 aluno.foto_perfil = foto_perfil

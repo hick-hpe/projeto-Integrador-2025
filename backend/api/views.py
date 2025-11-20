@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from certificado.views import gerar_certificado
-from .models import Aluno, Emblema, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
+from .models import CustomUser, Emblema, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
 from .serializers import DisciplinaSerializer, EmblemaUserSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
@@ -656,7 +656,7 @@ class EmblemaUserListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username=None):
-        aluno = get_object_or_404(Aluno, user__username=username)
+        aluno = get_object_or_404(CustomUser, user__username=username)
         emblemas = EmblemaUser.objects.filter(aluno=aluno)
         serializer = EmblemaUserSerializer(emblemas, many=True)
         return Response(serializer.data)
@@ -679,7 +679,7 @@ class PontuacaoListView(APIView):
 
     def get(self, request, username=None):
         if username:
-            aluno = get_object_or_404(Aluno, user__username=username)
+            aluno = get_object_or_404(CustomUser, user__username=username)
             pontuacao = get_object_or_404(Pontuacao, aluno=aluno)
             serializer = PontuacaoSerializer(pontuacao)
             return Response(serializer.data)

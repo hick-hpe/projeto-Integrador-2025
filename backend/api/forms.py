@@ -1,9 +1,9 @@
 from django import forms
-from .models import Aluno, Codigo, Disciplina, Quiz, Questao, Alternativa, RespostaAluno, Feedback, Emblema
+from .models import CustomUser, Codigo, Disciplina, Quiz, Questao, Alternativa, RespostaAluno, Feedback, Emblema
 
-class AlunoForm(forms.ModelForm):
+class CustomUserForm(forms.ModelForm):
     class Meta:
-        model = Aluno
+        model = CustomUser
         fields = ('username', 'email', 'foto_perfil', 'password')
 
 class CodigoForm(forms.ModelForm):
