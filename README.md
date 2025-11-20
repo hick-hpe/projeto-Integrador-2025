@@ -340,8 +340,63 @@ Para usar a API, deve estar autenticado!
         ```
 
 ### Rotas para admin/moderador
-Para isso, deve estar logado como admin/moderador
-- `GET /api/quizzes/` - Listar todos os quizzes criados
+Para isso, deve estar logado como admin/moderador.
+
+- `GET /api/adm/disciplinas/` - Listar todas as disciplinas
+    - Formato de resposta: <br/>
+        ```
+        {
+            "id": 1,
+            "nome": "web"
+        }
+        ```
+
+- `GET /api/adm/disciplinas/<int:id>/` - Obter dados de uma disciplina
+    - Formato de resposta: <br/>
+        ```
+        {
+            "id": 1,
+            "nome": "web"
+        }
+        ```
+
+- `POST /api/adm/disciplinas/` - Cria uma disciplina
+    - Formato de envio: <br/>
+        ```
+        {
+            "nome": "Nova disciplina"
+        }
+        ```
+    - Formato de resposta: <br/>
+        ```
+        {
+            "message": "Disciplina criada com sucesso!"
+        }
+        ```
+
+- `PATCH /api/adm/disciplinas/<int:id>/` - Atualizar dados de uma disciplina
+    - Formato de envio: <br/>
+        ```
+        {
+            "nome": "Novo nome"
+        }
+        ```
+    - Formato de resposta: <br/>
+        ```
+        {
+            "message": "Disciplina atualizada com sucesso!"
+        }
+        ```
+
+- `DELETE /api/adm/disciplinas/<int:id>/` - Excluir disciplina
+    - Formato de resposta: <br/>
+        ```
+        {
+            "message": "Disciplina excluída com sucesso!"
+        }
+        ```
+
+- `GET /api/adm/quizzes/` - Listar todos os quizzes criados
     - Formato de resposta: <br/>
         ```
         [
@@ -379,7 +434,43 @@ Para isso, deve estar logado como admin/moderador
         ]
         ```
 
-- `POST /api/quizzes/` - Criar um quiz
+- `GET /api/adm/quizzes/<int:id>/` - Obter dados de um quiz
+    - Formato de resposta: <br/>
+        ```
+        {
+            "id": 1,
+            "disciplina": "web",
+            "nivel": "Iniciante",
+            "descricao": "Quiz para iniciantes em desenvolvimento web",
+            "questoes": [
+                {
+                    "id": 1,
+                    "quiz": 1,
+                    "descricao": "Qual das seguintes linguagens é utilizada principalmente no lado do cliente para tornar as páginas web interativas?",
+                    "alternativas": [
+                        {
+                            "id": 1,
+                            "texto": "Python"
+                        },
+                        {
+                            "id": 2,
+                            "texto": "JavaScript"
+                        },
+                        {
+                            "id": 3,
+                            "texto": "SQL"
+                        },
+                        {
+                            "id": 4,
+                            "texto": "PHP"
+                        }
+                    ]
+                }
+            ]
+        }
+        ```
+
+- `POST /api/adm/quizzes/` - Criar um quiz
     - Formato de envio:
         ```
         {
@@ -403,7 +494,29 @@ Para isso, deve estar logado como admin/moderador
         ```
     - Formato de resposta:
         ```
-        {}
+        {
+            "message": "Quiz criado com sucesso!"
+        }
+        ```
+- `PATCH /api/adm/quizzes/<int:id>/` - Editar um quiz
+    - Formato de envio: <br/>
+        ```
+        {
+            "descricao": "Texto atualizado"
+        }
+        ```
+    - Formato de resposta: <br/>
+        ```
+        {
+            "message": "Quiz atualizado com sucesso!"
+        }
+        ```
+- `DELETE /api/adm/quizzes/<int:id>/` - Excluir um quiz
+    - Formato de resposta: <br/>
+        ```
+        {
+            "message": "Quiz excluído com sucesso!"
+        }
         ```
 
 ## Rodar protótipo teste:

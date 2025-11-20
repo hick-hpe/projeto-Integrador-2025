@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .permissions import IsAdminQuizzesPermission
 from certificado.views import gerar_certificado
 from .models import CustomUser, Emblema, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
 from .serializers import DisciplinaSerializer, EmblemaUserSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
@@ -35,7 +36,8 @@ class DisciplinaCreateView(APIView):
     """
     View para criar uma disciplina
     """
-    permission_classes = [IsAuthenticated]
+
+    permission_classes = [IsAuthenticated, IsAdminQuizzesPermission]
 
     def post(self, request):
         serializer = DisciplinaSerializer(data=request.data)
@@ -46,10 +48,9 @@ class DisciplinaCreateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        disciplina = serializer.save()
-
+        serializer.save()
         return Response(
-            DisciplinaSerializer(disciplina).data,
+            {"message": "Disciplina criada com sucesso!"},
             status=status.HTTP_201_CREATED
         )
     
@@ -59,6 +60,9 @@ class DisciplinaDetailView(APIView):
     """
     ADMIN: View para editar e excluir uma disiciplina
     """
+
+    permission_classes = [IsAuthenticated, IsAdminQuizzesPermission]
+
     def get_object(self, id):
         return get_object_or_404(Disciplina, id=id)
 
@@ -73,7 +77,10 @@ class DisciplinaDetailView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(
+                {"message": "Disciplina atualizada com sucesso!"},
+                status=status.HTTP_200_OK
+            )
 
         return Response(
             {"errors": serializer.errors},
@@ -83,7 +90,10 @@ class DisciplinaDetailView(APIView):
     def delete(self, request, id):
         disciplina = self.get_object(id)
         disciplina.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Disciplina excluída com sucesso!"},
+            status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class DisciplinaQuizzesView(APIView):
@@ -114,6 +124,9 @@ class QuizCreateView(APIView):
     """
     ADMIN: View para criar um quiz
     """
+
+    permission_classes = [IsAuthenticated, IsAdminQuizzesPermission]
+
     def post(self, request):
         serializer = QuizSerializer(data=request.data)
         if serializer.is_valid():
@@ -148,15 +161,22 @@ class QuizCreateView(APIView):
                     )
                     print(f'--- Resposta correta criada: {resposta_data}')
 
-            # Recarrega o serializer para retornar as questões no JSON
-            output_serializer = QuizSerializer(quiz)
-            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                {"message": "Quiz criado com sucesso!"},
+                status=status.HTTP_201_CREATED
+            )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         
 # ADMIN: GET/PUT/DELETE quiz por ID
 class QuizDetailAPIView(APIView):
+    """
+    ADMIN: View para obter/atualizar/excluir um quiz
+    """
+    
+    permission_classes = [IsAuthenticated, IsAdminQuizzesPermission]
+
     def get(self, request, id):
         quiz = get_object_or_404(Quiz, id=id)
         serializer = QuizSerializer(quiz)
@@ -167,13 +187,19 @@ class QuizDetailAPIView(APIView):
         serializer = QuizSerializer(quiz, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(
+                {"message": "Quiz atualizado com sucesso!"},
+                status=status.HTTP_201_CREATED
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, id):
         quiz = get_object_or_404(Quiz, id=id)
         quiz.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+                {"message": "Quiz excluído com sucesso!"},
+                status=status.HTTP_204_NO_CONTENT
+            )
 
 
 class QuizQuestoesListView(APIView):
@@ -217,9 +243,10 @@ class QuizQuestoesListView(APIView):
 # ADMIN: GET/POST questão
 class QuestaoCreateView(APIView):
     """
-    ADMIN: Criar e Listar questões
+    ADMIN: View para criar e listar questões
     """
-    permission_classes = [IsAuthenticated]
+
+    permission_classes = [IsAuthenticated, IsAdminQuizzesPermission]
 
     def get(self, request):
         questoes = Questao.objects.all()
@@ -236,7 +263,11 @@ class QuestaoCreateView(APIView):
 
 # ADMIN: GET/PATCH/DELETE questão por ID
 class QuestoesPatchDeleteView(APIView):
-    permission_classes = [IsAuthenticated]
+    """
+    ADMIN: View para obter/atualizar/excluir uma questão
+    """
+    
+    permission_classes = [IsAuthenticated, IsAdminQuizzesPermission]
 
     def get(self, request, quiz_id, questao_id):
         questao = get_object_or_404(Questao, id=questao_id, quiz__id=quiz_id)
