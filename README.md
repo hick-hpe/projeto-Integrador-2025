@@ -1,51 +1,44 @@
-# Projeto Integrador - 2025
+# 🎓 Projeto Integrador - 2025
 
-O **DevQuiz** é uma plataforma online de quizzes desenvolvida para apoiar os alunos do curso de Tecnologia em Análise e Desenvolvimento de Sistemas (TADS) na fixação dos conteúdos abordados durante o curso. A proposta do DevQuiz é baseada em estudos que comprovam a eficácia da gamificação como ferramenta para aumentar o engajamento e a motivação dos estudantes.
+O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes de TADS a reforçar os conteúdos da graduação por meio de gamificação. Permite praticar, avaliar conhecimentos e acompanhar a evolução com certificação digital. Uma solução flexível, acessível e que potencializa o aprendizado de forma prática.
 
-Ao oferecer quizzes interativos, o DevQuiz estimula a aprendizagem ativa, permitindo que os alunos testem seus conhecimentos de forma contínua e prática. Esse método auxilia na identificação de pontos que precisam ser reforçados, tornando o estudo mais focado e eficiente. Além disso, a diversidade dos níveis de dificuldade (iniciante, intermediário e avançado) atende a diferentes perfis de alunos, respeitando seu ritmo e conhecimento prévio.
-
-A plataforma também oferece a emissão de certificados digitais, que atestam a conclusão dos quizzes e o esforço dos alunos dentro do ambiente do DevQuiz. Esses certificados funcionam como um incentivo interno e ferramenta de autoavaliação, sem caráter oficial ou validade reconhecida externamente. O formato online possibilita acesso fácil e flexível, permitindo que o estudo ocorra a qualquer momento e lugar, adequando-se à rotina dos estudantes.
-
-Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando os métodos tradicionais e potencializando os resultados do aprendizado, além de ter grande potencial de escalabilidade para outros cursos e áreas.
-
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 - **Backend:** Django, Django REST Framework  
-- **Frontend:** React.js, Vite (em desenvolvimento separado)
-    - *Nota: o frontend disponível neste repositório está sendo desenvolvido apenas para testes, não representando a interface real do sistema.*
-- **Banco de Dados:** SQLite, (futuramente, PostgreSQL com Docker)
+- **Frontend:** React.js, Vite (em desenvolvimento)
+- **Banco de Dados:** SQLite
 - **Containerização:** Docker, Docker Compose  
 - **Autenticação:** JWT (JSON Web Tokens)  
 - **Controle de Versão:** Git e GitHub
 
-## Funcionalidades
-<!-- - Criação de quizzes (em desenvolvimento) -->
+## 🛠️ Funcionalidades
 - Realização de quizzes
 - Quizzes divididos em três níveis:
     - Iniciante
     - Intermediário
     - Avançado
 - Emissão de certificados para os alunos
+- Registro de desempenho
+- Gestão de disciplinas e quizzes
 
-## Funcionalidades futuras
+## 🛠️ Funcionalidades futuras
 - Sistema de ranking entre os participantes
 - Emblemas sugeridos:
   - **Conclusão de Nível**: Recebido ao completar todos os quizzes de um nível (Iniciante, Intermediário, Avançado)
-  <!-- - **Sequência de Acertos**: Para quem acerta um número X de perguntas seguidas sem errar -->
-  <!-- - **Participação Frequente**: Concedido a usuários que realizam quizzes diariamente por um período contínuo (ex: 7 dias) -->
+  - **Sequência de Acertos**: Para quem acerta um número X de perguntas seguidas sem errar
+  - **Participação Frequente**: Concedido a usuários que realizam quizzes diariamente por um período contínuo (ex: 7 dias)
   - **Especialista em Disciplina**: Recebido ao concluir com sucesso todos os quizzes de uma disciplina específica (níveis Iniciante, Intermediário e Avançado).
   - **Primeiro Quiz**: Recebido ao completar o primeiro quiz na plataforma
   - **Quiz 100%**: Recebido ao completar um quiz com 100% de acertos na plataforma
-  <!-- - **Top do Ranking**: Para os usuários que alcançam as melhores posições no sistema de ranking -->
+  - **Top do Ranking**: Para os usuários que alcançam as melhores posições no sistema de ranking
 - Notificações visuais para conquistas, como pop-ups ou animações ao ganhar um emblema
 - Área dedicada no perfil do usuário para exibição dos emblemas conquistados
-<!-- - Possibilidade de compartilhar conquistas em redes sociais para aumentar o engajamento -->
+- Possibilidade de compartilhar conquistas em redes sociais para aumentar o engajamento
 
-
-## Autenticação
-- CRIAR CONTA
-    - `POST /auth/cadastro/` - Criar uma conta. <br/>
-        - Formato de envio: <br/>
+## 🔐 Autenticação
+- 🆕 CRIAR CONTA
+    - 🚀 `POST /auth/cadastro/` - Criar uma conta. <br/>
+        - 📥 Formato de envio: <br/>
             ```
             {
                 "username": "username",
@@ -54,25 +47,25 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
                 "confirm-password": "confirm-password"
             }
             ```
-        - Formato de resposta de sucesso: <br/>
+        - 📤 Formato de resposta de sucesso: <br/>
             ```
             {
                 "detail": "Conta criada com sucesso!!"
             }
             ```
-        - Formato de resposta de erro de usuário criado: <br/>
+        - 📤 Formato de resposta de erro de usuário criado: <br/>
             ```
             {
                 "error": "Este usuário já existe!"
             }
             ```
-        - Formato de resposta de erro na senha: <br/>
+        - 📤 Formato de resposta de erro na senha: <br/>
             ```
             {
                 "error": "As senhas não coindizem!"
             }
             ```
-        - Formato de resposta de erro de dados faltantes: <br/>
+        - 📤 Formato de resposta de erro de dados faltantes: <br/>
             ```
             {
                 "error": "Preencha os campos!"
@@ -158,7 +151,7 @@ Por fim, o DevQuiz representa uma inovação na forma de ensino, diversificando 
         }
         ```
 
-## Rotas da API
+## 🔌 Rotas da API
 ### Rotas para Aluno
 Para usar a API, deve estar autenticado!
 - `GET /api/disciplinas/` - Listar disciplinas. <br/>
@@ -519,39 +512,43 @@ Para isso, deve estar logado como admin/moderador.
         }
         ```
 
-## Rodar protótipo teste:
-- Instalação:
-    - Clonar repositório:
+## 🚀 Rodar protótipo de teste
+
+- 🔧 **Instalação:**
+    - 📂 Clonar repositório:
         ```
         git clone https://github.com/hick-hpe/projeto-Integrador-2025/
         ```
-    - Acessar o repositório:
+    - 📁 Acessar o repositório:
         ```
         cd projeto-Integrador-2025
         ```
-    - Adicione as variáveis de ambiente:
-        - `devquiz/.env`:
+    - 🔐 Adicionar variáveis de ambiente:
+        - 🗄️ backend/.env:
             ```bash
             EMAIL_HOST_USER='email'
             EMAIL_HOST_PASSWORD='senha de app'
             ```
-        - `reactapp/.env`:
+        - 🌐 frontend/.env:
             ```bash
             VITE_REACT_APP_API_URL=http://localhost:8000/api/
             ```
-    - Executar
+    - ▶️ Executar:
         ```bash
         docker compose up
         ```
-## Servidores
-- Servidor Django:
+
+## 🌍 Servidores
+- 🐍 **Servidor Django**:
     ```
     http://localhost:8000/
     ```
-- Servidor React:
+- ⚛️ **Servidor React**:
     ```
     http://localhost:5173/
     ```
+
+> ⚠️ **Nota:** devido à configuração dos cookies, ambos os servidores precisam estar no mesmo domínio!
 
 
 <!-- ## Como Contribuir
@@ -564,17 +561,6 @@ Contribuições são bem-vindas! Para contribuir com o DevQuiz:
 4. Envie para seu fork (`git push origin minha-feature`)  
 5. Abra um Pull Request aqui no repositório original  
 6. Aguarde a revisão e feedback dos mantenedores -->
-
-<!-- ## Roadmap
-
-- [x] Criação e listagem de quizzes  
-- [x] Responder questões e avaliar respostas  
-- [x] Emissão de certificados digitais  
-- [ ] Implementar sistema de ranking entre participantes  
-- [ ] Criar sistema de emblemas e conquistas  
-- [ ] Adicionar compartilhamento de conquistas em redes sociais  
-- [ ] Melhorias na interface e experiência do usuário (UX/UI)  
-- [ ] Implementar notificações em tempo real   -->
 
 ---
 
