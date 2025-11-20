@@ -19,14 +19,17 @@ class DisciplinaSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
-    # disciplina = serializers.CharField(source="disciplina.nome", read_only=True)
-    # disciplina_id = serializers.PrimaryKeyRelatedField(
-    #     queryset=Disciplina.objects.all(), source='disciplina', write_only=True
-    # )
     disciplina = serializers.SlugRelatedField(
         slug_field="nome",
         queryset=Disciplina.objects.all()
     )
+    
+    disciplina_id = serializers.PrimaryKeyRelatedField(
+        source='disciplina',
+        queryset=Disciplina.objects.all(),
+        write_only=True
+    )
+
     questoes = serializers.SerializerMethodField()
 
     def get_questoes(self, obj):
@@ -44,7 +47,10 @@ class AlternativaSerializer(serializers.ModelSerializer):
 
 
 class QuestaoSerializer(serializers.ModelSerializer):
-    quiz = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all())
+    quiz = serializers.PrimaryKeyRelatedField(
+        queryset=Quiz.objects.all(),
+        write_only=True
+    )
     alternativas = AlternativaSerializer(many=True, read_only=True)
 
     class Meta:

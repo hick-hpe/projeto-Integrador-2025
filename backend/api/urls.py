@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    # rota inicial - teste api
     path('', IndexView.as_view(), name='index'),
 
     # Listar disiciplinas
@@ -11,18 +12,36 @@ urlpatterns = [
     path('disciplinas/<int:disciplina_id>/quizzes/', DisciplinaQuizzesView.as_view(), name='disciplina_quizzes'),
 
     # Listar questão(ões) de um quiz
-    path('quizzes/<int:quiz_id>/questoes/', QuizQuestoesView.as_view(), name='quizzes_questoes'),
+    path('quizzes/<int:quiz_id>/questoes/', QuizQuestoesListView.as_view(), name='quizzes_questoes'),
 
-    # Listar detalhes da questão + Receber resposta do aluno
-    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestoesDetailView.as_view(), name='questoes_detail'),
-    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/', RespostaQuestaoView.as_view(), name='resposta_questao'),
+    # Listar detalhes da questão
+    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestaoDetailView.as_view(), name='questoes_detail'),
+
+    # receber resposta do aluno
+    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', ResponderQuestaoView.as_view(), name='responder_questao_detail'),
+    
+    # obter resposta correta
+    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/obter-resposta/', RespostaQuestaoView.as_view(), name='resposta_questao'),
+
+    # listar quizzes
+    path('quizzes/', QuizListView.as_view(), name='quiz_list'),
+
+    # ============================================= CRUD - ADMIN =============================================
+    # CRUD disciplina
+    path('adm/disciplinas/', DisciplinaCreateView.as_view(), name='adm_disciplinas_create'),
+    path('adm/disciplinas/<int:id>/', DisciplinaDetailView.as_view(), name='adm_disciplinas_detail'),
 
     # CRUD quiz
-    path('quizzes/', QuizAPIView.as_view(), name='list_create_quiz'),
-    path('quizzes/<int:id>/', QuizDetailAPIView.as_view(), name='quiz_detail'),
+    path('adm/quizzes/', QuizCreateView.as_view(), name='adm_list_create_quiz'),
+    path('adm/quizzes/<int:id>/', QuizDetailAPIView.as_view(), name='adm_quiz_detail'),
 
-    # Criar, atualizar e deletar questão
-    # path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', views.crud_question, name='crud_question'),
+    # Listar/Criar questão
+    path('adm/quizzes/<int:quiz_id>/questoes/', QuestaoCreateView.as_view(), name='question_create'),
+
+    # Obter questão/Atualizar/Deletar questão
+    path('adm/quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestoesPatchDeleteView.as_view(), name='question_patch_delete'),
+
+    # ========================================================================================================
 
     # Iniciar quiz
     path('quizzes/<int:quiz_id>/iniciar/', IniciarQuizView.as_view(), name='iniciar_quiz'),
