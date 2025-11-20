@@ -11,7 +11,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 - **Autenticação:** JWT (JSON Web Tokens)  
 - **Controle de Versão:** Git e GitHub
 
-## 🛠️ Funcionalidades
+## 🎯 Funcionalidades
 - Realização de quizzes
 - Quizzes divididos em três níveis:
     - Iniciante
@@ -21,7 +21,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 - Registro de desempenho
 - Gestão de disciplinas e quizzes
 
-## 🛠️ Funcionalidades futuras
+## 🚀 Funcionalidades futuras
 - Sistema de ranking entre os participantes
 - Emblemas sugeridos:
   - **Conclusão de Nível**: Recebido ao completar todos os quizzes de um nível (Iniciante, Intermediário, Avançado)
@@ -156,11 +156,13 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 
 
 ## 🔌 Rotas da API
+
 ### 🎓 Rotas para Aluno
-Para usar a API, deve estar autenticado!
-- `GET /api/disciplinas/` - Listar disciplinas. <br/>
-    - Formato de resposta: <br/>
-        ```
+> Para usar a API, é necessário estar autenticado!
+
+- 📚 `GET /api/disciplinas/` – Listar disciplinas  
+    - 📤 **Formato de resposta:**  
+        ```json
         [
             {
                 "id": 1,
@@ -168,9 +170,10 @@ Para usar a API, deve estar autenticado!
             }
         ]
         ```
-- `GET /api/disciplinas/<int:disciplina_id>/quizzes/` - Listar os quizzes de uma disciplina. <br/>
-    - Formato de resposta: <br/>
-        ```
+
+- 📝 `GET /api/disciplinas/<int:disciplina_id>/quizzes/` – Listar quizzes de uma disciplina  
+    - 📤 **Formato de resposta:**  
+        ```json
         [
             {
                 "id": 1,
@@ -180,9 +183,10 @@ Para usar a API, deve estar autenticado!
             }
         ]
         ```
-- `GET /api/quizzes/<int:quiz_id>/questoes/` - Listar as questões de um quiz. <br/>
-    - Formato de resposta: <br/>
-        ```
+
+- ❓ `GET /api/quizzes/<int:quiz_id>/questoes/` – Listar questões de um quiz  
+    - 📤 **Formato de resposta:**  
+        ```json
         [
             {
                 "id": 51,
@@ -201,54 +205,38 @@ Para usar a API, deve estar autenticado!
             }
         ]
         ```
-- `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Exibe os detalhes de uma questão. Pode ser em múltipla escolha ou verdadeiro e falso. <br/>
-    - Formato de resposta de Verdadeiro/Falso: <br/>
-        ```
+
+- ❓ `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` – Exibe os detalhes de uma questão (Múltipla escolha ou Verdadeiro/Falso)  
+    - 📤 **Formato de resposta Verdadeiro/Falso:**  
+        ```json
         {
             "id": 57,
             "quiz": 3,
             "descricao": "Descrição da questão aqui",
             "alternativas": [
-                {
-                    "id": 45,
-                    "texto": "Verdadeiro"
-                },
-                {
-                    "id": 46,
-                    "texto": "Falso"
-                }
+                { "id": 45, "texto": "Verdadeiro" },
+                { "id": 46, "texto": "Falso" }
             ]
         }
         ```
-    - Formato de resposta de Múltipla Escolha: <br/>
-        ```
+    - 📤 **Formato de resposta Múltipla Escolha:**  
+        ```json
         {
             "id": 58,
             "quiz": 3,
             "descricao": "Descrição da questão aqui",
             "alternativas": [
-                {
-                    "id": 47,
-                    "texto": "Aternativa 1"
-                },
-                {
-                    "id": 48,
-                    "texto": "Aternativa 2"
-                },
-                {
-                    "id": 49,
-                    "texto": "Aternativa 3"
-                },
-                {
-                    "id": 50,
-                    "texto": "Aternativa 4"
-                }
+                { "id": 47, "texto": "Alternativa 1" },
+                { "id": 48, "texto": "Alternativa 2" },
+                { "id": 49, "texto": "Alternativa 3" },
+                { "id": 50, "texto": "Alternativa 4" }
             ]
         }
         ```
-- `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/` - Exibe a resposta da questão e sua explicação. <br/>
-    - Formato de resposta: <br/>
-        ```
+
+- 📝 `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/` – Exibe a resposta da questão e explicação  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "detail": {
                 "id": 17,
@@ -258,26 +246,26 @@ Para usar a API, deve estar autenticado!
             }
         }
         ```
-- `POST /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` - Recebe a resposta do aluno de uma questão. <br/>
-    - Formato de envio: <br/>
+
+- 🖊️ `POST /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` – Enviar resposta do aluno  
+    - 📥 **Formato de envio:**  
+        ```json
+        { "alternativa_id": 12 }
         ```
-        {
-            "alternativa_id": 12
-        }
-        ```
-    - Formato de resposta: <br/>
-        ```
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "correto": false,
             "id": 18,
             "questao": "Descrição da questão aqui",
             "alternativa": "Descrição da alternativa aqui",
-            "explicacao": "Explicação da reposta"
+            "explicacao": "Explicação da resposta"
         }
         ```
-- `GET /certificados/<str:codigo>/` - Exibe os detalhes de um certificado. <br/>
-    - Formato de resposta: <br/>
-        ```
+
+- 📜 `GET /certificados/<str:codigo>/` – Exibe os detalhes de um certificado  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "codigo": "CERT12345",
             "usuario": "Henrique",
@@ -285,23 +273,22 @@ Para usar a API, deve estar autenticado!
             "data_emissao": "2025-06-03"
         }
         ```
-- `POST /api/quizzes/<int:quiz_id>/iniciar/` - Informar à aplicação que o aluno iniciou do quiz e preparar para salvar os dados. <br/>
-    - Formato de resposta: <br/>
+
+- 🏁 `POST /api/quizzes/<int:quiz_id>/iniciar/` – Indica que o aluno iniciou o quiz  
+    - 📤 **Formato de resposta:**  
+        ```json
+        { "mensagem": "Você iniciou o quiz!" }
         ```
-        {
-            "mensagem": "Você iniciou do quiz!"
-        }
+
+- 🏳️ `POST /api/quizzes/<int:quiz_id>/desistir/` – Indica que o aluno desistiu do quiz e limpa os dados temporários  
+    - 📤 **Formato de resposta:**  
+        ```json
+        { "mensagem": "Você desistiu do quiz!" }
         ```
-- `POST /api/quizzes/<int:quiz_id>/desistir/` - Informar à aplicação que o aluno desistiu do quiz e limpa os dados temporários. <br/>
-    - Formato de resposta: <br/>
-        ```
-        {
-            "mensagem": "Você desistiu do quiz!"
-        }
-        ```
-- `POST /api/quizzes/<int:quiz_id>/concluir/` - Mostra o desempenho do aluno no quiz. <br/>
-    - Formato de resposta: <br/>
-        ```
+
+- 🏁 `POST /api/quizzes/<int:quiz_id>/concluir/` – Exibe o desempenho do aluno no quiz  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "mensagem": "Quiz concluído com sucesso!",
             "usuario": "Henrique",
@@ -312,9 +299,10 @@ Para usar a API, deve estar autenticado!
             "pontuacao": 40
         }
         ```
-- `GET /api/emblemas/` - Mostrar todos os emblemas disponíveis.
-    - Formato de resposta: <br/>
-        ```
+
+- 🏅 `GET /api/emblemas/` – Lista todos os emblemas disponíveis  
+    - 📤 **Formato de resposta:**  
+        ```json
         [
             {
                 "nome": "Primeiro Quiz",
@@ -324,9 +312,9 @@ Para usar a API, deve estar autenticado!
         ]
         ```
 
-- `GET /api/emblemas/user/<str:username>/` - Mostrar os emblemas conquistados pelo usuário.
-    - Formato de resposta: <br/>
-        ```
+- 🏆 `GET /api/emblemas/user/<str:username>/` – Mostra os emblemas conquistados pelo usuário  
+    - 📤 **Formato de resposta:**  
+        ```json
         [
             {
                 "nome": "Primeiro Quiz",
@@ -339,63 +327,63 @@ Para usar a API, deve estar autenticado!
 ### ⚙️ Rotas para admin/moderador
 Para isso, deve estar logado como admin/moderador.
 
-- `GET /api/adm/disciplinas/` - Listar todas as disciplinas
-    - Formato de resposta: <br/>
-        ```
+- 📚 `GET /api/adm/disciplinas/` – Listar todas as disciplinas  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "id": 1,
             "nome": "web"
         }
         ```
 
-- `GET /api/adm/disciplinas/<int:id>/` - Obter dados de uma disciplina
-    - Formato de resposta: <br/>
-        ```
+- 🔍 `GET /api/adm/disciplinas/<int:id>/` – Obter dados de uma disciplina  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "id": 1,
             "nome": "web"
         }
         ```
 
-- `POST /api/adm/disciplinas/` - Cria uma disciplina
-    - Formato de envio: <br/>
-        ```
+- 🆕 `POST /api/adm/disciplinas/` – Criar uma disciplina  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "nome": "Nova disciplina"
         }
         ```
-    - Formato de resposta: <br/>
-        ```
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "message": "Disciplina criada com sucesso!"
         }
         ```
 
-- `PATCH /api/adm/disciplinas/<int:id>/` - Atualizar dados de uma disciplina
-    - Formato de envio: <br/>
-        ```
+- ✏️ `PATCH /api/adm/disciplinas/<int:id>/` – Atualizar dados de uma disciplina  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "nome": "Novo nome"
         }
         ```
-    - Formato de resposta: <br/>
-        ```
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "message": "Disciplina atualizada com sucesso!"
         }
         ```
 
-- `DELETE /api/adm/disciplinas/<int:id>/` - Excluir disciplina
-    - Formato de resposta: <br/>
-        ```
+- ❌ `DELETE /api/adm/disciplinas/<int:id>/` – Excluir disciplina  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "message": "Disciplina excluída com sucesso!"
         }
         ```
 
-- `GET /api/adm/quizzes/` - Listar todos os quizzes criados
-    - Formato de resposta: <br/>
-        ```
+- 📋 `GET /api/adm/quizzes/` – Listar todos os quizzes criados  
+    - 📤 **Formato de resposta:**  
+        ```json
         [
             {
                 "id": 1,
@@ -408,22 +396,10 @@ Para isso, deve estar logado como admin/moderador.
                         "quiz": 1,
                         "descricao": "Qual das seguintes linguagens é utilizada principalmente no lado do cliente para tornar as páginas web interativas?",
                         "alternativas": [
-                            {
-                                "id": 1,
-                                "texto": "Python"
-                            },
-                            {
-                                "id": 2,
-                                "texto": "JavaScript"
-                            },
-                            {
-                                "id": 3,
-                                "texto": "SQL"
-                            },
-                            {
-                                "id": 4,
-                                "texto": "PHP"
-                            }
+                            {"id": 1, "texto": "Python"},
+                            {"id": 2, "texto": "JavaScript"},
+                            {"id": 3, "texto": "SQL"},
+                            {"id": 4, "texto": "PHP"}
                         ]
                     }
                 ]
@@ -431,9 +407,9 @@ Para isso, deve estar logado como admin/moderador.
         ]
         ```
 
-- `GET /api/adm/quizzes/<int:id>/` - Obter dados de um quiz
-    - Formato de resposta: <br/>
-        ```
+- 🔍 `GET /api/adm/quizzes/<int:id>/` – Obter dados de um quiz  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "id": 1,
             "disciplina": "web",
@@ -445,31 +421,19 @@ Para isso, deve estar logado como admin/moderador.
                     "quiz": 1,
                     "descricao": "Qual das seguintes linguagens é utilizada principalmente no lado do cliente para tornar as páginas web interativas?",
                     "alternativas": [
-                        {
-                            "id": 1,
-                            "texto": "Python"
-                        },
-                        {
-                            "id": 2,
-                            "texto": "JavaScript"
-                        },
-                        {
-                            "id": 3,
-                            "texto": "SQL"
-                        },
-                        {
-                            "id": 4,
-                            "texto": "PHP"
-                        }
+                        {"id": 1, "texto": "Python"},
+                        {"id": 2, "texto": "JavaScript"},
+                        {"id": 3, "texto": "SQL"},
+                        {"id": 4, "texto": "PHP"}
                     ]
                 }
             ]
         }
         ```
 
-- `POST /api/adm/quizzes/` - Criar um quiz
-    - Formato de envio:
-        ```
+- 🆕 `POST /api/adm/quizzes/` – Criar um quiz  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "descricao": "Learn how to create, read, update, and delete quizzes using a RESTful API built with Django REST Framework.",
             "disciplina": "API Development",
@@ -477,40 +441,37 @@ Para isso, deve estar logado como admin/moderador.
             "questoes": [
                 {
                     "descricao": "Which HTTP method is used to create a new quiz in a RESTful API?",
-                    "alternativas": [
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "DELETE"
-                    ],
+                    "alternativas": ["GET", "POST", "PUT", "DELETE"],
                     "resposta_correta": "POST",
                     "explicacao": "The POST method is used to create new resources in a RESTful API."
                 }
             ]
         }
         ```
-    - Formato de resposta:
-        ```
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "message": "Quiz criado com sucesso!"
         }
         ```
-- `PATCH /api/adm/quizzes/<int:id>/` - Editar um quiz
-    - Formato de envio: <br/>
-        ```
+
+- ✏️ `PATCH /api/adm/quizzes/<int:id>/` – Editar um quiz  
+    - 📥 **Formato de envio:**  
+        ```json
         {
             "descricao": "Texto atualizado"
         }
         ```
-    - Formato de resposta: <br/>
-        ```
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "message": "Quiz atualizado com sucesso!"
         }
         ```
-- `DELETE /api/adm/quizzes/<int:id>/` - Excluir um quiz
-    - Formato de resposta: <br/>
-        ```
+
+- ❌ `DELETE /api/adm/quizzes/<int:id>/` – Excluir um quiz  
+    - 📤 **Formato de resposta:**  
+        ```json
         {
             "message": "Quiz excluído com sucesso!"
         }
