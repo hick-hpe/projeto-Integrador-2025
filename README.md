@@ -11,6 +11,8 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 - **Autenticação:** JWT (JSON Web Tokens)  
 - **Controle de Versão:** Git e GitHub
 
+a
+
 ## 🎯 Funcionalidades
 - Realização de quizzes
 - Quizzes divididos em três níveis:
