@@ -128,3 +128,22 @@ class PontuacaoSerializer(serializers.ModelSerializer):
 
     def get_aluno(self, obj):
         return obj.aluno.user.username
+
+
+#Json serializer de cadastro
+# Utilizando os módulos importados no início do documento
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=6)
+    class Meta:
+        model = User
+        fields = ("id", "username", "email", "password", "first_name", "last_name")
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username = validated_data.get("username") or validated_data["email"],
+            email = validated_data["email"],
+            password = validated_data["password"],
+            first_name = validated_data.get("first_name", ""),
+            last_name = validated_data.get("last_name", "")
+        )
+        return user

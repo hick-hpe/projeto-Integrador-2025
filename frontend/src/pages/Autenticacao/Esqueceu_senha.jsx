@@ -92,3 +92,22 @@ export default function EsqueceuSenha() {
     </Tela>
   );
 }
+
+//Json
+const handleRecover = (e) => {
+  e.preventDefault();
+  const info = { email };
+  fetch('http://localhost:8000/api/recuperar-senha', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(info)
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log('Recuperação de senha:', data);
+      alert('Verifique seu e-mail para redefinir a senha.');
+    })
+    .catch(err => {
+      console.error('Erro na recuperação de senha:', err);
+    });
+};

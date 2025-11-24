@@ -1,5 +1,10 @@
 from django.urls import path
 from .views import *
+from contas.views import RegisterView, PasswordResetRequestView
+from devquiz.views import QuizSearchView, QuizDetailView, SubmitAnswerView
+from certificado.views import GenerateCertificateView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns = [
     # rota inicial - teste api
@@ -70,3 +75,16 @@ urlpatterns = [
 ]
 
 
+#Json
+urlpatterns = [
+    path("accounts/register/", RegisterView.as_view(), name="register"),
+    path("accounts/password-reset/", PasswordResetRequestView.as_view(), name="password_reset"),
+    path("accounts/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),  # recebe JSON username/password
+    path("accounts/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
+    path("quizzes/search/", QuizSearchView.as_view(), name="quiz_search"),
+    path("quizzes/<int:pk>/", QuizDetailView.as_view(), name="quiz_detail"),
+    path("quizzes/answer/", SubmitAnswerView.as_view(), name="quiz_answer"),
+
+    path("certificates/generate/", GenerateCertificateView.as_view(), name="generate_certificate"),
+]

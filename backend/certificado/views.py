@@ -223,3 +223,12 @@ class CertificadoListView(APIView):
 #                 return Response({'erro': 'Certificado não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 #         return Response({'erro': 'Código do certificado não fornecido.'}, status=status.HTTP_400_BAD_REQUEST)
 
+class GenerateCertificateView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        disciplina = request.data.get("disciplina")
+        user = request.user
+        # aqui você geraria o PDF, armazenaria e retornaria URL
+        # para exemplo, construímos uma url fictícia:
+        fake_url = f"/media/certificados/{user.username}_{disciplina}.pdf"
+        return Response({"message":"Certificado gerado", "url": fake_url})

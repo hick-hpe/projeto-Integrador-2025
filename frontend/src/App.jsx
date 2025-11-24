@@ -49,3 +49,34 @@ export default function App() {
   );
 }
 //<Route path="/Home/Ranking" element={<Ranking_Page/>} /> //desativado (a pensar oque fazer no lugar)
+
+// Json
+const BASE_URL = "http://127.0.0.1:8000/api"; // ajuste conforme backend
+
+export function getToken() {
+  return localStorage.getItem("access_token");
+}
+
+export function authHeaders() {
+  const token = getToken();
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { "Authorization": "Bearer " + token } : {})
+  };
+}
+
+export async function post(path, body, withAuth = false) {
+  const res = await fetch(BASE_URL + path, {
+    method: "POST",
+    headers: withAuth ? authHeaders() : { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+export async function get(path) {
+  const res = await fetch(BASE_URL + path, {
+    headers: authHeaders()
+  });
+  return res.json();
+}

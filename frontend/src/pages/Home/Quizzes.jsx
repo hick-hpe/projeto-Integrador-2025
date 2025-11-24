@@ -236,3 +236,25 @@ export default function Quizzes_tela() {
     </Container>
   );
 }
+
+
+//Json
+const searchQuizzes = () => {
+  const token = localStorage.getItem('token');
+  fetch(`http://localhost:8000/api/quizzes?search=${encodeURIComponent(term)}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log('Quizzes encontrados:', data);
+      // Aqui você pode atualizar o estado com os quizzes recebidos
+      // setQuizzes(data);
+    })
+    .catch(err => {
+      console.error('Erro na busca de quizzes:', err);
+    });
+};

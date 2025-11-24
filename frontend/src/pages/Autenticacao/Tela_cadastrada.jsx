@@ -173,3 +173,25 @@ export default function Cadastro() {
     </TelaStyled>
   );
 }
+
+
+import React, { useState } from "react";
+import { post } from "../api";
+
+export default function Register() {
+  const [form, setForm] = useState({ username:"", email:"", password:"" });
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const resp = await post("/accounts/register/", form, false);
+    alert(resp.message || JSON.stringify(resp));
+  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <input placeholder="Usuário" value={form.username} onChange={e=>setForm({...form,username:e.target.value})} />
+      <input placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} />
+      <input type="password" placeholder="Senha" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
+      <button type="submit">Cadastrar</button>
+    </form>
+  );
+}
+
