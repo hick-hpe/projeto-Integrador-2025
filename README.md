@@ -35,10 +35,9 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 - Área dedicada no perfil do usuário para exibição dos emblemas conquistados
 - Possibilidade de compartilhar conquistas em redes sociais para aumentar o engajamento
 
-## Teste da API
-- Para verificar se a API está disponível, teste a rota:
-    - 🚀 `GET /api/` – Testar disponibilidade da API.  
-        - 📤 Formato de resposta:
+## 📡 Teste da API
+- 🚀 `GET /api/` – Testar disponibilidade da API.  
+    - 📤 Formato de resposta:
         ```
         {
             "message": "api on!!"
