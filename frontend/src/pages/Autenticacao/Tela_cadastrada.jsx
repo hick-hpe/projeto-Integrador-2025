@@ -23,9 +23,9 @@ const Card = styled.div`
 const BackLink = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   color: black;
-  font-size: 14px;
+  font-size: 14px; /* mínimo 14px */
   text-decoration: none;
   margin-bottom: 15px;
 
@@ -37,29 +37,30 @@ const BackLink = styled(Link)`
 const Title = styled.h2`
   text-align: center;
   margin: 10px 0 20px;
-  font-size: 22px;
+  font-size: 24px; /* mais confortável */
   font-weight: bold;
   color: #28a745;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 14px; /* mínimo 14px */
 `;
 
 const Button = styled.button`
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background-color: #28a745;
   color: white;
   font-weight: bold;
   border: none;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 18px; /* maior para destaque */
+  margin-top: 10px;
 
   &:hover {
     background-color: #218838;
@@ -69,9 +70,10 @@ const Button = styled.button`
 
 const ErrorMsg = styled.p`
   color: red;
-  font-size: 14px;
+  font-size: 14px; /* mínimo 14px */
   text-align: center;
-  margin-top: 5px;
+  margin-top: -5px;
+  margin-bottom: 10px;
 `;
 
 export default function Cadastro() {
@@ -127,9 +129,10 @@ export default function Cadastro() {
     <TelaStyled>
       <Card>
         <BackLink to="/">
-          <FiArrowLeft size={15} />
+          <FiArrowLeft size={18} /> {/* aumentado para combinar */}
           Voltar
         </BackLink>
+
         <Title>Crie sua conta</Title>
 
         <form onSubmit={handleSubmit}>
@@ -167,31 +170,10 @@ export default function Cadastro() {
           />
 
           {error && <ErrorMsg>{error}</ErrorMsg>}
+
           <Button type="submit">Cadastrar</Button>
         </form>
       </Card>
     </TelaStyled>
   );
 }
-
-
-import React, { useState } from "react";
-import { post } from "../api";
-
-export default function Register() {
-  const [form, setForm] = useState({ username:"", email:"", password:"" });
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const resp = await post("/accounts/register/", form, false);
-    alert(resp.message || JSON.stringify(resp));
-  }
-  return (
-    <form onSubmit={handleSubmit}>
-      <input placeholder="Usuário" value={form.username} onChange={e=>setForm({...form,username:e.target.value})} />
-      <input placeholder="Email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} />
-      <input type="password" placeholder="Senha" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} />
-      <button type="submit">Cadastrar</button>
-    </form>
-  );
-}
-

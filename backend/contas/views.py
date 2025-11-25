@@ -10,7 +10,7 @@ from django.conf import settings
 from random import randint
 from api.models import Codigo, CustomUser
 from api.serializers import UserSerializer
-import random
+
 
 class CookieTokenObtainPairView(TokenObtainPairView):
     """
@@ -63,8 +63,7 @@ class CadastroView(APIView):
     {
         "username": "username",
         "email": "username@gmail.com",
-        "password": "password",
-        "confirm-password": "password"
+        "password": "password"
     }
     """
     permission_classes = [AllowAny]
@@ -73,14 +72,10 @@ class CadastroView(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
-        confirm_password = request.data.get('confirm-password')
 
-        if all([username, email, password, confirm_password]):
+        if all([username, email, password]):
             if User.objects.filter(username=username).exists():
                 return Response({'error': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
-
-            if password != confirm_password:
-                return Response({'error': 'As senhas não coindizem!'}, status=status.HTTP_400_BAD_REQUEST)
 
             user = User.objects.create_user(username=username, email=email, password=password)
             CustomUser.objects.create(user=user)

@@ -22,34 +22,35 @@ const Title = styled.h2`
     text-align: center;
     color: #007bff;
     margin-bottom: 20px;
+    font-size: 24px;
 `;
 
 const Label = styled.label`
     display: block;
-    margin-top: 10px;
+    margin-top: 15px;
     margin-bottom: 5px;
-    font-size: 14px;
+    font-size: 14px; /* mínimo 14px */
 `;
 
 const Input = styled.input`
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    margin-bottom: 10px;
-    font-size: 14px;
+    margin-bottom: 12px;
+    font-size: 14px; /* mínimo 14px */
 `;
 
 const Button = styled.button`
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background-color: #28a745;
     color: white;
     font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px; /* confortável e acima de 14px */
 
     &:hover {
         background-color: #218838;
@@ -59,10 +60,11 @@ const Button = styled.button`
 const StyledLink = styled(RouterLink)`
     display: block;
     text-align: right;
-    font-size: 12px;
+    font-size: 14px; /* mínimo 14px */
     color: #007bff;
     text-decoration: none;
     margin-bottom: 15px;
+    margin-top: 12px;
 
     &:hover {
         text-decoration: underline;
@@ -71,7 +73,7 @@ const StyledLink = styled(RouterLink)`
 
 const FooterText = styled.p`
     text-align: center;
-    font-size: 14px;
+    font-size: 14px; /* mínimo 14px */
 
     a {
         color: #007bff;
@@ -83,7 +85,8 @@ const FooterText = styled.p`
     }
 `;
 
-export default function Home() {
+
+export default function Login() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [senha, setSenha] = useState('');
@@ -96,24 +99,23 @@ export default function Home() {
         };
 
         try {
-            const response = await fetch(URL_LOGIN, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dadosLogin),
-                credentials: 'include'
-            });
+            // const response = await fetch(URL_LOGIN, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(dadosLogin),
+            //     credentials: 'include'
+            // });
 
-            const data = await response.json();
-            console.log(data);
+            // const data = await response.json();
+            // console.log(data);
 
-            // Redireciona se o login for bem-sucedido
-            if (response.ok) {
-                navigate("/home/Tela");
-            } else {
-                alert("Login falhou: " + (data.detail || "Erro desconhecido"));
-            }
+            // if (response.ok) {
+                navigate("/dashboard");
+            // } else {
+            //     alert("Login falhou: " + (data.detail || "Erro desconhecido"));
+            // }
         } catch (err) {
             console.error('Erro: ', err);
         }
@@ -140,14 +142,17 @@ export default function Home() {
                     onChange={(e) => setSenha(e.target.value)}
                 />
 
-                <StyledLink to="/Esqueceu_senha">Esqueceu a senha?</StyledLink>
+                <StyledLink to="/esqueceu-senha">Esqueceu a senha?</StyledLink>
 
                 <Button onClick={handleLogin}>Entrar</Button>
 
                 <FooterText>
-                    Não tem conta? <StyledLink to="/Criar_Conta">Cadastre-se</StyledLink>
+                    <StyledLink to="/cadastro">Não tem conta? Cadastre-se</StyledLink>
                 </FooterText>
             </Card>
         </TelaStyled>
     );
 }
+
+
+

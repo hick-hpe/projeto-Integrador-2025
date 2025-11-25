@@ -2,40 +2,13 @@ import styled from "styled-components";
 import { FaFilter, FaClipboardList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Sidebar from "../../components/Sidebar";
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
-`;
-
-const Sidebar = styled.div`
-  width: 200px;
-  background-color: #007bff;
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const SidebarTitle = styled.h3`
-  color: white;
-  margin-bottom: 30px;
-`;
-
-const SidebarButton = styled.button`
-  background-color: ${(props) => (props.active ? "#e6f4ff" : "#0056b3")};
-  border: ${(props) => (props.active ? "2px solid #00ccff" : "none")};
-  color: ${(props) => (props.active ? "#007bff" : "white")};
-  border-radius: 10px;
-  padding: 10px;
-  text-align: left;
-  cursor: pointer;
-  font-weight: bold;
-  &:hover {
-    background-color: #3399ff;
-  }
+  font-size: 16px; /* fonte mínima */
 `;
 
 const Content = styled.div`
@@ -97,14 +70,11 @@ const TableRow = styled.tr`
   &:nth-child(even) {
     background-color: #f0f0f0;
   }
-
-  display: flex;
 `;
 
 const TableCell = styled.td`
   padding: 10px;
   text-align: center;
-  flex: 1;
 `;
 
 export default function Quizzes_tela() {
@@ -115,7 +85,7 @@ export default function Quizzes_tela() {
 
   const URL_DISCIPLINAS = "http://localhost:8000/api/disciplinas/";
 
-  // buscar disciplinas
+  // Buscar disciplinas
   useEffect(() => {
     const fetchDisciplinas = async () => {
       try {
@@ -130,46 +100,41 @@ export default function Quizzes_tela() {
     fetchDisciplinas();
   }, []);
 
-  // buscar quizzes relacionados a cada disciplina
+  // Buscar quizzes
   useEffect(() => {
     if (!listDisciplinas.length) return;
 
-    const fetchAllQuizzes = async () => {
+    const fetchQuizzes = async () => {
       try {
-        const promises = listDisciplinas.map(async (disciplina) => {
-          const URL_QUIZZES = `http://localhost:8000/api/disciplinas/${disciplina.id}/quizzes/`;
-          const response = await fetch(URL_QUIZZES, { credentials: "include" });
-          const data = await response.json();
-          return [disciplina.id, data];
+        const response = await fetch("http://localhost:8000/api/quizzes/", {
+          credentials: "include",
         });
 
-        const resultados = await Promise.all(promises);
+        const quizzes = await response.json();
 
-        // transforma em objeto: { id1: [...], id2: [...] }
-        const dict = Object.fromEntries(resultados);
+        const agrupado = {};
+        quizzes.forEach((quiz) => {
+          const idDisc = quiz.disciplina;
+          if (!agrupado[idDisc]) agrupado[idDisc] = [];
+          agrupado[idDisc].push(quiz);
+        });
 
-        console.log("Quizzes organizados:", dict);
-        setChaveValorDiscQuiz(dict);
+        setChaveValorDiscQuiz(agrupado);
       } catch (err) {
         console.error("Erro ao buscar quizzes:", err);
       }
     };
 
-    fetchAllQuizzes();
+    fetchQuizzes();
   }, [listDisciplinas]);
 
-  const realizarQuiz = () => navigate("/home/Disciplinas/Desenvolvimento_Web");
+  const realizarQuiz = (disciplina) =>
+    navigate(`/Home/Disciplinas/${disciplina.nome}`);
 
   return (
     <Container>
-      <Sidebar>
-        <SidebarTitle>DevQuiz Aluno</SidebarTitle>
-        <SidebarButton onClick={() => navigate("/Home/Tela")}>Home</SidebarButton>
-        <SidebarButton active>Quizzes</SidebarButton>
-        <SidebarButton onClick={() => navigate("/Home/Certificados")}>Certificados</SidebarButton>
-        <SidebarButton onClick={() => navigate("/Home/Ranking")}>Ranking</SidebarButton>
-        <SidebarButton onClick={() => navigate("/Home/Perfil")}>Perfil</SidebarButton>
-      </Sidebar>
+      
+      <Sidebar />
 
       <Content>
         <FilterSection>
@@ -185,7 +150,6 @@ export default function Quizzes_tela() {
           </Select>
         </FilterSection>
 
-        {/* Renderizar tabelas de quizzes por disciplina */}
         {!listDisciplinas.length ? (
           <h2>Carregando disciplinas...</h2>
         ) : (
@@ -193,7 +157,7 @@ export default function Quizzes_tela() {
             <TableSection key={disciplina.id}>
               <Title>Quizzes de {disciplina.nome}</Title>
 
-              <QuizButton onClick={realizarQuiz}>
+              <QuizButton onClick={() => realizarQuiz(disciplina)}>
                 <FaClipboardList /> Realizar Quiz
               </QuizButton>
 
@@ -206,6 +170,7 @@ export default function Quizzes_tela() {
                     <TableCell>Nível</TableCell>
                   </TableRow>
                 </TableHead>
+
                 <tbody>
                   {!chaveValorDiscQuiz[disciplina.id] ? (
                     <TableRow>
@@ -218,9 +183,7 @@ export default function Quizzes_tela() {
                   ) : (
                     chaveValorDiscQuiz[disciplina.id].map((quiz) => (
                       <TableRow key={quiz.id}>
-                        <TableCell
-                          style={{ overflowX: 'hidden' }}
-                        >{quiz.descricao}</TableCell>
+                        <TableCell>{quiz.descricao}</TableCell>
                         <TableCell>{disciplina.nome}</TableCell>
                         <TableCell>{quiz.pontuacao || "-"}</TableCell>
                         <TableCell>{quiz.nivel || "-"}</TableCell>
@@ -236,25 +199,3 @@ export default function Quizzes_tela() {
     </Container>
   );
 }
-
-
-//Json
-const searchQuizzes = () => {
-  const token = localStorage.getItem('token');
-  fetch(`http://localhost:8000/api/quizzes?search=${encodeURIComponent(term)}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Quizzes encontrados:', data);
-      // Aqui você pode atualizar o estado com os quizzes recebidos
-      // setQuizzes(data);
-    })
-    .catch(err => {
-      console.error('Erro na busca de quizzes:', err);
-    });
-};

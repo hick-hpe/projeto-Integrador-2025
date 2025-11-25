@@ -24,7 +24,7 @@ const LinkVoltar = styled(Link)`
   align-items: center;
   gap: 5px;
   color: black;
-  font-size: 14px;
+  font-size: 14px; /* mínimo */
   text-decoration: none;
   margin-bottom: 15px;
 
@@ -36,7 +36,7 @@ const LinkVoltar = styled(Link)`
 const Titulo = styled.h2`
   text-align: center;
   margin: 10px 0 20px;
-  font-size: 22px;
+  font-size: 22px; /* já > 14px */
   font-weight: bold;
   color: #007bff;
 `;
@@ -45,7 +45,7 @@ const Rotulo = styled.label`
   display: block;
   margin-top: 10px;
   margin-bottom: 5px;
-  font-size: 14px;
+  font-size: 14px; /* mínimo */
 `;
 
 const Entrada = styled.input`
@@ -54,7 +54,7 @@ const Entrada = styled.input`
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 14px; /* mínimo */
 `;
 
 const BotaoLink = styled(Link)`
@@ -67,7 +67,8 @@ const BotaoLink = styled(Link)`
   font-weight: bold;
   border-radius: 5px;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 16px; /* botão mantido maior */
+  margin-top: 5px;
 
   &:hover {
     background-color: #218838;
@@ -82,32 +83,16 @@ export default function EsqueceuSenha() {
           <FiArrowLeft size={15} />
           Voltar início
         </LinkVoltar>
+
         <Titulo>Recuperação de senha</Titulo>
+
         <Rotulo>Digite seu e-mail</Rotulo>
         <Entrada type="email" placeholder="Digite seu e-mail" />
-        <BotaoLink to="/verificacao_recuperacao">
+
+        <BotaoLink to="/verificacao-recuperacao">
           Receber link de verificação
         </BotaoLink>
       </Cartao>
     </Tela>
   );
 }
-
-//Json
-const handleRecover = (e) => {
-  e.preventDefault();
-  const info = { email };
-  fetch('http://localhost:8000/api/recuperar-senha', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(info)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Recuperação de senha:', data);
-      alert('Verifique seu e-mail para redefinir a senha.');
-    })
-    .catch(err => {
-      console.error('Erro na recuperação de senha:', err);
-    });
-};
