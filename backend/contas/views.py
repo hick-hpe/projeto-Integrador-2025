@@ -241,31 +241,3 @@ class ContaDetailView(APIView):
         request.user.delete()
         return Response({'detail': 'Conta excluída com sucesso'})
 
-
-#Json RegisterView, PasswordResetRequestView e usar TokenObtainPairView para login
-# todos os módulos foram importados no início
-class RegisterView(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({"message": "Usuário criado com sucesso", "id": user.id}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class PasswordResetRequestView(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        email = request.data.get("email")
-        if not email:
-            return Response({"error":"Informe email"}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            # para não vazar informação, retornar ok
-            return Response({"message":"Se o email existir, um código foi enviado"}, status=status.HTTP_200_OK)
-        # gerar código temporário (ex: 6 dígitos) -> idealmente salvar em db
-        code = str(random.randint(100000, 999999))
-        # aqui você enviaria por email. Para testes, devolvemos o código (apenas em dev).
-        # Em produção, remover this line.
-        return Response({"message":"Código enviado", "code_dev_only": code}, status=status.HTTP_200_OK)
