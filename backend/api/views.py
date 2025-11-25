@@ -16,8 +16,8 @@ class IndexView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        return JsonResponse({'message': 'api on'})
-
+        return JsonResponse({'message': 'API ON!!!'})
+    
 
 class DisciplinaListView(APIView):
     """

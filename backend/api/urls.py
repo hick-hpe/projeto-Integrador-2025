@@ -1,10 +1,5 @@
 from django.urls import path
 from .views import *
-from contas.views import RegisterView, PasswordResetRequestView
-from devquiz.views import QuizSearchView, QuizDetailView, SubmitAnswerView
-from certificado.views import GenerateCertificateView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 
 urlpatterns = [
     # rota inicial - teste api
@@ -73,4 +68,3 @@ urlpatterns = [
     path('pontuacao/', PontuacaoListView.as_view(), name='pontuacao_list'),
 
 ]
-
