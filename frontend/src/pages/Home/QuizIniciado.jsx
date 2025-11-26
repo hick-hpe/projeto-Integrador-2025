@@ -215,7 +215,7 @@ export default function QuizIniciado() {
     if (!selectedOption) return;
 
     const questionId = questions[currentQuestion].id;
-    const URL_ENVIAR_RESPOSTA = `http://localhost:8000/api/quizzes/${id}/questoes/${questionId}/`;
+    const URL_ENVIAR_RESPOSTA = `http://localhost:8000/api/quizzes/${id}/questoes/${questionId}/responder/`;
 
     const data = {
       alternativa_id: alternativaID
@@ -224,6 +224,7 @@ export default function QuizIniciado() {
     try {
       await fetch(URL_ENVIAR_RESPOSTA, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -237,7 +238,7 @@ export default function QuizIniciado() {
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion(prev => prev + 1);
     } else {
-      navigate("/resultado-quiz/");
+      navigate("/resultado-quiz/", { state: { quiz_id: id } });
     }
   };
 

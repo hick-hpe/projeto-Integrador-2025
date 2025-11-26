@@ -672,7 +672,7 @@ class RespostaUltimoQuiz(APIView):
 
     def get(self, request, quiz_id):
         respostas = RespostaAluno.objects.filter(
-            aluno=request.user.aluno,
+            desempenho__aluno=request.user.aluno,
             questao__quiz__id=quiz_id
         ).order_by('id')
 

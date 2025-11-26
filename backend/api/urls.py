@@ -17,11 +17,11 @@ urlpatterns = [
     # Informações do quiz
     path('quizzes/<int:quiz_id>/', QuizDetailView.as_view(), name='quiz_detail'),
 
+    # enviar resposta do aluno
+    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/responder/', ResponderQuestaoView.as_view(), name='responder_questao_detail'),
+
     # Listar detalhes da questão
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestaoDetailView.as_view(), name='questoes_detail'),
-
-    # receber resposta do aluno
-    path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', ResponderQuestaoView.as_view(), name='responder_questao_detail'),
     
     # obter resposta correta
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/obter-resposta/', RespostaQuestaoView.as_view(), name='resposta_questao'),
