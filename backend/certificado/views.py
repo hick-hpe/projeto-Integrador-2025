@@ -169,10 +169,10 @@ class CertificadoListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        certificados = list(Certificado.objects.all().values())
-        return JsonResponse({
-            'certificados': certificados
-        })
+        certificados = Certificado.objects.all()
+        serializer = CertificadoSerializer(certificados, many=True)
+        return Response(serializer.data)
+        
 
 # configurar e criar o certificado
 # def buscar_certificado():

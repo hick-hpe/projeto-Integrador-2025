@@ -1,40 +1,12 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar";
+import { useEffect, useState } from "react";
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
-`;
-
-const Sidebar = styled.div`
-  width: 200px;
-  background-color: #007bff;
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const SidebarTitle = styled.h3`
-  color: white;
-  margin-bottom: 30px;
-`;
-
-const SidebarButton = styled.button`
-  background-color: ${(props) => (props.active ? "#e6f4ff" : "#0056b3")};
-  border: ${(props) => (props.active ? "2px solid #00ff66" : "none")};
-  color: ${(props) => (props.active ? "#00ff66" : "white")};
-  border-radius: 10px;
-  padding: 10px;
-  text-align: left;
-  cursor: pointer;
-  font-weight: bold;
-  &:hover {
-    background-color: #3399ff;
-  }
 `;
 
 const Content = styled.div`
@@ -142,19 +114,42 @@ const DeleteButton = styled.button`
   align-self: center;
 `;
 
-export default function Perfil_Page() {
-  const navigate = useNavigate();
+export default function Perfil() {
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // verificar se ta logado
+      try {
+        const response = await fetch("http://localhost:8000/auth/me/", {
+          method: "GET",
+          credentials: "include", // envia os cookies
+        });
+
+        if (response.status === 401) {
+          // não está autenticado
+          window.location.href = "/";
+          return;
+        }
+
+        if (response.ok) {
+          const data = await response.json();
+          setUsername(data.username);
+        } else {
+          console.error("Erro ao buscar dados do usuário");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   return (
     <Container>
-      <Sidebar>
-        <SidebarTitle>DevQuiz Aluno</SidebarTitle>
-        <SidebarButton onClick={() => navigate("/home/Tela")}>Home</SidebarButton>
-        <SidebarButton onClick={() => navigate("/home/Quizzes")}>Quizzes</SidebarButton>
-        <SidebarButton onClick={() => navigate("/home/Certificados")}>Certificados</SidebarButton>
-        <SidebarButton onClick={() => navigate("/home/Ranking")}>Ranking</SidebarButton>
-        <SidebarButton active>Perfil</SidebarButton>
-      </Sidebar>
+      <Sidebar />
+
       <Content>
         <Title>Meu Perfil</Title>
         <ProfileSection>
@@ -162,7 +157,7 @@ export default function Perfil_Page() {
             <ProfileImage src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" />
             <CameraIcon />
           </ProfileImageWrapper>
-          <h2>Henrique localhost</h2>
+          <h2>{username}</h2>
           <InfoBox>
             <StatBox>
               <div>Total de Pontuação:</div>

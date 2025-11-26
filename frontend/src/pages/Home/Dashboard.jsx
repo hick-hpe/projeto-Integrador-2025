@@ -93,13 +93,18 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchUserData = async () => {
             // verificar se ta logado
-            // url: /auth/me/
-            // retorno: { username, email }
             try {
                 const response = await fetch("http://localhost:8000/auth/me/", {
                     method: "GET",
                     credentials: "include", // envia os cookies
                 });
+
+                if (response.status === 401) {
+                    // não está autenticado
+                    window.location.href = "/";
+                    return;
+                }
+
                 if (response.ok) {
                     const data = await response.json();
                     setUsername(data.username);
@@ -111,7 +116,7 @@ export default function Dashboard() {
             }
         }
         fetchUserData();
-    });
+    }, []);
 
     const handleLogout = async () => {
         try {

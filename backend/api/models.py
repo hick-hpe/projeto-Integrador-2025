@@ -37,14 +37,21 @@ class Disciplina(models.Model):
 
 
 class Quiz(models.Model):
-    NIVEIS = (
+    NIVEIS_CHOICE = (
         ('Iniciante', 'Iniciante'),
         ('Intermediário', 'Intermediário'),
         ('Avançado', 'Avançado'),
     )
+    TIPOS_QUESTOES_CHOICE = (
+        ('Múltipla Escolha', 'Múltipla Escolha'),
+        ('Verdadeiro ou Falso', 'Verdadeiro ou Falso'),
+        ('Múltipla Escolha e Verdadeiro ou Falso', 'Múltipla Escolha e Verdadeiro ou Falso'),
+    )
+    titulo = models.CharField(max_length=100, null=True, blank=True)
     disciplina = models.ForeignKey(Disciplina, related_name='quizzes', on_delete=models.CASCADE)
-    nivel = models.CharField(max_length=13, choices=NIVEIS, default='Iniciante')
+    nivel = models.CharField(max_length=13, choices=NIVEIS_CHOICE, default='Iniciante')
     descricao = models.TextField()
+    tipo_questoes = models.CharField(max_length=38, choices=TIPOS_QUESTOES_CHOICE, default='Múltipla Escolha')
 
     def __str__(self):
         return self.descricao[:30] + '...'

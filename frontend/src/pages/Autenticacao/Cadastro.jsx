@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const TelaStyled = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const TelaStyled = styled.div`
   background-color: #f3f3f3;
 `;
 
-const Card = styled.div`
+const Form = styled.form`
   background-color: white;
   padding: 40px;
   border-radius: 10px;
@@ -72,13 +73,15 @@ const Button = styled.button`
 export default function Cadastro() {
   const navigate = useNavigate();
 
-  const [nome, setNome] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
-  const handleCadastro = async () => {
-    if (senha !== confirmarSenha) {
+  const handleCadastro = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmarSenha) {
       alert("As senhas não coincidem!");
       return;
     }
@@ -90,16 +93,14 @@ export default function Cadastro() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nome: nome,
-          email: email,
-          password: senha,
+          username, email, password
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.detail || "Erro ao cadastrar");
+        alert(data.error || "Erro ao cadastrar");
         return;
       }
 
@@ -114,15 +115,15 @@ export default function Cadastro() {
 
   return (
     <TelaStyled>
-      <Card>
+      <Form method="post">
         <Title>Crie sua Conta</Title>
 
         <Label>Nome completo</Label>
         <Input
           type="text"
-          placeholder="Digite seu nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
+          placeholder="Digite seu username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
 
         <Label>Email</Label>
@@ -136,8 +137,8 @@ export default function Cadastro() {
         <Label>Senha</Label>
         <Input
           type="password"
-          placeholder="Digite sua senha"
-          value={senha}
+          placeholder="Digite sua password"
+          value={password}
           onChange={(e) => setSenha(e.target.value)}
         />
 
@@ -149,10 +150,10 @@ export default function Cadastro() {
           onChange={(e) => setConfirmarSenha(e.target.value)}
         />
 
-        <Button onClick={handleCadastro}>Cadastrar</Button>
+        <Button type="submit" onClick={handleCadastro}>Entrar</Button>
 
         <StyledLink href="/">Já tem conta? Entre!</StyledLink>
-      </Card>
+      </Form>
     </TelaStyled>
   );
 }

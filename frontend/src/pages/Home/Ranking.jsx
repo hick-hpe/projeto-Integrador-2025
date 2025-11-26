@@ -1,41 +1,14 @@
 import styled from "styled-components";
 import { FaFilter } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
+import { useEffect, useState } from "react";
 
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
-`;
-
-const Sidebar = styled.div`
-  width: 200px;
-  background-color: #007bff;
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const SidebarTitle = styled.h3`
-  color: white;
-  margin-bottom: 30px;
-`;
-
-const SidebarButton = styled.button`
-  background-color: ${(props) => (props.active ? "#e6f4ff" : "#0056b3")};
-  border: ${(props) => (props.active ? "2px solid #00ccff" : "none")};
-  color: ${(props) => (props.active ? "#007bff" : "white")};
-  border-radius: 10px;
-  padding: 10px;
-  text-align: left;
-  cursor: pointer;
-  font-weight: bold;
-  &:hover {
-    background-color: #3399ff;
-  }
 `;
 
 const Content = styled.div`
@@ -87,55 +60,77 @@ const TableCell = styled.td`
 `;
 
 export default function Ranking_Page() {
-    const navigate = useNavigate();
+  const [username, setUsername] = useState("");
 
-    const rankingData = [
-        { pos: 1, name: "David Hotes", category: "Desenvolvimento Web", points: 327 },
-        { pos: 2, name: "Henrique localhost", category: "Desenvolvimento Web", points: 313 },
-        { pos: 3, name: "Nsaboqmmasvaiter", category: "Desenvolvimento Web", points: 200 },
-        { pos: 4, name: "Nsaboqmmasvaiter", category: "Desenvolvimento Web", points: 200 },
-    ];
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // verificar se ta logado
+      try {
+        const response = await fetch("http://localhost:8000/auth/me/", {
+          method: "GET",
+          credentials: "include", // envia os cookies
+        });
 
-    return (
-        <Container>
-            <Sidebar>
-                <SidebarTitle>DevQuiz Aluno</SidebarTitle>
-                <SidebarButton onClick={() => navigate("/home/Tela")}>Home</SidebarButton>
-                <SidebarButton onClick={() => navigate("/home/Quizzes")}>Quizzes</SidebarButton>
-                <SidebarButton onClick={() => navigate("/home/Certificados")}>Certificados</SidebarButton>
-                <SidebarButton active>Ranking</SidebarButton>
-                <SidebarButton onClick={() => navigate("/home/Perfil")}>Perfil</SidebarButton>
-            </Sidebar>
-            <Content>
-                <Title>Ranking teste</Title>
-                <FilterSection>
-                    <span>Filtrar por:</span>
-                    <FaFilter />
-                    <Select>
-                        <option>Pontuação</option>
-                    </Select>
-                </FilterSection>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Posição</TableCell>
-                            <TableCell>Aluno</TableCell>
-                            <TableCell>Disciplina/Categoria</TableCell>
-                            <TableCell>Pontos</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <tbody>
-                        {rankingData.map((item) => (
-                            <TableRow key={item.pos} highlight={item.pos === 2}>
-                                <TableCell>#{item.pos}</TableCell>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.category}</TableCell>
-                                <TableCell>{item.points}</TableCell>
-                            </TableRow>
-                        ))}
-                    </tbody>
-                </Table>
-            </Content>
-        </Container>
-    );
+        if (response.status === 401) {
+          // não está autenticado
+          window.location.href = "/";
+          return;
+        }
+
+        if (response.ok) {
+          const data = await response.json();
+          setUsername(data.username);
+        } else {
+          console.error("Erro ao buscar dados do usuário");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    }
+    fetchUserData();
+  }, []);
+
+  const rankingData = [
+    { pos: 1, name: "David Hotes", category: "Desenvolvimento Web", points: 327 },
+    { pos: 2, name: "Henrique localhost", category: "Desenvolvimento Web", points: 313 },
+    { pos: 3, name: "Nsaboqmmasvaiter", category: "Desenvolvimento Web", points: 200 },
+    { pos: 4, name: "Nsaboqmmasvaiter", category: "Desenvolvimento Web", points: 200 },
+  ];
+
+  return (
+    <Container>
+      <Sidebar />
+
+      <Content>
+        <Title>Ranking teste</Title>
+        <FilterSection>
+          <span>Filtrar por:</span>
+          <FaFilter />
+          <Select>
+            <option>Pontuação</option>
+          </Select>
+        </FilterSection>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Posição</TableCell>
+              <TableCell>Aluno</TableCell>
+              <TableCell>Disciplina/Categoria</TableCell>
+              <TableCell>Pontos</TableCell>
+            </TableRow>
+          </TableHead>
+          <tbody>
+            {rankingData.map((item) => (
+              <TableRow key={item.pos} highlight={item.pos === 2}>
+                <TableCell>#{item.pos}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.category}</TableCell>
+                <TableCell>{item.points}</TableCell>
+              </TableRow>
+            ))}
+          </tbody>
+        </Table>
+      </Content>
+    </Container>
+  );
 }

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .permissions import IsAdminQuizzesPermission
 from certificado.views import gerar_certificado
 from .models import CustomUser, Emblema, Pontuacao, Tentativa, models, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, Resposta, Desempenho, EmblemaUser
-from .serializers import DisciplinaSerializer, EmblemaUserSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer
+from .serializers import DisciplinaSerializer, EmblemaUserSerializer, PontuacaoSerializer, QuizSerializer, QuestaoSerializer, RespostaSerializer, FeedbackSerializer, QuestaoRespostaSerializer, RespostaAlunoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 import random
@@ -202,6 +202,18 @@ class QuizDetailAPIView(APIView):
             )
 
 
+class QuizDetailView(APIView):
+    """
+    View para obter detalhes de um quiz específico.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, quiz_id):
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        serializer = QuizSerializer(quiz)
+        return Response(serializer.data)
+    
+
 class QuizQuestoesListView(APIView):
     """
     Veirficar se atingiu pelo 70% de acertos no nível anterior
@@ -307,7 +319,7 @@ class QuestaoDetailView(APIView):
 
 class ResponderQuestaoView(APIView):
     """
-    ADMIN: View para enviar a resposta do aluno para uma questão
+    View para enviar a resposta do aluno para uma questão
     """
     
     permission_classes = [IsAuthenticated]
@@ -408,6 +420,27 @@ class RespostaQuestaoView(APIView):
             return Response({'detail': 'ID da questao e do quiz não fornecido!!'})
 
 
+class ListRespostaQuestaoView(APIView):
+    """
+    Retornar todas as questões, alternativas e resposta correta
+    de um quiz específico.
+    """
+
+    def get(self, request, quiz_id):
+
+        if not quiz_id:
+            return Response(
+                {"detail": "ID do quiz não fornecido!"},
+                status=400
+            )
+
+        questoes = Questao.objects.filter(quiz_id=quiz_id)
+
+        serializer = QuestaoRespostaSerializer(questoes, many=True)
+
+        return Response(serializer.data, status=200)
+
+
 class IniciarQuizView(APIView):
     """
     Iniciar um quiz e registrar o desempenho.
@@ -418,14 +451,15 @@ class IniciarQuizView(APIView):
 
         quiz = get_object_or_404(Quiz, id=quiz_id)
 
-        desempenho = Desempenho.objects.create(
+        Desempenho.objects.update_or_create(
             aluno=request.user.aluno,
             quiz=quiz,
             disciplina=quiz.disciplina,
+            defaults={}
         )
 
         data = {
-            "detail": f"Você iniciou o quiz com sucesso! ID = {desempenho.id}"
+            "detail": "ok"
         }
         return Response(data, status=status.HTTP_201_CREATED)
     
@@ -628,6 +662,23 @@ class UltimosDesempenhosView(APIView):
             for d in desempenhos
         ]
         return Response(data)
+
+
+class RespostaUltimoQuiz(APIView):
+    """
+    Retorna todas as respostas do aluno para um quiz específico
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, quiz_id):
+        respostas = RespostaAluno.objects.filter(
+            aluno=request.user.aluno,
+            questao__quiz__id=quiz_id
+        ).order_by('id')
+
+        serializer = RespostaAlunoSerializer(respostas, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class FeedbackView(APIView):

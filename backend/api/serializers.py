@@ -37,14 +37,35 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ['id', 'disciplina', 'disciplina_id', 'nivel', 'descricao', 'questoes']
-    
+        fields = ['id', 'titulo', 'disciplina', 'tipo_questoes', 'disciplina_id', 'nivel', 'descricao', 'questoes']
+
 
 class AlternativaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alternativa
         fields = ['id', 'texto']
 
+
+class QuestaoRespostaSerializer(serializers.ModelSerializer):
+    alternativas = AlternativaSerializer(many=True)
+    resposta_correta = serializers.SerializerMethodField()
+    explicacao = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Questao
+        fields = ['id', 'descricao', 'alternativas', 'resposta_correta', 'explicacao']
+
+    def get_resposta_correta(self, obj):
+        # obj.resposta é o related_name do seu OneToOneField
+        if hasattr(obj, 'resposta'):
+            return obj.resposta.alternativa.id
+        return None
+
+    def get_explicacao(self, obj):
+        if hasattr(obj, 'resposta'):
+            return obj.resposta.explicacao
+        return None
+        
 
 class QuestaoSerializer(serializers.ModelSerializer):
     quiz = serializers.PrimaryKeyRelatedField(
@@ -77,9 +98,9 @@ class RespostaSerializer(serializers.ModelSerializer):
 
 
 class RespostaAlunoSerializer(serializers.ModelSerializer):
-    aluno = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    questao = serializers.PrimaryKeyRelatedField(queryset=Questao.objects.all())
-    alternativa = serializers.PrimaryKeyRelatedField(queryset=Alternativa.objects.all())
+    aluno = serializers.PrimaryKeyRelatedField(read_only=True)
+    questao = serializers.PrimaryKeyRelatedField(read_only=True)
+    alternativa = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = RespostaAluno

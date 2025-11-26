@@ -243,7 +243,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         }
         ```
 
-- 📝 `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/resposta/` – Exibe a resposta da questão e explicação  
+- 📝 `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/obter-resposta/` – Exibe a resposta da questão e explicação  
     - 📤 **Formato de resposta:**  
         ```json
         {

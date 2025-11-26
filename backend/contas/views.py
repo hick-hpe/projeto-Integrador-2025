@@ -78,7 +78,7 @@ class CadastroView(APIView):
                 return Response({'error': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
 
             user = User.objects.create_user(username=username, email=email, password=password)
-            CustomUser.objects.create(user=user)
+            CustomUser.objects.create(user=user, tipo_usuario='aluno')
             return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)

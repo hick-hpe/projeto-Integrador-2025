@@ -10,7 +10,7 @@ const TelaStyled = styled.div`
     background-color: #f3f3f3;
 `;
 
-const Card = styled.div`
+const Form = styled.form`
     background-color: white;
     padding: 40px;
     border-radius: 10px;
@@ -91,7 +91,9 @@ export default function Login() {
     const [username, setUsername] = useState('');
     const [senha, setSenha] = useState('');
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
         const URL_LOGIN = 'http://localhost:8000/auth/login/';
         const dadosLogin = {
             username: username,
@@ -99,23 +101,23 @@ export default function Login() {
         };
 
         try {
-            // const response = await fetch(URL_LOGIN, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(dadosLogin),
-            //     credentials: 'include'
-            // });
+            const response = await fetch(URL_LOGIN, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dadosLogin),
+                credentials: 'include'
+            });
 
-            // const data = await response.json();
-            // console.log(data);
+            const data = await response.json();
+            console.log(data);
 
-            // if (response.ok) {
+            if (response.ok) {
                 navigate("/dashboard");
-            // } else {
-            //     alert("Login falhou: " + (data.detail || "Erro desconhecido"));
-            // }
+            } else {
+                alert("Login falhou: " + (data.detail || "Erro desconhecido"));
+            }
         } catch (err) {
             console.error('Erro: ', err);
         }
@@ -123,12 +125,12 @@ export default function Login() {
 
     return (
         <TelaStyled>
-            <Card>
+            <Form method="post">
                 <Title>Login</Title>
 
                 <Label>Username</Label>
                 <Input
-                    type="email"
+                    type="text"
                     placeholder="Digite seu username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -144,12 +146,12 @@ export default function Login() {
 
                 <StyledLink to="/esqueceu-senha">Esqueceu a senha?</StyledLink>
 
-                <Button onClick={handleLogin}>Entrar</Button>
+                <Button type="submit" onClick={handleLogin}>Entrar</Button>
 
                 <FooterText>
                     <StyledLink to="/cadastro">Não tem conta? Cadastre-se</StyledLink>
                 </FooterText>
-            </Card>
+            </Form>
         </TelaStyled>
     );
 }

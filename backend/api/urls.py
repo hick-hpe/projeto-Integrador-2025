@@ -14,6 +14,9 @@ urlpatterns = [
     # Listar questão(ões) de um quiz
     path('quizzes/<int:quiz_id>/questoes/', QuizQuestoesListView.as_view(), name='quizzes_questoes'),
 
+    # Informações do quiz
+    path('quizzes/<int:quiz_id>/', QuizDetailView.as_view(), name='quiz_detail'),
+
     # Listar detalhes da questão
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestaoDetailView.as_view(), name='questoes_detail'),
 
@@ -22,6 +25,9 @@ urlpatterns = [
     
     # obter resposta correta
     path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/obter-resposta/', RespostaQuestaoView.as_view(), name='resposta_questao'),
+
+    # obter todas as resposta correta
+    path('quizzes/<int:quiz_id>/questoes/respostas-corretas/', ListRespostaQuestaoView.as_view(), name='resposta_questao'),
 
     # listar quizzes
     path('quizzes/', QuizListView.as_view(), name='quiz_list'),
@@ -52,8 +58,11 @@ urlpatterns = [
     # Concluir quiz
     path('quizzes/<int:quiz_id>/concluir/', ConcluirQuizView.as_view(), name='concluir_quiz'),
 
-    # Meus desempenhos (3 últimos)
+    # Meus desempenhos (3 últimos) / N
     path('meus-desempenhos/', UltimosDesempenhosView.as_view(), name='ultimos_desempenhos'),
+
+    # Respostas do aluno no ultimo quiz
+    path('respostas-ultimo-quiz/<int:quiz_id>/', RespostaUltimoQuiz.as_view(), name='respostas-ultimo-quiz'),
     
     # Enviar feedbacks
     path('feedbacks/', FeedbackView.as_view(), name='feedbacks'),

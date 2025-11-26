@@ -77,11 +77,42 @@ const TableCell = styled.td`
   text-align: center;
 `;
 
-export default function Quizzes_tela() {
+export default function Quizzes() {
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
   const [listDisciplinas, setListDisciplinas] = useState([]);
   const [chaveValorDiscQuiz, setChaveValorDiscQuiz] = useState({});
+  const [chaveValorDiscQuizFilter, setChaveValorDiscQuizFilter] = useState({});
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // verificar se ta logado
+      try {
+        const response = await fetch("http://localhost:8000/auth/me/", {
+          method: "GET",
+          credentials: "include", // envia os cookies
+        });
+
+        if (response.status === 401) {
+          // não está autenticado
+          window.location.href = "/";
+          return;
+        }
+
+        if (response.ok) {
+          const data = await response.json();
+          setUsername(data.username);
+        } else {
+          console.error("Erro ao buscar dados do usuário");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   const URL_DISCIPLINAS = "http://localhost:8000/api/disciplinas/";
 
@@ -102,8 +133,6 @@ export default function Quizzes_tela() {
 
   // Buscar quizzes
   useEffect(() => {
-    if (!listDisciplinas.length) return;
-
     const fetchQuizzes = async () => {
       try {
         const response = await fetch("http://localhost:8000/api/quizzes/", {
@@ -119,33 +148,74 @@ export default function Quizzes_tela() {
           agrupado[idDisc].push(quiz);
         });
 
+        console.log('agrupado: ', agrupado);
         setChaveValorDiscQuiz(agrupado);
+        setChaveValorDiscQuizFilter(agrupado);
       } catch (err) {
         console.error("Erro ao buscar quizzes:", err);
       }
     };
 
     fetchQuizzes();
-  }, [listDisciplinas]);
+  }, []);
 
-  const realizarQuiz = (disciplina) =>
-    navigate(`/Home/Disciplinas/${disciplina.nome}`);
+  const handleFiltroChange = (e) => {
+    setFiltro(e.target.value);
+
+    if (e.target.value === "Todos") {
+      setChaveValorDiscQuizFilter(chaveValorDiscQuiz);
+      return;
+    } else if (e.target.value === "Alta") {
+      // Pontuação alta (300+)
+      const filtrado = {};
+      for (const discId in chaveValorDiscQuiz) {
+        filtrado[discId] = chaveValorDiscQuiz[discId].filter(
+          (quiz) => quiz.pontuacao >= 300
+        );
+      }
+      setChaveValorDiscQuizFilter(filtrado);
+    } else if (e.target.value === "Baixa") {
+      // Pontuação baixa (<300)
+      const filtrado = {};
+      for (const discId in chaveValorDiscQuiz) {
+        filtrado[discId] = chaveValorDiscQuiz[discId].filter(
+          (quiz) => quiz.pontuacao < 300
+        );
+      }
+      setChaveValorDiscQuizFilter(filtrado);
+    } else if (["Iniciante", "Intermediário", "Avançado"].includes(e.target.value)) {
+      // Nível
+      const filtrado = {};
+      for (const discId in chaveValorDiscQuiz) {
+        filtrado[discId] = chaveValorDiscQuiz[discId].filter(
+          (quiz) => quiz.nivel === e.target.value
+        );
+      }
+      setChaveValorDiscQuizFilter(filtrado);
+    }
+  }
+
+  const realizarQuiz = (disciplina) => {
+    // console.log("Realizar quiz de ", disciplina);
+    // console.log("Id: ", disciplina.id);
+    navigate(`/quiz-info/${disciplina.id}`);
+  }
 
   return (
     <Container>
-      
+
       <Sidebar />
 
       <Content>
         <FilterSection>
           <span>Filtrar por:</span>
           <FaFilter />
-          <Select value={filtro} onChange={(e) => setFiltro(e.target.value)}>
+          <Select value={filtro} onChange={handleFiltroChange}>
             <option value="Todos">Todos</option>
             <option value="Alta">Pontuação Alta (300+)</option>
             <option value="Baixa">Pontuação Baixa (&lt;300)</option>
             <option value="Iniciante">Iniciante</option>
-            <option value="Mediano">Mediano</option>
+            <option value="Intermediário">Intermediário</option>
             <option value="Avançado">Avançado</option>
           </Select>
         </FilterSection>
@@ -172,17 +242,17 @@ export default function Quizzes_tela() {
                 </TableHead>
 
                 <tbody>
-                  {!chaveValorDiscQuiz[disciplina.id] ? (
-                    <TableRow>
-                      <TableCell colSpan="4">Carregando quizzes...</TableCell>
+                  {!chaveValorDiscQuizFilter[disciplina.nome] ? (
+                    <TableRow key={`${disciplina.id} - ${disciplina.nome}`}>
+                      <TableCell colSpan="4">Carregando quizzes...{disciplina.nome}</TableCell>
                     </TableRow>
-                  ) : chaveValorDiscQuiz[disciplina.id].length === 0 ? (
+                  ) : chaveValorDiscQuizFilter[disciplina.nome].length === 0 ? (
                     <TableRow>
                       <TableCell colSpan="4">Nenhum quiz disponível.</TableCell>
                     </TableRow>
                   ) : (
-                    chaveValorDiscQuiz[disciplina.id].map((quiz) => (
-                      <TableRow key={quiz.id}>
+                    chaveValorDiscQuizFilter[disciplina.nome].map((quiz) => (
+                      <TableRow key={`${quiz.id} - ${quiz.titulo}`}>
                         <TableCell>{quiz.descricao}</TableCell>
                         <TableCell>{disciplina.nome}</TableCell>
                         <TableCell>{quiz.pontuacao || "-"}</TableCell>

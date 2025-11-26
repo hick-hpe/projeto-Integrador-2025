@@ -48,30 +48,24 @@ export default function Sidebar() {
   const location = useLocation();
 
   const menu = [
-    { text: "Dashboard", path: "/dashboard" },
-    { text: "Quizzes", path: "/quizzes" },
-    { text: "Certificados", path: "/certificados" },
-    { text: "Ranking", path: "/ranking" },
-    { text: "Perfil", path: "/perfil" },
+    { text: "Dashboard", path: ["/dashboard"] },
+    { text: "Quizzes", path: ["/quizzes", "/quiz-info/"] }, // essa rota é dinâmica: /quiz-info/:id
+    { text: "Certificados", path: ["/certificados"] },
+    { text: "Ranking", path: ["/ranking"] },
+    { text: "Perfil", path: ["/perfil"] },
   ];
-
-  menu.map((item) => {
-    if (location.pathname === item.path) {
-      console.log("ativo", item.text);
-    }
-  });
 
   return (
     <SidebarContainer>
       <SidebarTitle>DevQuiz Aluno</SidebarTitle>
 
       {menu.map((item) =>
-        location.pathname === item.path ? (
+        item.path.some((p) => location.pathname.startsWith(p)) ? (
           <SidebarButtonActive key={item.text}>
             {item.text}
           </SidebarButtonActive>
         ) : (
-          <SidebarButton key={item.text} onClick={() => navigate(item.path)}>
+          <SidebarButton key={item.text} onClick={() => navigate(item.path[0])}>
             {item.text}
           </SidebarButton>
         )

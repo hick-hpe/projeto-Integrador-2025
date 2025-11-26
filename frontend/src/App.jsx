@@ -6,15 +6,20 @@ import EsqueceuSenha from './pages/Autenticacao/EsqueceuSenha';
 
 // home
 import Dashboard from './pages/Home/Dashboard';
+import Perfil from './pages/Home/Perfil';
+import Quizzes from './pages/Home/Quizzes';
+import Ranking from './pages/Home/Ranking';
+import Certificados from './pages/Home/Certificados';
+import QuizInfoPage from './pages/Home/QuizInfoPage';
+import QuizIniciado from './pages/Home/QuizIniciado';
+import ResultadoQuiz from './pages/Home/ResultadoQuiz';
 
 // import Erro404 from './pages/Autenticacao/Erro404';
 // import VerificacaoCodigo from './pages/Autenticacao/Verificacao_recuperacao';
 // import AlterarSenha from './pages/Autenticacao/alteracao_senha'; 
 // import CadastroRealizado from './pages/Autenticacao/Tela_cadastrada'; 
 // import Tela_inicial from './pages/Home/Tela';
-// import Quizzes_tela from './pages/Home/Quizzes';
 // import Meus_Certificados from './pages/Home/Certificados';
-//import Ranking_Page from './pages/Home/Ranking';
 // import Perfil_Page from './pages/Home/Perfil';
 // import QuizInfoPage from './pages/Home/Disciplinas/Desenvolvimento_Web';
 // import Quiz_de_Programacao from './pages/Home/Disciplinas/Quiz_Programacao';
@@ -31,16 +36,23 @@ export default function App() {
       <Routes>
         {/* auth */}
         <Route path="/" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro/>} />
+        <Route path="/cadastro/" element={<Cadastro/>} />
         {/* <Route path="/Tela_cadastrada" element={<CadastroRealizado/>} /> */}
-        <Route path="/esqueceu-senha" element={<EsqueceuSenha/>} />
+        <Route path="/esqueceu-senha/" element={<EsqueceuSenha/>} />
         {/* <Route path="/Verificacao_recuperacao" element={<VerificacaoCodigo/>} /> */}
         {/* <Route path="/alteracao_senha" element={<AlterarSenha/>} /> */}
         
         {/* home */}
-        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/dashboard/" element={<Dashboard/>} />
+        <Route path="/quizzes/" element={<Quizzes/>} />
+        <Route path="/perfil/" element={<Perfil/>} />
+        <Route path='/certificados/' element={<Certificados/>} />
+        <Route path="/ranking/" element={<Ranking/>} />
+        <Route path="/quiz-info/:id/" element={<QuizInfoPage/>} />
+        <Route path="/quiz-info/:id/iniciado/" element={<QuizIniciado/>} />
+        <Route path='/resultado-quiz/' element={<ResultadoQuiz />} />
+
         {/* <Route path="*" element={<Erro404/>} /> */}
-        {/* <Route path="/Home/Quizzes" element={<Quizzes_tela/>} /> */}
         {/* <Route path="/Home/Certificados" element={<Meus_Certificados/>} /> */}
         {/* <Route path="/Home/Perfil" element={<Perfil_Page/>} /> */}
         {/* <Route path="/Home/Disciplinas/Desenvolvimento_Web" element={<QuizInfoPage/>} /> */}
