@@ -451,11 +451,10 @@ class IniciarQuizView(APIView):
 
         quiz = get_object_or_404(Quiz, id=quiz_id)
 
-        Desempenho.objects.update_or_create(
+        Desempenho.objects.create(
             aluno=request.user.aluno,
             quiz=quiz,
             disciplina=quiz.disciplina,
-            defaults={}
         )
 
         data = {
@@ -671,14 +670,16 @@ class RespostaUltimoQuiz(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, quiz_id):
+        quiz = get_object_or_404(Quiz, id=quiz_id)
+        num_quesotes_quiz = quiz.questoes.count()
+        print('> num_quesotes_quiz:', num_quesotes_quiz)
         respostas = RespostaAluno.objects.filter(
             desempenho__aluno=request.user.aluno,
             questao__quiz__id=quiz_id
-        ).order_by('id')
+        ).order_by('-id')[:num_quesotes_quiz]
 
         serializer = RespostaAlunoSerializer(respostas, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class FeedbackView(APIView):

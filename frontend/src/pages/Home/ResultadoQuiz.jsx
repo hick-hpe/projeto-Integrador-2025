@@ -75,6 +75,7 @@ export default function ResultadoQuiz() {
                 const response = await fetch(url, { credentials: "include" });
                 const data = await response.json();
                 setUserAnswers(data);
+                console.log(data);
             } catch (err) {
                 console.error("Erro ao buscar respostas do aluno:", err);
             }
@@ -82,6 +83,24 @@ export default function ResultadoQuiz() {
 
         fetchUserAnswers();
     }, [quiz_id]);
+
+    // concluir quiz
+    useEffect(() => {
+        if (!quiz_id) return;
+    
+        const fetchIniciarQuiz = async () => {
+          try {
+            const response = await fetch(`http://localhost:8000/api/quizzes/${quiz_id}/concluir/`, {
+              method: 'POST',
+              credentials: 'include'
+            });
+
+        } catch (err) {
+            console.error(err);
+          }
+        }
+        fetchIniciarQuiz();
+      }, [quiz_id]);
 
     // Buscar gabarito
     useEffect(() => {

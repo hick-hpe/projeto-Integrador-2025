@@ -115,6 +115,7 @@ export default function QuizIniciado() {
 
   const [username, setUsername] = useState("");
 
+  // autenticacao
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -220,6 +221,8 @@ export default function QuizIniciado() {
     const data = {
       alternativa_id: alternativaID
     };
+
+    console.log(`Q=${questionId} - ALT=${alternativaID}`);
 
     try {
       await fetch(URL_ENVIAR_RESPOSTA, {

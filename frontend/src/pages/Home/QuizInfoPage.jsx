@@ -117,8 +117,6 @@ export default function QuizInfoPage() {
     fetchQuestoes();
   }, [id]);
 
-  useEffect
-
   return (
     <Container>
       <Sidebar />
