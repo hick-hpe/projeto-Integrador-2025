@@ -171,10 +171,10 @@ class CertificadoListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        certificados = Certificado.objects.all()
+        aluno = get_object_or_404(CustomUser, user=request.user)
+        certificados = Certificado.objects.filter(aluno=aluno)
         serializer = CertificadoSerializer(certificados, many=True)
         return Response(serializer.data)
-        
 
 # configurar e criar o certificado
 # def buscar_certificado():

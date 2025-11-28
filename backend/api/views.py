@@ -97,6 +97,7 @@ class QuizQuestoesListView(APIView):
 
 # Método para verificar se o aluno pode fazer
 def aluno_pode_fazer_quiz(quiz, aluno):
+    # ----------- Avançado -----------
     if quiz.nivel == "Avançado":
         tentativa = Tentativa.objects.filter(
             aluno=aluno,
@@ -104,9 +105,11 @@ def aluno_pode_fazer_quiz(quiz, aluno):
             aprovado=True,
             status_quiz="Concluído"
         ).first()
+
         if not tentativa:
-            return {'detail': 'Você não pode fazer o nível Avançado!!'}
-        
+            return {'detail': 'Você não pode fazer o nível Avançado!'}
+
+    # ----------- Intermediário -----------
     elif quiz.nivel == "Intermediário":
         tentativa = Tentativa.objects.filter(
             aluno=aluno,
@@ -114,10 +117,14 @@ def aluno_pode_fazer_quiz(quiz, aluno):
             aprovado=True,
             status_quiz="Concluído"
         ).first()
+
+        print('tentativa INT:', tentativa)
+
         if not tentativa:
-            return {'detail': 'Você não pode fazer o nível Intermediário!!'}
-    
+            return {'detail': 'Você não pode fazer o nível Intermediário!'}
+
     return {"detail": "OK"}
+
 
 # View
 class AlunoPodeFazerQuizView(APIView):
@@ -129,6 +136,7 @@ class AlunoPodeFazerQuizView(APIView):
     def get(self, request, quiz_id):
         quiz = get_object_or_404(Quiz, id=quiz_id)
         aluno = get_object_or_404(CustomUser, user=request.user)
+        print(f'Quiz: {quiz.titulo}')
         resposta = aluno_pode_fazer_quiz(quiz, aluno)
         return Response(resposta, status=status.HTTP_200_OK)
 

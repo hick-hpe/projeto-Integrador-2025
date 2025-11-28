@@ -13,7 +13,7 @@ class CustomUser(models.Model):
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
-    matricula = models.CharField(max_length=16, blank=True, null=True)
+    matricula = models.CharField(max_length=16)
     tipo_usuario = models.CharField(max_length=5, choices=TIPOS_USUARIOS_CHOICE)
 
     def __str__(self):

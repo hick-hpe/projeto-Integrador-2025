@@ -3,10 +3,11 @@ import { FaFilter, FaClipboardList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
+import Modal from "../../components/Modal";
 
 const Container = styled.div`
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
   font-family: Arial, sans-serif;
   font-size: 16px; /* fonte mínima */
 `;
@@ -29,6 +30,20 @@ const Title = styled.h2`
 
 const QuizButton = styled.button`
   background-color: #28a745;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 15px;
+`;
+
+const QuizButtonDesativado = styled.button`
+  background-color: #559b66;
   color: white;
   padding: 8px 12px;
   border: none;
@@ -81,11 +96,14 @@ export default function Quizzes() {
   const navigate = useNavigate();
   const [filtro, setFiltro] = useState("Todos");
   const [listDisciplinas, setListDisciplinas] = useState([]);
+  const [listQuizzes, setListQuizzes] = useState([]);
   const [chaveValorDiscQuiz, setChaveValorDiscQuiz] = useState({});
   const [chaveValorDiscQuizFilter, setChaveValorDiscQuizFilter] = useState({});
-
+  const [podeFazerQuiz, setPodeFazerQuiz] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
 
+  // autenticacao
   useEffect(() => {
     const fetchUserData = async () => {
       // verificar se ta logado
@@ -116,7 +134,7 @@ export default function Quizzes() {
 
   const URL_DISCIPLINAS = "http://localhost:8000/api/disciplinas/";
 
-  // Buscar disciplinas
+  // buscar disciplinas
   useEffect(() => {
     const fetchDisciplinas = async () => {
       try {
@@ -131,26 +149,15 @@ export default function Quizzes() {
     fetchDisciplinas();
   }, []);
 
-  // Buscar quizzes
+  // buscar quizzes
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         const response = await fetch("http://localhost:8000/api/quizzes/", {
           credentials: "include",
         });
-
         const quizzes = await response.json();
-
-        const agrupado = {};
-        quizzes.forEach((quiz) => {
-          const idDisc = quiz.disciplina;
-          if (!agrupado[idDisc]) agrupado[idDisc] = [];
-          agrupado[idDisc].push(quiz);
-        });
-
-        console.log('agrupado: ', agrupado);
-        setChaveValorDiscQuiz(agrupado);
-        setChaveValorDiscQuizFilter(agrupado);
+        setListQuizzes(quizzes);
       } catch (err) {
         console.error("Erro ao buscar quizzes:", err);
       }
@@ -159,6 +166,61 @@ export default function Quizzes() {
     fetchQuizzes();
   }, []);
 
+  // organizar os quizzes por disciplinas
+  useEffect(() => {
+    if (!listQuizzes || listQuizzes.length === 0) return;
+
+    const agrupado = {};
+    listQuizzes.forEach((quiz) => {
+      const idDisc = quiz.disciplina;
+      if (!agrupado[idDisc]) agrupado[idDisc] = [];
+      agrupado[idDisc].push(quiz);
+    });
+
+    console.log(agrupado)
+    setChaveValorDiscQuiz(agrupado);
+    setChaveValorDiscQuizFilter(agrupado);
+  }, [listQuizzes]);
+
+  // verificar se pode fazer os quizzes
+  useEffect(() => {
+    if (!listQuizzes || listQuizzes.length === 0) return;
+
+    const fetchChecks = async () => {
+      try {
+        // Criar um array de promessas
+        const promessas = listQuizzes.map((quiz) =>
+          fetch(`http://localhost:8000/api/quizzes/${quiz.id}/aluno-pode-fazer/`, {
+            credentials: "include",
+          })
+            .then((res) => res.json())
+            .then((data) => ({
+              id: quiz.id,
+              pode: data.detail === "OK"
+            }))
+        );
+
+        // executar todas simultaneamente
+        const resultados = await Promise.all(promessas);
+
+        // transformar em objeto { id: boolean }
+        const mapa = resultados.reduce((acc, item) => {
+          acc[item.id] = item.pode;
+          return acc;
+        }, {});
+
+        console.log('mapa: ', mapa);
+        setPodeFazerQuiz(mapa);
+
+      } catch (err) {
+        console.error("Erro ao verificar quizzes:", err);
+      }
+    };
+
+    fetchChecks();
+  }, [listQuizzes]);
+
+  // handle filtro
   const handleFiltroChange = (e) => {
     setFiltro(e.target.value);
 
@@ -198,14 +260,24 @@ export default function Quizzes() {
   const realizarQuiz = (quizID) => {
     // console.log("Realizar quiz de ", disciplina);
     // console.log("Id: ", disciplina.id);
-    console.log(quizID);
-    navigate(`/quiz-info/${quizID}`);
+    console.log(`Pode fazer Quiz_id=${quizID}?? -> ${podeFazerQuiz[quizID]}`);
+
+    if (!podeFazerQuiz[quizID]) {
+      setModalVisible(true);
+    } else {
+      navigate(`/quiz-info/${quizID}`);
+    }
   }
 
   return (
     <Container>
 
       <Sidebar />
+
+      <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
+        <h2>Você não pode fazer este quiz!!!</h2>
+        <p style={{ marginTop: '10px' }}>Deve concluir o de nível anterior!</p>
+      </Modal>
 
       <Content>
         <FilterSection>
@@ -256,9 +328,16 @@ export default function Quizzes() {
                         <TableCell>{quiz.pontuacao || "-"}</TableCell>
                         <TableCell>{quiz.nivel || "-"}</TableCell>
                         <TableCell>
-                          <QuizButton onClick={() => realizarQuiz(quiz.id)}>
-                            <FaClipboardList /> Realizar Quiz
-                          </QuizButton>
+                          {
+                            podeFazerQuiz[quiz.id] ?
+                              <QuizButton onClick={() => realizarQuiz(quiz.id)}>
+                                <FaClipboardList /> Realizar Quiz
+                              </QuizButton>
+                              :
+                              <QuizButtonDesativado onClick={() => realizarQuiz(quiz.id)}>
+                                <FaClipboardList /> Realizar Quiz
+                              </QuizButtonDesativado>
+                          }
                         </TableCell>
                       </TableRow>
                     ))

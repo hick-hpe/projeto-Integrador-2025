@@ -116,10 +116,52 @@ print("✔️ Dados reais criados com sucesso!")
 
 
 
-quiz = Quiz.objects.create(
-    titulo="Quiz de Matemática Avançado",
-    disciplina=disc1,
-    nivel="Avançado",
-    descricao="Questões avançadas de matemática.",
-    tipo_questoes="Múltipla Escolha"
+# -------- FÍSICA INTERMEDIÁRIA --------
+disc2 = Disciplina.objects.get(id=2)
+
+quiz_fisica = Quiz.objects.create(
+    titulo="Física - Intermediária",
+    disciplina=disc2,
+    nivel="Intermediário",
+    descricao="Quiz intermediário de física"
+)
+
+q1 = Questao.objects.create(
+    quiz=quiz_fisica,
+    descricao="Qual é a unidade de medida de força no Sistema Internacional (SI)?"
+)
+a1 = Alternativa.objects.create(questao=q1, texto="Newton (N)")
+a2 = Alternativa.objects.create(questao=q1, texto="Joule (J)")
+a3 = Alternativa.objects.create(questao=q1, texto="Pascal (Pa)")
+RespostaQuestao.objects.create(
+    questao=q1,
+    alternativa=a1,
+    explicacao="A unidade de força no SI é o Newton (N), definido como kg·m/s²."
+)
+
+q2 = Questao.objects.create(
+    quiz=quiz_fisica,
+    descricao="Um corpo de massa 2 kg sofre uma aceleração de 3 m/s². Qual é a força resultante?"
+)
+b1 = Alternativa.objects.create(questao=q2, texto="5 N")
+b2 = Alternativa.objects.create(questao=q2, texto="6 N")
+b3 = Alternativa.objects.create(questao=q2, texto="12 N")
+RespostaQuestao.objects.create(
+    questao=q2,
+    alternativa=b2,
+    explicacao="Pela 2ª lei de Newton, F = m·a = 2 kg × 3 m/s² = 6 N."
+)
+
+q3 = Questao.objects.create(
+    quiz=quiz_fisica,
+    descricao="Qual grandeza física é definida como a variação da velocidade no tempo?"
+)
+c1 = Alternativa.objects.create(questao=q3, texto="Aceleração")
+c2 = Alternativa.objects.create(questao=q3, texto="Força")
+c3 = Alternativa.objects.create(questao=q3, texto="Impulso")
+c4 = Alternativa.objects.create(questao=q3, texto="Empuxo")
+RespostaQuestao.objects.create(
+    questao=q3,
+    alternativa=c1,
+    explicacao="A aceleração é definida como Δv/Δt, ou seja, variação da velocidade no tempo."
 )

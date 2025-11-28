@@ -1,21 +1,7 @@
 import styled from "styled-components";
 import { FaFilePdf } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
-
-const certificados = [
-  {
-    codigo: "ABCDE12345",
-    curso: "Introdução ao Django",
-    data: "12/06/2025",
-  },
-  {
-    codigo: "FGHIJ67890",
-    curso: "Docker",
-    data: "12/06/2025",
-  },
-];
 
 const Container = styled.div`
   display: flex;
@@ -68,18 +54,20 @@ const PdfButton = styled.button`
 export default function Meus_Certificados() {
 
   const [username, setUsername] = useState("");
+  const [certificados, setCertificados] = useState([]);
 
+  // =======================
+  // Buscar usuário logado
+  // =======================
   useEffect(() => {
     const fetchUserData = async () => {
-      // verificar se ta logado
       try {
         const response = await fetch("http://localhost:8000/auth/me/", {
           method: "GET",
-          credentials: "include", // envia os cookies
+          credentials: "include",
         });
 
         if (response.status === 401) {
-          // não está autenticado
           window.location.href = "/";
           return;
         }
@@ -88,13 +76,39 @@ export default function Meus_Certificados() {
           const data = await response.json();
           setUsername(data.username);
         } else {
-          console.error("Erro ao buscar dados do usuário");
+          console.error("Erro ao obter dados do usuário.");
         }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
+      } catch (err) {
+        console.error("Erro na requisição:", err);
       }
-    }
+    };
+
     fetchUserData();
+  }, []);
+
+  // ===========================
+  // Buscar certificados do aluno
+  // ===========================
+  useEffect(() => {
+    const fetchCertificados = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/certificados/", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCertificados(data);
+        } else {
+          console.error("Erro ao buscar certificados.");
+        }
+      } catch (err) {
+        console.error("Erro na requisição:", err);
+      }
+    };
+
+    fetchCertificados();
   }, []);
 
   return (
@@ -103,6 +117,7 @@ export default function Meus_Certificados() {
 
       <Content>
         <Title>Meus Certificados</Title>
+
         <Table>
           <TableHead>
             <TableRow>
@@ -112,14 +127,15 @@ export default function Meus_Certificados() {
               <TableCell>Ver</TableCell>
             </TableRow>
           </TableHead>
+
           <tbody>
             {certificados.map((cert) => (
               <TableRow key={cert.codigo}>
                 <TableCell>{cert.codigo}</TableCell>
-                <TableCell>{cert.curso}</TableCell>
-                <TableCell>{cert.data}</TableCell>
+                <TableCell>{cert.disciplina}</TableCell>
+                <TableCell>{cert.data_emissao}</TableCell>
                 <TableCell>
-                  <PdfButton>
+                  <PdfButton onClick={() => console.log("abrir pdf", cert.codigo)}>
                     <FaFilePdf />
                   </PdfButton>
                 </TableCell>

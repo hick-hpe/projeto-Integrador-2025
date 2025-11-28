@@ -16,9 +16,12 @@ class CookieTokenObtainPairView(TokenObtainPairView):
     View que autentica o usuário e armazena os tokens JWT em cookies HttpOnly.
     """
     def post(self, request, *args, **kwargs):
+        print('request: ', request)
+
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == 200:
+            print('response.data: ', response.data.keys())
             access_token = response.data['access']
             refresh_token = response.data['refresh']
 
@@ -48,9 +51,6 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             response.data.pop('refresh', None)
             response.data['detail'] = 'Login realizado com sucesso!!'
 
-            print('--- COOKIESS ---')
-            print(response.cookies)
-
         return response
 
 
@@ -62,7 +62,8 @@ class CadastroView(APIView):
     {
         "username": "username",
         "email": "username@gmail.com",
-        "password": "password"
+        "password": "password",
+        "matricula": "matricula"
     }
     """
     permission_classes = [AllowAny]
@@ -71,13 +72,14 @@ class CadastroView(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
+        matricula = request.data.get('matricula')
 
-        if all([username, email, password]):
+        if all([username, email, password, matricula]):
             if User.objects.filter(username=username).exists():
                 return Response({'error': 'Este usuário já existe!'}, status=status.HTTP_400_BAD_REQUEST)
 
             user = User.objects.create_user(username=username, email=email, password=password)
-            CustomUser.objects.create(user=user, tipo_usuario='aluno')
+            CustomUser.objects.create(user=user, matricula=matricula, tipo_usuario='aluno')
             return Response({'detail': 'Conta criada com sucesso!!'}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': 'Preencha os campos!'}, status=status.HTTP_400_BAD_REQUEST)

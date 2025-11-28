@@ -55,9 +55,10 @@ const BackButton = styled.button`
   }
 `;
 
-export default function ResultadoQuiz({ quiz_id }) {
+export default function ResultadoQuiz() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { quiz_id } = location.state || {};
 
     const [userAnswers, setUserAnswers] = useState([]);
     const [correctAnswers, setCorrectAnswers] = useState([]);
