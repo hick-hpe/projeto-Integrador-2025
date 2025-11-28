@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaPlay } from "react-icons/fa";
+import { FaArrowLeft, FaPlay } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
 
@@ -122,7 +122,11 @@ export default function QuizInfoPage() {
       <Sidebar />
 
       <Content>
-        <Title>{quiz?.titulo} - {quiz?.nivel}</Title>
+        <Title>
+          <div style={{ display: "flex", alignItems: 'center', gap: '10px' }}>
+            <FaArrowLeft onClick={() => navigate('/quizzes/')} style={{ cursor: 'pointer' }} /> {quiz?.titulo} - {quiz?.nivel}
+          </div>
+        </Title>
         <Paragraph><Highlight>Informações acerca do quiz:</Highlight></Paragraph>
         <Paragraph>
           {quiz?.descricao}

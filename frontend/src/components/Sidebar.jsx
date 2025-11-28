@@ -51,7 +51,9 @@ export default function Sidebar() {
     { text: "Dashboard", path: ["/dashboard"] },
     { text: "Quizzes", path: ["/quizzes", "/quiz-info/"] }, // essa rota é dinâmica: /quiz-info/:id
     { text: "Certificados", path: ["/certificados"] },
-    { text: "Ranking", path: ["/ranking"] },
+    // { text: "Ranking", path: ["/ranking"] },
+    // { text: "Configurações", path: ["/configuracoes"] },
+    { text: "Emblemas", path: ["/emblemas"] },
     { text: "Perfil", path: ["/perfil"] },
   ];
 

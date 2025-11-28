@@ -174,9 +174,9 @@ export default function QuizIniciado() {
           credentials: 'include'
         });
 
-        if (response.ok) {
+        // if (response.ok) {
           setQuizIniciado(true);
-        }
+        // }
       } catch (err) {
         console.error(err);
       }

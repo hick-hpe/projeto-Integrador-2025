@@ -57,28 +57,48 @@ const ChartPlaceholder = styled.div`
   border-radius: 10px;
 `;
 
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
+// const Table = styled.table`
+//   width: 100%;
+//   border-collapse: collapse;
+//   background-color: white;
+//   border-radius: 10px;
+//   overflow: hidden;
+// `;
+
+// const TableHead = styled.thead`
+//   background-color: #00aaff;
+//   color: white;
+// `;
+
+// const TableRow = styled.tr`
+//   &:nth-child(even) {
+//     background-color: #f0f0f0;
+//   }
+// `;
+
+// const TableCell = styled.td`
+//   padding: 10px;
+//   text-align: center;
+// `;
+
+const EmblemesRow = styled.div`
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+`;
+
+const EmblemaCard = styled.div`
+  flex: 1;
+  background-color: #fff;
   border-radius: 10px;
-  overflow: hidden;
-`;
-
-const TableHead = styled.thead`
-  background-color: #00aaff;
-  color: white;
-`;
-
-const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f0f0f0;
-  }
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
+  padding: 15px;
   text-align: center;
+  border-top: 4px solid #ffc107; /* cor ouro */
+`;
+
+const EmblemaIcon = styled.div`
+  font-size: 40px;
+  margin-bottom: 10px;
 `;
 
 const DashboardContainer = styled.div`
@@ -89,6 +109,14 @@ const DashboardContainer = styled.div`
 export default function Dashboard() {
 
     const [username, setUsername] = useState("");
+
+    // simulação de emblemas
+    const emblemas = [
+        { nome: "Matemática Mestre", icone: "🏆" },
+        { nome: "Física Intermediária", icone: "🎖️" },
+        { nome: "Quizzes Concluídos", icone: "🥇" },
+    ];
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -159,7 +187,7 @@ export default function Dashboard() {
                 <SubTitle>Estatísticas</SubTitle>
                 <ChartPlaceholder />
 
-                <SubTitle>Ranking - Top#3</SubTitle>
+                {/* <SubTitle>Ranking - Top#3</SubTitle>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -185,7 +213,18 @@ export default function Dashboard() {
                             <TableCell>200</TableCell>
                         </TableRow>
                     </tbody>
-                </Table>
+                </Table> */}
+
+                <SubTitle>Seus Emblemas</SubTitle>
+                <EmblemesRow>
+                    {emblemas.map((e, i) => (
+                        <EmblemaCard key={i}>
+                            <EmblemaIcon>{e.icone}</EmblemaIcon>
+                            <p>{e.nome}</p>
+                        </EmblemaCard>
+                    ))}
+                </EmblemesRow>
+
             </Content>
         </DashboardContainer>
     );
