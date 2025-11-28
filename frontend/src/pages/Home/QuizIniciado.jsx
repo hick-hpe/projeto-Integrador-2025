@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaPlay, FaTimes } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import ResultadoQuiz from "../../components/ResultadoQuiz";
 
 const PageContainer = styled.div`
   background-color: #f2f2f2;
@@ -112,7 +113,7 @@ export default function QuizIniciado() {
   const [selectedOption, setSelectedOption] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const [mostrarResultado, setMostrarResultado] = useState(false);
   const [username, setUsername] = useState("");
 
   // autenticacao
@@ -241,13 +242,15 @@ export default function QuizIniciado() {
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion(prev => prev + 1);
     } else {
-      navigate("/resultado-quiz/", { state: { quiz_id: id } });
+      setMostrarResultado(true);
     }
   };
 
   const handleQuit = () => {
     // navigate("/desistiu-quiz");
   };
+
+  if (mostrarResultado) return <ResultadoQuiz quiz_id={id} />;
 
   // Mostrar estado de carregamento ou erro
   if (loading) return <p>Carregando perguntas...</p>;

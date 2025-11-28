@@ -55,10 +55,9 @@ const BackButton = styled.button`
   }
 `;
 
-export default function ResultadoQuiz() {
+export default function ResultadoQuiz({ quiz_id }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { quiz_id } = location.state || {};
 
     const [userAnswers, setUserAnswers] = useState([]);
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -87,20 +86,20 @@ export default function ResultadoQuiz() {
     // concluir quiz
     useEffect(() => {
         if (!quiz_id) return;
-    
-        const fetchIniciarQuiz = async () => {
-          try {
-            const response = await fetch(`http://localhost:8000/api/quizzes/${quiz_id}/concluir/`, {
-              method: 'POST',
-              credentials: 'include'
-            });
 
-        } catch (err) {
-            console.error(err);
-          }
+        const fetchIniciarQuiz = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/quizzes/${quiz_id}/concluir/`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+            } catch (err) {
+                console.error(err);
+            }
         }
         fetchIniciarQuiz();
-      }, [quiz_id]);
+    }, [quiz_id]);
 
     // Buscar gabarito
     useEffect(() => {

@@ -6,8 +6,7 @@ admin.site.register([
     Quiz,
     Questao,
     Alternativa,
-    EmblemaUser,
     Certificado,
-    Resposta
+    RespostaQuestao
 ])
 

@@ -195,10 +195,11 @@ export default function Quizzes() {
     }
   }
 
-  const realizarQuiz = (disciplina) => {
+  const realizarQuiz = (quizID) => {
     // console.log("Realizar quiz de ", disciplina);
     // console.log("Id: ", disciplina.id);
-    navigate(`/quiz-info/${disciplina.id}`);
+    console.log(quizID);
+    navigate(`/quiz-info/${quizID}`);
   }
 
   return (
@@ -227,10 +228,6 @@ export default function Quizzes() {
             <TableSection key={disciplina.id}>
               <Title>Quizzes de {disciplina.nome}</Title>
 
-              <QuizButton onClick={() => realizarQuiz(disciplina)}>
-                <FaClipboardList /> Realizar Quiz
-              </QuizButton>
-
               <Table>
                 <TableHead>
                   <TableRow>
@@ -238,6 +235,7 @@ export default function Quizzes() {
                     <TableCell>Disciplina</TableCell>
                     <TableCell>Pontuação</TableCell>
                     <TableCell>Nível</TableCell>
+                    <TableCell>Ação</TableCell>
                   </TableRow>
                 </TableHead>
 
@@ -257,6 +255,11 @@ export default function Quizzes() {
                         <TableCell>{disciplina.nome}</TableCell>
                         <TableCell>{quiz.pontuacao || "-"}</TableCell>
                         <TableCell>{quiz.nivel || "-"}</TableCell>
+                        <TableCell>
+                          <QuizButton onClick={() => realizarQuiz(quiz.id)}>
+                            <FaClipboardList /> Realizar Quiz
+                          </QuizButton>
+                        </TableCell>
                       </TableRow>
                     ))
                   )}

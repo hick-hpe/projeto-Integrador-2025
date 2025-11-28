@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status, permissions
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -10,7 +10,6 @@ from django.conf import settings
 from random import randint
 from api.models import Codigo, CustomUser
 from api.serializers import UserSerializer
-
 
 class CookieTokenObtainPairView(TokenObtainPairView):
     """

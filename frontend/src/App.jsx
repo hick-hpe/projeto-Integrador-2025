@@ -12,7 +12,7 @@ import Ranking from './pages/Home/Ranking';
 import Certificados from './pages/Home/Certificados';
 import QuizInfoPage from './pages/Home/QuizInfoPage';
 import QuizIniciado from './pages/Home/QuizIniciado';
-import ResultadoQuiz from './pages/Home/ResultadoQuiz';
+// import ResultadoQuiz from './pages/Home/ResultadoQuiz';
 
 // import Erro404 from './pages/Autenticacao/Erro404';
 // import VerificacaoCodigo from './pages/Autenticacao/Verificacao_recuperacao';
@@ -50,7 +50,7 @@ export default function App() {
         <Route path="/ranking/" element={<Ranking/>} />
         <Route path="/quiz-info/:id/" element={<QuizInfoPage/>} />
         <Route path="/quiz-info/:id/iniciado/" element={<QuizIniciado/>} />
-        <Route path='/resultado-quiz/' element={<ResultadoQuiz />} />
+        {/* <Route path='/resultado-quiz/' element={<ResultadoQuiz />} /> */}
 
         {/* <Route path="*" element={<Erro404/>} /> */}
         {/* <Route path="/Home/Certificados" element={<Meus_Certificados/>} /> */}

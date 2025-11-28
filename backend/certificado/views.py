@@ -28,9 +28,12 @@ class ValidarCertificadoView(APIView):
         if not codigo or not matricula:
             print("[ERRO] Código ou matrícula não informados.")
             return Response(
-                {'erro': 'É necessário informar o código e a matrícula.'},
+                {'erro': 'É necessário informar o código do certificado e a matrícula do aluno.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+        # teste
+        # return Response({"detail": "válido!!!"}) 
 
         try:
             print("[BUSCA] Verificando aluno e disciplina...")
@@ -145,7 +148,7 @@ def gerar_codigo_certificado():
     return codigo
 
 
-def gerar_certificado(data):
+def gerar_certificado_no_banco(data):
     """
     Gerar apenas se o aluno obteve pelo menos 70% de acertos
     """
@@ -160,7 +163,6 @@ def gerar_certificado(data):
             'codigo': gerar_codigo_certificado()
         }
     )
-
 
 class CertificadoListView(APIView):
     """

@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    CustomUser, Disciplina, Pontuacao, Quiz, Questao,
-    Alternativa, Resposta, RespostaAluno,
-    Feedback, Certificado, EmblemaUser
+    Disciplina, Quiz, Questao,
+    Alternativa, RespostaQuestao, RespostaAluno,
+    Certificado
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -92,7 +92,7 @@ class RespostaSerializer(serializers.ModelSerializer):
         return obj.alternativa.texto
 
     class Meta:
-        model = Resposta
+        model = RespostaQuestao
         fields = ['id', 'questao_id', 'questao', 'alternativa', 'alternativa_id', 'explicacao']
         read_only_fields = ['questao', 'alternativa', 'explicacao']
 
@@ -117,35 +117,35 @@ class CertificadoSerializer(serializers.ModelSerializer):
         fields = ['codigo', 'aluno', 'disciplina', 'data_emissao']
 
 
-class FeedbackSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Feedback
-        fields = ['email', 'assunto', 'mensagem']
+# class FeedbackSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Feedback
+#         fields = ['email', 'assunto', 'mensagem']
 
 
-class EmblemaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EmblemaUser
-        fields = ['nome', 'descricao', 'logo']
+# class EmblemaSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = EmblemaUser
+#         fields = ['nome', 'descricao', 'logo']
 
 
-class EmblemaUserSerializer(serializers.ModelSerializer):
-    aluno = serializers.SerializerMethodField()
+# class EmblemaUserSerializer(serializers.ModelSerializer):
+#     aluno = serializers.SerializerMethodField()
 
-    class Meta:
-        model = EmblemaUser
-        fields = ['aluno', 'nome', 'descricao', 'logo']
+#     class Meta:
+#         model = EmblemaUser
+#         fields = ['aluno', 'nome', 'descricao', 'logo']
 
-    def get_aluno(self, obj):
-        return obj.aluno.user.username
+#     def get_aluno(self, obj):
+#         return obj.aluno.user.username
 
 
-class PontuacaoSerializer(serializers.ModelSerializer):
-    aluno = serializers.SerializerMethodField()
+# class PontuacaoSerializer(serializers.ModelSerializer):
+#     aluno = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Pontuacao
-        fields = ['aluno', 'pontos']
+#     class Meta:
+#         model = Pontuacao
+#         fields = ['aluno', 'pontos']
 
-    def get_aluno(self, obj):
-        return obj.aluno.user.username
+#     def get_aluno(self, obj):
+#         return obj.aluno.user.username
