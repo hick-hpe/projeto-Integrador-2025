@@ -1,17 +1,15 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from api.models import CustomUser, Certificado, Disciplina
 from api.serializers import CertificadoSerializer
+import io
 import pdfkit
-import os
-import base64
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse
 import random
-from django.templatetags.static import static
 
 class ValidarCertificadoView(APIView):
     permission_classes = [AllowAny]
@@ -31,98 +29,22 @@ class ValidarCertificadoView(APIView):
                 {'erro': 'É necessário informar o código do certificado e a matrícula do aluno.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
-        # teste
-        # return Response({"detail": "válido!!!"}) 
 
         try:
-            print("[BUSCA] Verificando aluno e disciplina...")
-            disciplina = Disciplina.objects.get(pk=1)
-            aluno = CustomUser.objects.get(matricula=matricula)
-            print(f"[OK] CustomUser: {aluno.user.username} | Disciplina: {disciplina.nome}")
+            aluno_temp = CustomUser.objects.get(matricula=matricula)
+        except CustomUser.DoesNotExist:
+            print("[ERRO] Aluno não encontrado.")
+            return Response({'erro': 'Aluno não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
-            print("[BUSCA] Procurando certificado correspondente...")
-            certificado = get_object_or_404(Certificado, codigo=codigo, aluno=aluno, disciplina=disciplina)
-            print(f"[OK] Certificado encontrado: {certificado.codigo}")
-
-            nome = aluno.user.username
-            percentual_acertos = certificado.percentual_acertos
-
-            print("[GERAÇÃO] Preparando dados para o PDF...")
-            data_formatada = converter_data_para_extenso(datetime.today())
-            logo_path = os.path.join('static', 'img', 'logo', 'logo-teste.png')
-
-            if not os.path.exists(logo_path):
-                print(f"[AVISO] Logo não encontrado em: {logo_path}")
-            else:
-                print("[OK] Logo encontrado.")
-
-            logo_base64 = converter_imagem_para_base64(logo_path)
-            css_url = request.build_absolute_uri(static('css/certificado_pdf.css'))
-
-            contexto = {
-                "nome": nome.upper(),
-                "data": data_formatada,
-                "logo_base64": logo_base64,
-                "percentual_acertos": percentual_acertos,
-                "css_url": css_url,
-            }
-
-            print("[GERAÇÃO] Renderizando HTML do certificado...")
-            rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
-            print("[OK] HTML renderizado.")
-
-            pdf_path = f'certificado_{nome.replace(" ", "_")}.pdf'
-            print(f"[PDFKIT] Gerando PDF em: {pdf_path}")
-            pdfkit.from_string(rendered, pdf_path, options={'enable-local-file-access': ''})
-
-            if not os.path.exists(pdf_path):
-                print("[ERRO] PDF não foi gerado corretamente!")
-                return Response({'erro': 'Erro ao gerar o PDF.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            tamanho_pdf = os.path.getsize(pdf_path)
-            print(f"[OK] PDF gerado com sucesso ({tamanho_pdf} bytes)")
-
-            print("[RESPOSTA] Preparando envio do arquivo ao cliente...")
-            response = FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename=os.path.basename(pdf_path))
-            response['Content-Type'] = 'application/pdf'
-
-            print("[SUCESSO ✅] PDF pronto para download!\n=====================================================================")
-            return response
-
+        try:
+            certificado = Certificado.objects.get(codigo=codigo, aluno=aluno_temp)
         except Certificado.DoesNotExist:
-            print("[ERRO] Certificado não encontrado ou dados inválidos.\n=====================================================================")
-            return Response(
-                {'erro': 'Certificado não encontrado ou dados inválidos.'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        except Exception as e:
-            print(f"[EXCEÇÃO] Erro inesperado: {e}\n=====================================================================")
-            return Response({'erro': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            print("[ERRO] Certificado não encontrado ou não pertence a este aluno.")
+            return Response({'erro': 'Certificado não encontrado ou não pertence a este aluno.'}, status=status.HTTP_404_NOT_FOUND)
 
-# class CertificadoDetailView(APIView):
-#     """
-#     View para obter detalhes de um certificado específico.
-#     """
-#     permission_classes = [AllowAny]
-
-#     def get(self, request, codigo):
-#         if codigo:
-#             try:
-#                 certificado = Certificado.objects.get(codigo=codigo)
-#                 serializer = CertificadoSerializer(certificado)
-#                 return Response(serializer.data)
-#             except Certificado.DoesNotExist:
-#                 return Response({'erro': 'Certificado não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
-#         return Response({'erro': 'Código do certificado não fornecido.'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-def converter_imagem_para_base64(caminho):
-    """
-    Converte uma imagem em um caminho para uma string base64.
-    """
-    with open(caminho, 'rb') as img_file:
-        return base64.b64encode(img_file.read()).decode('utf-8')
+        # Certificado válido
+        print("[SUCESSO] Certificado válido.")
+        return baixar_certificado(request, certificado, aluno_temp)
 
 
 def converter_data_para_extenso(data: datetime):
@@ -158,17 +80,17 @@ def gerar_certificado_no_banco(data):
     Certificado.objects.get_or_create(
         aluno=aluno,
         disciplina=disciplina,
-        percentual_acertos=data['acertos'],
         defaults={
             'codigo': gerar_codigo_certificado()
         }
     )
 
+# rever privilégio -> testes
 class CertificadoListView(APIView):
     """
     View para exibir a lista de certificados.
     """
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] # admin?
 
     def get(self, request):
         aluno = get_object_or_404(CustomUser, user=request.user)
@@ -176,51 +98,42 @@ class CertificadoListView(APIView):
         serializer = CertificadoSerializer(certificados, many=True)
         return Response(serializer.data)
 
-# configurar e criar o certificado
-# def buscar_certificado():
-#     pass
 
-# def criar_pdf_certificado():
-#     pass
+def baixar_certificado(request, certificado, aluno):
+    nome = aluno.user.username
+    data_formatada = converter_data_para_extenso(datetime.today())
 
-# def baixar_certificado():
-#     pass
+    contexto = {
+        "nome": nome.upper(),
+        "disciplina": certificado.disciplina.nome,
+        "data": data_formatada,
+    }
 
-# class CertificadoDownloadView(APIView):
-#     """
-#     View para gerar e baixar o certificado em PDF.
-#     """
-#     permission_classes = [AllowAny]
+    rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
+
+    # gera PDF em memoria
+    pdf_bytes = io.BytesIO()
+    pdfkit.from_string(rendered, pdf_bytes, options={'enable-local-file-access': ''})
+    pdf_bytes.seek(0) # move cursor de leitura para o inicio do arquivo (pra onde ele vai começar a ler pro response)
+
+    filename = f'certificado_{nome.replace(" ", "_")}.pdf'
+    # as_attachment=True -> força o navegador a baixar o arquivo em vez de abrir na tela.
+    # filename=filename -> define o nome do arquivo que o usuário vai receber.
+    return FileResponse(pdf_bytes, as_attachment=True, filename=filename)
+
+
+class CertificadoDownloadView(APIView):
+    """
+    View para gerar e baixar o certificado em PDF.
+    """
+    permission_classes = [IsAuthenticated]
     
-#     def get(self, request, codigo):
-#         if codigo:
-#             try:
-#                 disciplina = Disciplina.objects.get(pk=1)
-                
-#                 certificado = get_object_or_404(Certificado, codigo=codigo, aluno=request.user.aluno, disciplina=disciplina)
-#                 nome = request.user.username
-#                 percentual_acertos = certificado.percentual_acertos
-
-#                 data_formatada = converter_data_para_extenso(datetime.today())
-#                 logo_path = os.path.join('static', 'img', 'logo', 'logo-teste.png')
-                
-#                 logo_base64 = converter_imagem_para_base64(logo_path)
-#                 css_url = request.build_absolute_uri(static('css/certificado_pdf.css'))
-
-#                 contexto = {
-#                     "nome": nome.upper(),
-#                     "data": data_formatada,
-#                     "logo_base64": logo_base64,
-#                     "percentual_acertos": percentual_acertos,
-#                     'css_url': css_url
-#                 }
-
-#                 rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
-#                 pdf_path = f'certificado_{nome.replace(" ", "_")}.pdf'
-#                 pdfkit.from_string(rendered, pdf_path, options={'enable-local-file-access': ''})
-                
-#                 return FileResponse(open(pdf_path, 'rb'), as_attachment=True)
-            
-#             except Certificado.DoesNotExist:
-#                 return Response({'erro': 'Certificado não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
-#         return Response({'erro': 'Código do certificado não fornecido.'}, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, codigo):
+        if not codigo:
+            return Response({'erro': 'Código do certificado não fornecido.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Busca o certificado pelo código
+        certificado = get_object_or_404(Certificado, codigo=codigo)
+        aluno = certificado.aluno  # pega o aluno relacionado ao certificado
+        
+        return baixar_certificado(request, certificado, aluno)

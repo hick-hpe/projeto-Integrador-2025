@@ -13,9 +13,9 @@ body {
     padding: 60px 80px;
     box-sizing: border-box;
     position: relative;
-    color: #22543d; /* verde escuro */
-    border: 30px solid #38a169; /* borda verde */
-    box-shadow: 0 0 24px #a0e7b6;
+    color: #223b54; /* verde escuro */
+    border: 30px solid #3872a1; /* borda verde */
+    box-shadow: 0 0 24px #a0c0e7;
   }
 
   .titulo {
@@ -24,17 +24,17 @@ body {
     text-transform: uppercase;
     font-family: 'Georgia', serif;
     font-size: 40px;
-    color: #2e7d32;
+    color: #2e637d;
     text-align: center;
     margin-bottom: 0;
   }
 
   .subtitulo {
     margin-bottom: 40px;
-    color: #38a169;
+    color: #386ba1;
     font-family: 'Georgia', serif;
     font-size: 28px;
-    color: #388e3c;
+    color: #385f8e;
     font-style: italic;
     text-align: center;
     margin-bottom: 36px;
@@ -46,7 +46,7 @@ body {
     margin: 20px 0;
     font-size: 32px;
     font-weight: bold;
-    color: #14532d;
+    color: #143153;
     text-align: center;
     margin-bottom: 18px;
   }

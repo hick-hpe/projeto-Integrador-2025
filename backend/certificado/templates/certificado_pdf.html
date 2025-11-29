@@ -1,11 +1,11 @@
-{% load static %}
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <title>Certificado</title>
-  <link rel="stylesheet" href="{{ css_url }}">
+  <link rel="stylesheet" href="../../static/css/certificado_pdf.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap" rel="stylesheet">
@@ -32,12 +32,14 @@
 
       <div class="descricao">
         pela conclusão e desempenho no curso<br>
-        <span class="curso" style="font-size: 24px; color: #2e7d32; font-weight: bold;">Desenvolvimento Web com
-          Django</span>
+        <span class="curso" style="font-size: 24px; color: #2e637d; font-weight: bold;">
+          {{ disciplina }}
+        </span>
       </div>
 
       <div class="descricao">
-        O aluno demonstrou domínio dos conhecimentos abordados e está oficialmente certificado pela plataforma DevQuiz.
+        O participante concluiu com êxito o quiz final de avaliação.
+        Ao atingir o desempenho necessário, demonstrou domínio dos conteúdos abordados e recebeu o certificado oficial.
       </div>
 
       <div class="data">
@@ -45,12 +47,12 @@
       </div>
 
       <div class="assinatura">
-        <div class="linha" style="width: 220px; border-bottom: 2px solid #388e3c; margin-bottom: 5px;">Devquiz</div>
+        <div class="linha" style="width: 220px; border-bottom: 2px solid #385f8e; margin-bottom: 5px;">Devquiz</div>
         Plataforma DevQuiz
       </div>
 
       <div class="logo">
-        <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo">
+        <img src="../../static/img/logo/logo-teste.png" alt="Logo">
       </div>
     </div>
   </body>

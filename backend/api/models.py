@@ -134,7 +134,6 @@ class Certificado(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
     aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
-    percentual_acertos = models.IntegerField(default=0)
     data_emissao = models.DateField(auto_now_add=True)
 
     def __str__(self):
