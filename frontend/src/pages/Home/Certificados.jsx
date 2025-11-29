@@ -6,13 +6,17 @@ import { useEffect, useState } from "react";
 const Container = styled.div`
   display: flex;
   height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #eef1f5;
   font-family: Arial, sans-serif;
 `;
 
 const Content = styled.div`
   flex: 1;
-  background-color: #f7f7f7;
-  padding: 30px;
+  padding: 40px;
+  overflow-y: auto;
+  height: 100vh;
 `;
 
 const Title = styled.h2`
@@ -129,18 +133,23 @@ export default function Meus_Certificados() {
           </TableHead>
 
           <tbody>
-            {certificados.map((cert) => (
-              <TableRow key={cert.codigo}>
-                <TableCell>{cert.codigo}</TableCell>
-                <TableCell>{cert.disciplina}</TableCell>
-                <TableCell>{cert.data_emissao}</TableCell>
-                <TableCell>
-                  <PdfButton onClick={() => console.log("abrir pdf", cert.codigo)}>
-                    <FaFilePdf />
-                  </PdfButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {
+              certificados.length == 0 ?
+                <TableRow>
+                  <TableCell>Você ainda não conquistou nenhum certificado.</TableCell>
+                </TableRow>
+                : certificados.map((cert) => (
+                  <TableRow key={cert.codigo}>
+                    <TableCell>{cert.codigo}</TableCell>
+                    <TableCell>{cert.disciplina}</TableCell>
+                    <TableCell>{cert.data_emissao}</TableCell>
+                    <TableCell>
+                      <PdfButton onClick={() => console.log("abrir pdf", cert.codigo)}>
+                        <FaFilePdf />
+                      </PdfButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
           </tbody>
         </Table>
       </Content>

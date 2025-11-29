@@ -66,7 +66,7 @@ const FooterButton = styled.button`
   }
 `;
 
-export default function Modal({ children, visible, onClose }) {
+export default function Modal({ children, visible, onClose, funcaoParaBotao }) {
   return (
     <ModalBackDrop visible={visible}>
       <ModalContent>
@@ -76,7 +76,12 @@ export default function Modal({ children, visible, onClose }) {
 
         {children}
 
-        <FooterButton onClick={onClose}>Fechar</FooterButton>
+        {
+          funcaoParaBotao ?
+            <FooterButton onClick={funcaoParaBotao}>OK</FooterButton>
+            :
+            <FooterButton onClick={onClose}>OK</FooterButton>
+        }
       </ModalContent>
     </ModalBackDrop>
   );

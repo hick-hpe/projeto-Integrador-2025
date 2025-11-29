@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaPlay, FaTimes } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import Modal from "../../components/Modal";
 
 const PageContainer = styled.div`
   background-color: #f2f2f2;
@@ -9,6 +10,7 @@ const PageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px; /* Evita corte no mobile */
   font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 `;
 
@@ -19,6 +21,10 @@ const QuizBox = styled.div`
   width: 100%;
   max-width: 700px;
   box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.12);
+
+  @media (max-width: 768px) {
+    padding: 25px 20px;
+  }
 `;
 
 const QuizTitle = styled.h2`
@@ -26,18 +32,31 @@ const QuizTitle = styled.h2`
   font-weight: bold;
   margin-bottom: 30px;
   font-size: 24px;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+    text-align: center;
+  }
 `;
 
 const QuestionNumber = styled.h3`
   color: #333;
   font-size: 20px;
   margin-bottom: 8px;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const QuestionText = styled.p`
   font-size: 18px;
   margin-bottom: 25px;
   color: #222;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const Option = styled.label`
@@ -57,6 +76,11 @@ const Option = styled.label`
   input {
     margin-right: 10px;
   }
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
 `;
 
 const Buttons = styled.div`
@@ -64,22 +88,32 @@ const Buttons = styled.div`
   justify-content: space-between;
   margin-top: 30px;
   flex-wrap: wrap;
+  gap: 10px;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+  }
 `;
 
 const SubmitButton = styled.button`
   background-color: #28a745;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 18px;
   font-size: 16px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  flex: 1;
 
   &:hover {
     background-color: #218838;
+  }
+
+  @media (max-width: 500px) {
+    justify-content: center;
   }
 `;
 
@@ -87,18 +121,24 @@ const QuitButton = styled.button`
   background-color: #c82333;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 18px;
   font-size: 16px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  flex: 1;
 
   &:hover {
     background-color: #a71d2a;
   }
+
+  @media (max-width: 500px) {
+    justify-content: center;
+  }
 `;
+
 
 export default function QuizIniciado() {
   const navigate = useNavigate();
@@ -112,8 +152,8 @@ export default function QuizIniciado() {
   const [selectedOption, setSelectedOption] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [mostrarResultado, setMostrarResultado] = useState(false);
   const [username, setUsername] = useState("");
+  const [open, setOpen] = useState(false);
 
   // autenticacao
   useEffect(() => {
@@ -175,7 +215,7 @@ export default function QuizIniciado() {
         });
 
         // if (response.ok) {
-          setQuizIniciado(true);
+        setQuizIniciado(true);
         // }
       } catch (err) {
         console.error(err);
@@ -242,15 +282,27 @@ export default function QuizIniciado() {
       setCurrentQuestion(prev => prev + 1);
     } else {
       // setMostrarResultado(true);
-      navigate('/resultado-quiz/', { state: { quiz_id: id } })
+      navigate(`/quiz-info/${id}/resultado-quiz/`, { state: { quiz_id: id } })
     }
   };
 
-  const handleQuit = () => {
-    // navigate("/desistiu-quiz");
-  };
+  const handleQuit = async () => {
+    try {
+      await fetch(`http://localhost:8000/api/quizzes/${id}/desistir/`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
 
-  // if (mostrarResultado) return <ResultadoQuiz quiz_id={id} />;
+      setOpen(false);
+
+      navigate(`/quiz-info/${id}`);
+    } catch (error) {
+      console.error("Erro ao desistir do quiz:", error);
+    }
+  };
 
   // Mostrar estado de carregamento ou erro
   if (loading) return <p>Carregando perguntas...</p>;
@@ -259,6 +311,17 @@ export default function QuizIniciado() {
 
   return (
     <PageContainer>
+
+      {/* modal confirmacao para desistir do quiz */}
+      <Modal
+        visible={open}
+        onClose={() => setOpen(false)}
+        funcaoParaBotao={handleQuit}
+      >
+        <h2>ATENÇÃO!!!</h2>
+        <p>Se desisitr, seu progresso será perdido!! Tem certeza que deseja desisitr?</p>
+      </Modal>
+
       <QuizBox>
         <QuizTitle>{quiz?.titulo} - {quiz?.nivel}</QuizTitle>
 
@@ -279,7 +342,7 @@ export default function QuizIniciado() {
         ))}
 
         <Buttons>
-          <QuitButton onClick={handleQuit}>
+          <QuitButton onClick={() => setOpen(true)}>
             <FaTimes /> Desistir
           </QuitButton>
           <SubmitButton onClick={handleSubmit}>

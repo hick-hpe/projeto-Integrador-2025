@@ -3,57 +3,85 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
-  background-color: #f2f2f2;
+  background-color: #f4f6ff;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding: 40px 20px;
+  align-items: flex-start;
   font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 `;
 
 const ResultBox = styled.div`
-  background-color: #fff;
-  border-radius: 12px;
+  background-color: #ffffff;
+  border-radius: 14px;
   padding: 35px 40px;
-  max-width: 700px;
+  max-width: 780px;
   width: 100%;
-  box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 6px 16px rgba(0, 0, 0, 0.10),
+    0px 1px 3px rgba(0,0,0,0.05);
 `;
 
 const Title = styled.h2`
   color: #337eff;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 30px;
-  font-size: 24px;
+  font-size: 26px;
+  text-align: center;
 `;
 
 const AnswerItem = styled.div`
+  background: #fafcff;
+  border: 1px solid #e4eaff;
+  padding: 20px;
+  border-radius: 10px;
   margin-bottom: 20px;
 `;
 
 const QuestionText = styled.p`
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 17px;
 `;
 
 const UserAnswer = styled.p`
-  color: ${({ correct }) => (correct ? "#28a745" : "#c82333")};
+  padding: 12px 15px;
+  border-radius: 8px;
+  background-color: ${({ correct }) =>
+        correct ? "rgba(40, 167, 69, 0.12)" : "rgba(200, 35, 51, 0.12)"};
+  border-left: 5px solid ${({ correct }) =>
+        correct ? "#28a745" : "#c82333"};
+  margin-bottom: 12px;
+`;
+
+const Explanation = styled.div`
+  background-color: #eef2ff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 15px;
+  border-left: 4px solid #557cff;
 `;
 
 const BackButton = styled.button`
   background-color: #337eff;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 22px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 30px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 
   &:hover {
     background-color: #2868d6;
   }
 `;
+
 
 export default function ResultadoQuiz() {
     const location = useLocation();
@@ -137,26 +165,29 @@ export default function ResultadoQuiz() {
                     const userAlt = userAnswerObj?.alternativa;
                     const isCorrect = userAlt === q.resposta_correta;
 
-                    const alternativaTexto = q.alternativas.find(a => a.id === userAlt)?.texto || "Não respondida";
-                    const corretaTexto = q.alternativas.find(a => a.id === q.resposta_correta)?.texto;
+                    const alternativaTexto =
+                        q.alternativas.find(a => a.id === userAlt)?.texto || "Não respondida";
+
+                    const corretaTexto =
+                        q.alternativas.find(a => a.id === q.resposta_correta)?.texto;
 
                     return (
                         <AnswerItem key={q.id}>
                             <QuestionText>{q.descricao}</QuestionText>
 
                             <UserAnswer correct={isCorrect}>
-                                <strong>Sua resposta:</strong> {alternativaTexto} <br />
-
+                                <strong>Sua resposta:</strong> {alternativaTexto}
+                                <br />
                                 {isCorrect ? (
-                                    <span>✅ Correta!</span>
+                                    <span>✅ Resposta correta!</span>
                                 ) : (
                                     <span>❌ Correta: {corretaTexto}</span>
                                 )}
-
-                                <div>
-                                    <strong>Explicação:</strong> {q.explicacao}
-                                </div>
                             </UserAnswer>
+
+                            <Explanation>
+                                <strong>Explicação:</strong> {q.explicacao}
+                            </Explanation>
                         </AnswerItem>
                     );
                 })}

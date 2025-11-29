@@ -7,16 +7,18 @@ import Modal from "../../components/Modal";
 
 const Container = styled.div`
   display: flex;
-  /* height: 100vh; */
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #eef1f5;
   font-family: Arial, sans-serif;
-  font-size: 16px; /* fonte mínima */
 `;
 
 const Content = styled.div`
   flex: 1;
-  background-color: #f7f7f7;
-  padding: 30px;
+  padding: 40px;
   overflow-y: auto;
+  height: 100vh;
 `;
 
 const TableSection = styled.div`

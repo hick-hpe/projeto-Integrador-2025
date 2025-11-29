@@ -74,6 +74,7 @@ export default function Cadastro() {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
+  const [matricula, setMatricula] = useState('123456789');
   const [email, setEmail] = useState("");
   const [password, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -93,7 +94,7 @@ export default function Cadastro() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username, email, password
+          username, email, password, matricula
         }),
       });
 
@@ -124,6 +125,14 @@ export default function Cadastro() {
           placeholder="Digite seu username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <Label>Matrícula</Label>
+        <Input
+          type="text"
+          placeholder="Digite sua matrícula"
+          value={matricula}
+          onChange={(e) => setMatricula(e.target.value)}
         />
 
         <Label>Email</Label>

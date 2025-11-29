@@ -3,14 +3,14 @@ from django.contrib.auth.models import User
 from .models import (
     Disciplina, Quiz, Questao,
     Alternativa, RespostaQuestao, RespostaAluno,
-    Certificado
+    Certificado, Emblema, EmblemaUser, Tentativa
 )
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email']
-
+        
 
 class DisciplinaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -115,19 +115,36 @@ class CertificadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificado
         fields = ['codigo', 'aluno', 'disciplina', 'data_emissao']
+        
+
+class EmblemaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Emblema
+        fields = ['id', 'nome', 'descricao', 'logo']
 
 
-# class FeedbackSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Feedback
-#         fields = ['email', 'assunto', 'mensagem']
+class EmblemaUserSerializer(serializers.ModelSerializer):
+    emblema = EmblemaSerializer()
+
+    class Meta:
+        model = EmblemaUser
+        fields = ['id', 'emblema', 'conquistado_em']
 
 
-# class EmblemaSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = EmblemaUser
-#         fields = ['nome', 'descricao', 'logo']
+class TentativaSerializer(serializers.ModelSerializer):
+    disciplina = serializers.SerializerMethodField()
+    nivel = serializers.SerializerMethodField()
 
+    def get_disciplina(self, obj):
+        return obj.quiz.disciplina.nome
+
+    def get_nivel(self, obj):
+        return obj.quiz.nivel
+    
+    class Meta:
+        model = Tentativa
+        fields = ['id', 'nivel', 'aprovado', 'disciplina']
+    
 
 # class EmblemaUserSerializer(serializers.ModelSerializer):
 #     aluno = serializers.SerializerMethodField()

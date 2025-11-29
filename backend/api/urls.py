@@ -38,6 +38,16 @@ urlpatterns = [
     # Respostas do aluno no ultimo quiz
     path('quizzes/<int:quiz_id>/respostas-ultimo-quiz/', ListRespostaaAlunoQuiz.as_view(), name='respostas-ultimo-quiz'),
 
+    # Emblemas
+    path('emblemas/', ListEmblemasView.as_view(), name='emblemas'),
+
+    # Emblemas do aluno
+    path('emblemas/aluno/', ListEmblemasUserView.as_view(), name='emblemas-aluno'),
+
+    # estatisticas -> para obter dados de quizzes e nome da disciplina
+    path('tentativas/', ListTentativasView.as_view(), name='tentativas'),
+
+
     # # Listar detalhes da questão
     # path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestaoDetailView.as_view(), name='questoes_detail'),
     

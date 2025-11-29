@@ -140,9 +140,27 @@ class Certificado(models.Model):
     def __str__(self):
         return f"{self.aluno} - {self.disciplina.nome} - {self.data_emissao}"
 
+# ====================================================
+# Emblemas
+# ====================================================
+class Emblema(models.Model):
+    nome = models.CharField(max_length=20)
+    descricao = models.TextField(max_length=100)
+    logo = models.ImageField(upload_to='emblemas/', null=True)
 
+    def __str__(self):
+        return f'Emblema {self.nome}'
 
+# ====================================================
+# Emblemas do aluno
+# ====================================================
+class EmblemaUser(models.Model):
+    aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    emblema = models.ForeignKey(Emblema, on_delete=models.CASCADE)
+    conquistado_em = models.DateTimeField(auto_now_add=True, null=True)
 
+    def __str__(self):
+        return f'{self.aluno.user.username} conquistou o emblema {self.emblema.nome}'
 
 # =========================================================================================================================
 # Adicionais Futuros

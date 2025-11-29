@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .permissions import IsAdminQuizzesPermission
 from certificado.views import gerar_certificado_no_banco
-from .models import CustomUser, Tentativa, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, RespostaQuestao
-from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, QuestaoRespostaSerializer, RespostaAlunoSerializer
+from .models import CustomUser, Tentativa, Quiz, Questao, Disciplina, Alternativa, RespostaAluno, RespostaQuestao, Emblema, EmblemaUser
+from .serializers import DisciplinaSerializer, QuizSerializer, QuestaoSerializer, QuestaoRespostaSerializer, RespostaAlunoSerializer, EmblemaSerializer, EmblemaUserSerializer, TentativaSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 import random
@@ -227,6 +227,9 @@ class DesistirQuizView(APIView):
         tentativa.status_quiz = "Desistido"
         tentativa.save()
 
+        # excluir todas as respostas associadas a esta tentativa
+        RespostaAluno.objects.filter(tentativa=tentativa).delete()
+
         return Response(
             {"detail": "Tentativa marcada como desistida com sucesso"},
             status=status.HTTP_200_OK
@@ -447,6 +450,55 @@ class ListRespostaaAlunoQuiz(APIView):
         )
 
         serializer = RespostaAlunoSerializer(respostas, many=True)
+        return Response(serializer.data, status=200)
+    
+
+# ====================================================
+# Listar emblemas
+# ====================================================
+class ListEmblemasView(APIView):
+    """
+    View para listrar os emblemas
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        emblemas = Emblema.objects.all()
+        serializer = EmblemaSerializer(emblemas, many=True)
+        return Response(serializer.data, status=200)
+
+# ====================================================
+# Listar emblemas do aluno
+# ====================================================
+class ListEmblemasUserView(APIView):
+    """
+    View para listrar os emblemas do aluno
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        aluno = get_object_or_404(CustomUser, user=request.user)
+        emblemas = EmblemaUser.objects.filter(aluno=aluno)
+        serializer = EmblemaUserSerializer(emblemas, many=True)
+        return Response(serializer.data, status=200)
+    
+# ====================================================
+# Estatisticas -> para obter dados de quizzes e nome da disciplina
+# ====================================================
+class ListTentativasView(APIView):
+    """
+    View para obter dados de quizzes e nome da disciplina
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        
+        aluno = get_object_or_404(CustomUser, user=request.user)
+        tentativas = Tentativa.objects.filter(aluno=aluno)
+        serializer = TentativaSerializer(tentativas, many=True)
         return Response(serializer.data, status=200)
 
 # ================================================================================================

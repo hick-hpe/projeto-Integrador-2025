@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-2rk8ew*!8h%i*3&ue2^jx9qc3v%6874tac3=)+6=9%0@3=c%9(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -53,6 +53,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'http://localhost:5173'
 ]
 
 # Django REST Framework settings

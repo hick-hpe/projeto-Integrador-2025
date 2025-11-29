@@ -227,11 +227,20 @@ class ContaDetailView(APIView):
     """
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
+    def patch(self, request):
+        user = request.user
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'detail': 'Dados atualizados com sucesso'})
+            
+            # atualiza password se fornecido
+            password = request.data.get("password")
+            if password:
+                user.set_password(password)
+                user.save()
+
+            print('password:',password)
+            return Response({'detail': f'Dados atualizados com sucesso: password={password}'})
     
     def delete(self, request):
         request.user.delete()

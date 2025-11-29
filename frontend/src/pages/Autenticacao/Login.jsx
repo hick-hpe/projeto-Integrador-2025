@@ -116,7 +116,7 @@ export default function Login() {
             if (response.ok) {
                 navigate("/dashboard");
             } else {
-                alert("Login falhou: " + (data.detail || "Erro desconhecido"));
+                alert("Login falhou: nenhuma conta encontrada com essas credenciais!!");
             }
         } catch (err) {
             console.error('Erro: ', err);
