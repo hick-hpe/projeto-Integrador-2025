@@ -82,6 +82,8 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
             }
             ```
 - 🔑 **FAZER LOGIN**
+    > Nota: a sessão do usuário permanece por 1h.
+    
     - 🚀 `POST /auth/login/` – Realizar o login na conta  
     - 📥 **Formato de envio:**  
         ```json
@@ -131,37 +133,6 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
             "detail": "Logout realizado com sucesso!!"
         }
         ```
-<!-- 
-- 📧 **ENVIAR EMAIL**
-    - 🚀 `POST /auth/enviar-email/` – Envia um código de recuperação de conta para o email cadastrado no sistema  
-    - 📥 **Formato de envio:**  
-        ```json
-        {
-            "email": "email"
-        }
-        ```
-    - 📤 **Formato de resposta de sucesso:**  
-        ```json
-        {
-            "detail": "Código enviado com sucesso!!"
-        }
-        ``` -->
-
-<!-- - 🔑 **VALIDAR CÓDIGO**
-    - 🚀 `POST /auth/validar-codigo/` – Verifica se o código informado é válido  
-    - 📥 **Formato de envio:**  
-        ```json
-        {
-            "email": "email",
-            "codigo": "codigo"
-        }
-        ```
-    - 📤 **Formato de resposta de sucesso:**  
-        ```json
-        {
-            "detail": "Código validado com sucesso!!"
-        }
-        ``` -->
 
 ## 🔌 Rotas da API
 
