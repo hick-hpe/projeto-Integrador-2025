@@ -1,13 +1,110 @@
-base de dados - teste
+from core.models import Disciplina, Quiz, Questao, Alternativa, RespostaQuestao
 
-poo
-ciencia de dados
+# =============================================
+# Criar disciplina
+# =============================================
+disciplina, created = Disciplina.objects.get_or_create(nome="Clash Royale")
+print("Disciplina criada:", disciplina.nome)
 
-
-quiz3 = Quiz.objects.create(
-    titulo="POO - Polimorfismo",
-    disciplina=disciplina_poo,
-    nivel="Avançado",
-    descricao="Questões sobre polimorfismo e sobrescrita de métodos.",
+# =============================================
+# Criar Quiz Iniciante
+# =============================================
+quiz = Quiz.objects.create(
+    titulo="Quiz Iniciante de Clash Royale",
+    disciplina=disciplina,
+    nivel="Iniciante",
+    descricao="Quiz para testar seus conhecimentos básicos sobre Clash Royale.",
     tipo_questoes="Múltipla Escolha"
 )
+print("Quiz criado:", quiz.titulo)
+
+
+# =============================================
+# QUESTÕES + ALTERNATIVAS + GABARITO
+# =============================================
+
+questions = [
+    {
+        "descricao": "Qual é a arena inicial no Clash Royale?",
+        "alternativas": [
+            "Arena de Treinamento",
+            "Arena dos Goblins",
+            "Arena da Selva",
+            "Geleira Congelada"
+        ],
+        "correta": 0,
+        "explicacao": "Todo jogador começa na Arena de Treinamento, antes da Arena 1."
+    },
+    {
+        "descricao": "Qual destes é um feitiço?",
+        "alternativas": [
+            "Gigante",
+            "Flechas",
+            "Cavaleiro",
+            "Príncipe"
+        ],
+        "correta": 1,
+        "explicacao": "Flechas é um feitiço que atinge várias tropas pequenas."
+    },
+    {
+        "descricao": "Qual é o objetivo principal do jogo?",
+        "alternativas": [
+            "Coletar cartas",
+            "Destruir as torres inimigas",
+            "Conseguir o maior nível de rei",
+            "Subir de clã"
+        ],
+        "correta": 1,
+        "explicacao": "O objetivo central é destruir as torres inimigas para vencer a partida."
+    },
+    {
+        "descricao": "Qual carta custa 5 de elixir?",
+        "alternativas": [
+            "Golem",
+            "Valquíria",
+            "Horda de Servos",
+            "Mago"
+        ],
+        "correta": 3,
+        "explicacao": "O Mago custa 5 de elixir e causa dano em área."
+    },
+    {
+        "descricao": "Qual destas cartas ataca somente construções?",
+        "alternativas": [
+            "Gigante",
+            "Mini P.E.K.K.A",
+            "Mosqueteira",
+            "Valquíria"
+        ],
+        "correta": 0,
+        "explicacao": "O Gigante foca exclusivamente em construções como torres e prédios."
+    }
+]
+
+for q in questions:
+    questao = Questao.objects.create(
+        quiz=quiz,
+        descricao=q["descricao"]
+    )
+
+    alternativas_objs = []
+    for alt in q["alternativas"]:
+        alternativas_objs.append(
+            Alternativa.objects.create(
+                questao=questao,
+                texto=alt
+            )
+        )
+
+    resposta_correta = alternativas_objs[q["correta"]]
+
+    RespostaQuestao.objects.create(
+        questao=questao,
+        alternativa=resposta_correta,
+        explicacao=q["explicacao"]
+    )
+
+    print("Questão criada:", questao.descricao)
+
+
+print("\n🎉 Quiz iniciante de Clash Royale criado com sucesso!")

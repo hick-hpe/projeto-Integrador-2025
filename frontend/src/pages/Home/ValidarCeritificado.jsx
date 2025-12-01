@@ -17,6 +17,10 @@ const Content = styled.div`
   position: relative;
 `;
 
+const Title = styled.h1`
+    color: #0062cc;
+`;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -92,7 +96,7 @@ export default function ValidarCeritificado() {
       <Sidebar />
 
       <Content>
-        <h1>Validar certificado</h1>
+        <Title>Validar certificado</Title>
 
         <Form onSubmit={validarCertificado}>
           <Input

@@ -20,6 +20,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
 - Emissão de certificados para os alunos
 - Registro de desempenho
 - Gestão de disciplinas e quizzes
+- Emblemas para cada nível de quiz aprovado
 
 ## 🚀 Funcionalidades futuras
 - Sistema de ranking entre os participantes

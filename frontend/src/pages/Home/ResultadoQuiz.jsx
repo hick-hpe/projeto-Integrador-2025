@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Modal from "../../components/Modal";
 
 const Container = styled.div`
   background-color: #f4f6ff;
@@ -91,8 +92,32 @@ export default function ResultadoQuiz() {
     const [userAnswers, setUserAnswers] = useState([]);
     const [correctAnswers, setCorrectAnswers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [quiz, setQuiz] = useState({});
 
-    // Buscar respostas do aluno
+    const [modalVisibleEmblema, setModalVisibleEmblema] = useState(false);
+    const [modalVisibleCertificado, setModalVisibleCertificado] = useState(false);
+
+    // buscar quiz
+    useEffect(() => {
+        if (!quiz_id) return;
+
+        const fetchQuiz = async () => {
+            const url = `http://localhost:8000/api/quizzes/${quiz_id}/`;
+
+            try {
+                const response = await fetch(url, { credentials: "include" });
+                const data = await response.json();
+                setQuiz(data);
+                console.log('Quiz: ', data);
+            } catch (err) {
+                console.error("Erro ao buscar quiz:", err);
+            }
+        };
+
+        fetchQuiz();
+    }, [quiz_id]);
+
+    // buscar respostas do aluno
     useEffect(() => {
         if (!quiz_id) return;
 
@@ -112,7 +137,7 @@ export default function ResultadoQuiz() {
         fetchUserAnswers();
     }, [quiz_id]);
 
-    // Buscar gabarito
+    // buscar gabarito
     useEffect(() => {
         if (!quiz_id) return;
 
@@ -133,12 +158,57 @@ export default function ResultadoQuiz() {
         fetchCorrectAnswers();
     }, [quiz_id]);
 
+    // calcular e exibir modals
+    useEffect(() => {
+        if (loading) return;
+        if (!correctAnswers.length || !userAnswers.length) return;
+
+        const total = correctAnswers.length;
+        const acertos = correctAnswers.filter((q) => {
+            const user = userAnswers.find(a => a.questao === q.id);
+            return user?.alternativa === q.resposta_correta;
+        }).length;
+
+        const percentual = (acertos / total) * 100;
+        console.log("Acertos:", acertos, "/", total, "=", percentual.toFixed(2) + "%");
+
+        // mostrar modal do emblema
+        if (percentual >= 70) {
+            setModalVisibleEmblema(true);
+
+            // mostrar modal do certificado somente se for avançado
+            if (quiz.nivel === "Avançado") {
+                setModalVisibleCertificado(true);
+            }
+        }
+    }, [loading, correctAnswers, userAnswers, quiz]);
+
     if (loading) return <p>Carregando resultado...</p>;
 
     const handleBack = () => navigate(`/quiz-info/${quiz_id}/`);
 
     return (
         <Container>
+
+            {/* modal de certificado */}
+            <Modal
+                visible={modalVisibleCertificado}
+                onClose={() => setModalVisibleCertificado(false)}
+            >
+                <h2>Parabéns!!!</h2>
+                <p>Você conquistou o certificado em <strong>{quiz.disciplina}</strong></p>
+            </Modal>
+
+            {/* modal de emblema */}
+            <Modal
+                visible={modalVisibleEmblema}
+                onClose={() => setModalVisibleEmblema(false)}
+            >
+                <h2>Parabéns!!!</h2>
+                <p>Você desbloqueou o emblema de <strong>{quiz.nivel}</strong> em <strong>{quiz.disciplina}</strong></p>
+            </Modal>
+
+
             <ResultBox>
                 <Title>Resultado do Quiz</Title>
 
