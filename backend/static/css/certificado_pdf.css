@@ -6,8 +6,8 @@ body {
   }
 
   .certificado {
-    width: 1000px;
-    height: 560px;
+    width: 1200px;
+    height: 600px;
     background-size: cover;
     background-position: center;
     padding: 60px 80px;
@@ -68,7 +68,13 @@ body {
   .data {
     margin-top: 40px;
     text-align: right;
-    margin-top: 40px;
+    color: #143153;
+    font-size: 16px;
+  }
+
+  .codigo {
+    text-align: right;
+    margin-top: 10px;
     color: #143153;
     font-size: 16px;
   }

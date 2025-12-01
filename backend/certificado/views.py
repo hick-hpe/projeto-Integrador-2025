@@ -112,8 +112,9 @@ def baixar_certificado(request, certificado, aluno):
         "nome": nome.upper(),
         "disciplina": certificado.disciplina.nome,
         "data": data_formatada,
-        'css_path': css_path,
-        'img_path': img_path
+        "css_path": css_path,
+        "img_path": img_path,
+        "codigo": certificado.codigo
     }
     
     rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
