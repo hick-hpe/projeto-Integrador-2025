@@ -237,24 +237,6 @@ export default function Quizzes() {
     if (e.target.value === "Todos") {
       setChaveValorDiscQuizFilter(chaveValorDiscQuiz);
       return;
-    } else if (e.target.value === "Alta") {
-      // Pontuação alta (300+)
-      const filtrado = {};
-      for (const discId in chaveValorDiscQuiz) {
-        filtrado[discId] = chaveValorDiscQuiz[discId].filter(
-          (quiz) => quiz.pontuacao >= 300
-        );
-      }
-      setChaveValorDiscQuizFilter(filtrado);
-    } else if (e.target.value === "Baixa") {
-      // Pontuação baixa (<300)
-      const filtrado = {};
-      for (const discId in chaveValorDiscQuiz) {
-        filtrado[discId] = chaveValorDiscQuiz[discId].filter(
-          (quiz) => quiz.pontuacao < 300
-        );
-      }
-      setChaveValorDiscQuizFilter(filtrado);
     } else if (["Iniciante", "Intermediário", "Avançado"].includes(e.target.value)) {
       // Nível
       const filtrado = {};
@@ -321,12 +303,10 @@ export default function Quizzes() {
       <Content>
         <ContainerFilters>
           <FilterSection>
-            <span>Filtrar por:</span>
+            <span>Filtrar por nível:</span>
             <FaFilter />
             <Select value={filtroTipo} onChange={handleFiltroTipoChange}>
               <option value="Todos">Todos</option>
-              <option value="Alta">Pontuação Alta (300+)</option>
-              <option value="Baixa">Pontuação Baixa (&lt;300)</option>
               <option value="Iniciante">Iniciante</option>
               <option value="Intermediário">Intermediário</option>
               <option value="Avançado">Avançado</option>
