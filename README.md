@@ -97,7 +97,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         ```
 
 - ✏️ **ATUALIZAR DADOS DA CONTA**
-    - 🚀 `PUT /auth/conta-detail/` – Editar dados da conta  
+    - 🚀 `PATCH /auth/conta/` – Editar dados da conta  
     - 📥 **Formato de envio:**  
         ```json
         {
@@ -130,8 +130,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
             "detail": "Logout realizado com sucesso!!"
         }
         ```
-
-
+<!-- 
 - 📧 **ENVIAR EMAIL**
     - 🚀 `POST /auth/enviar-email/` – Envia um código de recuperação de conta para o email cadastrado no sistema  
     - 📥 **Formato de envio:**  
@@ -145,9 +144,9 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         {
             "detail": "Código enviado com sucesso!!"
         }
-        ```
+        ``` -->
 
-- 🔑 **VALIDAR CÓDIGO**
+<!-- - 🔑 **VALIDAR CÓDIGO**
     - 🚀 `POST /auth/validar-codigo/` – Verifica se o código informado é válido  
     - 📥 **Formato de envio:**  
         ```json
@@ -161,8 +160,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         {
             "detail": "Código validado com sucesso!!"
         }
-        ```
-
+        ``` -->
 
 ## 🔌 Rotas da API
 
@@ -272,17 +270,6 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         }
         ```
 
-- 📜 `GET /certificados/<str:codigo>/` – Exibe os detalhes de um certificado  
-    - 📤 **Formato de resposta:**  
-        ```json
-        {
-            "codigo": "CERT12345",
-            "usuario": "Henrique",
-            "disciplina": "Desenvolvimento Web II",
-            "data_emissao": "2025-06-03"
-        }
-        ```
-
 - 🏁 `POST /api/quizzes/<int:quiz_id>/iniciar/` – Indica que o aluno iniciou o quiz  
     - 📤 **Formato de resposta:**  
         ```json
@@ -333,7 +320,27 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         ]
         ```
 
-### ⚙️ Rotas para admin/moderador
+- 📜 `GET /certificados/<str:codigo>/download/` – Faz o download do certificado do aluno logado
+    - 📤 **Formato de resposta:**  
+        - 📕 Um arquivo PDF
+
+- 📜 `GET /validar-certificado/` – Faz a validação de um certificado  
+    - 📤 **Formato de envio:**
+        ```json
+        {
+            "codigo": "CERT12345",
+            "matricula": "12345678"
+        }
+        ```
+
+    - 📤 **Formato de resposta:**  
+        ```json
+        {
+            "vlido": true,
+        }
+        ```
+
+<!-- ### ⚙️ Rotas para admin/moderador
 Para isso, deve estar logado como admin/moderador.
 
 - 📚 `GET /api/adm/disciplinas/` – Listar todas as disciplinas  
@@ -484,7 +491,7 @@ Para isso, deve estar logado como admin/moderador.
         {
             "message": "Quiz excluído com sucesso!"
         }
-        ```
+        ``` -->
 
 ## 🚀 Rodar protótipo de teste
 

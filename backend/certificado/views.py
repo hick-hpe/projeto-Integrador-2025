@@ -23,28 +23,28 @@ class ValidarCertificadoView(APIView):
         print(f"[INPUT] Código: {codigo}")
         print(f"[INPUT] Matrícula: {matricula}")
 
+        # Falta de dados → valido = False
         if not codigo or not matricula:
             print("[ERRO] Código ou matrícula não informados.")
-            return Response(
-                {'erro': 'É necessário informar o código do certificado e a matrícula do aluno.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"valido": False}, status=status.HTTP_200_OK)
 
+        # Verifica aluno
         try:
             aluno_temp = CustomUser.objects.get(matricula=matricula)
         except CustomUser.DoesNotExist:
             print("[ERRO] Aluno não encontrado.")
-            return Response({'erro': 'Aluno não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"valido": False}, status=status.HTTP_200_OK)
 
+        # Verifica certificado
         try:
             certificado = Certificado.objects.get(codigo=codigo, aluno=aluno_temp)
         except Certificado.DoesNotExist:
             print("[ERRO] Certificado não encontrado ou não pertence a este aluno.")
-            return Response({'erro': 'Certificado não encontrado ou não pertence a este aluno.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"valido": False}, status=status.HTTP_200_OK)
 
         # Certificado válido
         print("[SUCESSO] Certificado válido.")
-        return baixar_certificado(request, certificado, aluno_temp)
+        return Response({"valido": True}, status=status.HTTP_200_OK)
 
 
 def converter_data_para_extenso(data: datetime):

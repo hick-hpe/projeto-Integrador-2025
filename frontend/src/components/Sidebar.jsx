@@ -108,6 +108,7 @@ export default function Sidebar() {
     { text: "Certificados", path: ["/certificados"] },
     { text: "Emblemas", path: ["/emblemas"] },
     { text: "Perfil", path: ["/perfil"] },
+    { text: "Validar certificado", path: ["/validar-ceritificado"]}
   ];
 
   return (

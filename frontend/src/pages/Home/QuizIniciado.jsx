@@ -305,7 +305,7 @@ export default function QuizIniciado() {
         const data = await response.json();
 
         // se a tentativa estiver desistida, volta pra info
-        if (data.status === "Desistido") {
+        if (data.status !== "Iniciado") {
           navigate(`/quiz-info/${id}/`);
         }
 
