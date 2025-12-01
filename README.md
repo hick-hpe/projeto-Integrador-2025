@@ -179,153 +179,292 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
         ]
         ```
 
-- 📝 `GET /api/disciplinas/<int:disciplina_id>/quizzes/` – Listar quizzes de uma disciplina  
+- 📝 `GET /api/quizzes/` – Listar quizzes
     - 📤 **Formato de resposta:**  
         ```json
         [
             {
                 "id": 1,
-                "disciplina": "Desenvolvimento Web II",
+                "titulo": "POO - Conceitos Básicos",
+                "disciplina": "POO",
+                "tipo_questoes": "Múltipla Escolha",
                 "nivel": "Iniciante",
-                "descricao": "Quiz sobre conceitos básicos de Django."
-            }
-        ]
-        ```
-
-- ❓ `GET /api/quizzes/<int:quiz_id>/questoes/` – Listar questões de um quiz  
-    - 📤 **Formato de resposta:**  
-        ```json
-        [
-            {
-                "id": 51,
-                "quiz": 3,
-                "descricao": "Django é um framework web escrito em Python.",
-                "alternativas": [
+                "descricao": "Fundamentos iniciais de Programação Orientada a Objetos.",
+                "questoes": [
                     {
-                        "id": 29,
-                        "texto": "Verdadeiro"
-                    },
-                    {
-                        "id": 30,
-                        "texto": "Falso"
+                        "id": 1,
+                        "descricao": "O que é uma classe em POO?",
+                        "alternativas": [
+                            {
+                                "id": 1,
+                                "texto": "Um molde/estrutura para criar objetos."
+                            },
+                            {
+                                "id": 2,
+                                "texto": "Um objeto já instanciado."
+                            },
+                            {
+                                "id": 3,
+                                "texto": "Um tipo de banco de dados."
+                            }
+                        ]
                     }
                 ]
             }
         ]
         ```
 
-- ❓ `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` – Exibe os detalhes de uma questão (Múltipla escolha ou Verdadeiro/Falso)  
-    - 📤 **Formato de resposta Verdadeiro/Falso:**  
-        ```json
-        {
-            "id": 57,
-            "quiz": 3,
-            "descricao": "Descrição da questão aqui",
-            "alternativas": [
-                { "id": 45, "texto": "Verdadeiro" },
-                { "id": 46, "texto": "Falso" }
-            ]
-        }
-        ```
-    - 📤 **Formato de resposta Múltipla Escolha:**  
-        ```json
-        {
-            "id": 58,
-            "quiz": 3,
-            "descricao": "Descrição da questão aqui",
-            "alternativas": [
-                { "id": 47, "texto": "Alternativa 1" },
-                { "id": 48, "texto": "Alternativa 2" },
-                { "id": 49, "texto": "Alternativa 3" },
-                { "id": 50, "texto": "Alternativa 4" }
-            ]
-        }
-        ```
-
-- 📝 `GET /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/obter-resposta/` – Exibe a resposta da questão e explicação  
+- ❓ `GET /api/quizzes/<int:quiz_id>/questoes/` – Listar questões de um quiz - 10 aleatoriamente
     - 📤 **Formato de resposta:**  
         ```json
-        {
-            "detail": {
-                "id": 17,
-                "questao": "Descrição da questão aqui",
-                "alternativa": "Verdadeiro",
-                "explicacao": "Explicação aqui"
+        [
+            {
+                "id": 2,
+                "descricao": "O que é um objeto?",
+                "alternativas": [
+                    {
+                        "id": 4,
+                        "texto": "Uma instância de uma classe."
+                    },
+                    {
+                        "id": 5,
+                        "texto": "Um tipo de variável global."
+                    },
+                    {
+                        "id": 6,
+                        "texto": "Um método especial da classe."
+                    }
+                ]
             }
+        ]
+        ```
+
+- 📝 `GET /api/quizzes/<int:quiz_id>/aluno-pode-fazer/` - Verificar se o aluno pode fazer o quiz
+    - 📤 **Formato de resposta:**
+        Caso seja um nível superior ao qual o aluno não respondeu ainda, bloqueado!
+        ```json
+        {
+            "detail": "Você não pode fazer o nível Avançado!"
+        }
+        ```
+        Ou
+        ```json
+        {
+            "detail": "Você não pode fazer o nível Intermediário!"
         }
         ```
 
-- 🖊️ `POST /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/` – Enviar resposta do aluno  
+        Caso puder, OK!
+        ```json
+        {
+            "detail": "OK"
+        }
+        ```
+
+- 📝 `POST /api/quizzes/<int:quiz_id>/`- Informações do quiz
     - 📥 **Formato de envio:**  
         ```json
-        { "alternativa_id": 12 }
+        {
+            "id": 1,
+            "titulo": "POO - Conceitos Básicos",
+            "disciplina": "POO",
+            "tipo_questoes": "Múltipla Escolha",
+            "nivel": "Iniciante",
+            "descricao": "Fundamentos iniciais de Programação Orientada a Objetos.",
+            "questoes": [
+                {
+                    "id": 1,
+                    "descricao": "O que é uma classe em POO?",
+                    "alternativas": [
+                        {
+                            "id": 1,
+                            "texto": "Um molde/estrutura para criar objetos."
+                        },
+                        {
+                            "id": 2,
+                            "texto": "Um objeto já instanciado."
+                        },
+                        {
+                            "id": 3,
+                            "texto": "Um tipo de banco de dados."
+                        }
+                    ]
+                }
+            ]
+        }
         ```
+
+- 📝 `GET /api/quizzes/<int:quiz_id>/respostas-ultimo-quiz/` - Exibir as respostas do aluno no último quiz
+    - 📤 **Formato de resposta:**  
+        ```json
+        [
+            {
+                "id": 10,
+                "aluno": 1,
+                "questao": 1,
+                "alternativa": 1
+            },
+            {
+                "id": 11,
+                "aluno": 1,
+                "questao": 2,
+                "alternativa": 6
+            },
+            {
+                "id": 12,
+                "aluno": 1,
+                "questao": 3,
+                "alternativa": 9
+            }
+        ]
+        ```
+
+- 📝 `GET /api/quizzes/<int:quiz_id>/questoes/respostas-corretas/` - Exibir as respostas das perguntas repsondidas pelo aluno (gabarito)
+    - 📤 **Formato de resposta:**  
+        ```json
+        [
+            {
+                "id": 1,
+                "descricao": "O que é uma classe em POO?",
+                "alternativas": [
+                    {
+                        "id": 1,
+                        "texto": "Um molde/estrutura para criar objetos."
+                    },
+                    {
+                        "id": 2,
+                        "texto": "Um objeto já instanciado."
+                    },
+                    {
+                        "id": 3,
+                        "texto": "Um tipo de banco de dados."
+                    }
+                ],
+                "resposta_correta": 1,
+                "explicacao": null
+            }
+        ]
+        ```
+
+- 🖊️ `POST /api/quizzes/<int:quiz_id>/questoes/<int:questao_id>/responder/` – Enviar resposta do aluno
     - 📤 **Formato de resposta:**  
         ```json
         {
-            "correto": false,
-            "id": 18,
-            "questao": "Descrição da questão aqui",
-            "alternativa": "Descrição da alternativa aqui",
-            "explicacao": "Explicação da resposta"
+            "questao": "Descrição",
+            "resposta_aluno": "Texto fa alternativa escolhida",
+            "detail": "Resposta registrada com sucesso."
+        }
+        ```
+
+        Caso não tenha iniciado o quiz:
+        ```json
+        {
+            "detail": "Nenhuma tentativa ativa encontrada para este quiz."
+        }
+        ```
+
+        Caso já tenha repsondido nesta tentativa:
+        ```json
+        {
+            "questao": "Descrição",
+            "resposta_aluno": "Texto fa alternativa escolhida",
+            "detail": "Você já respondeu esta questão nesta tentativa."
         }
         ```
 
 - 🏁 `POST /api/quizzes/<int:quiz_id>/iniciar/` – Indica que o aluno iniciou o quiz  
     - 📤 **Formato de resposta:**  
         ```json
-        { "mensagem": "Você iniciou o quiz!" }
+        {
+            "detail": "ok"
+        }
+        ```
+        Caso tente de novo, status 400
+        ```json
+        {
+            "detail": "Este quiz já foi iniciado e ainda não foi concluído"
+        }
         ```
 
 - 🏳️ `POST /api/quizzes/<int:quiz_id>/desistir/` – Indica que o aluno desistiu do quiz e limpa os dados temporários  
     - 📤 **Formato de resposta:**  
         ```json
-        { "mensagem": "Você desistiu do quiz!" }
+        {
+            "mensagem": "Você desistiu do quiz!"
+        }
+        ```
+
+        Caso tente desisitr de um quiz não iniciado:
+        ```json
+        {
+            "detail": "Nenhuma tentativa ativa para desistir."
+        }
         ```
 
 - 🏁 `POST /api/quizzes/<int:quiz_id>/concluir/` – Exibe o desempenho do aluno no quiz  
     - 📤 **Formato de resposta:**  
         ```json
         {
-            "mensagem": "Quiz concluído com sucesso!",
-            "usuario": "Henrique",
-            "quiz": "iniciante",
-            "disciplina": "Desenvolvimento Web II",
-            "acertos": 4,
+            "detail": "Quiz concluído com sucesso",
+            "acertos": 3,
             "total_questoes": 10,
-            "pontuacao": 40
+            "porcentagem": 33.33,
+            "aprovado": false
         }
         ```
 
-- 🏅 `GET /api/emblemas/` – Lista todos os emblemas disponíveis  
+        Caso não tenha iniciado um quiz:
+        ```json
+        {
+            "detail": "Nenhuma tentativa ativa encontrada."
+        }
+        ```
+
+### Emblemas
+- 🏅 `GET /api/emblemas/` – Mostra os emblemas disponíveis  
     - 📤 **Formato de resposta:**  
         ```json
         [
             {
+                "id": 1,
                 "nome": "Primeiro Quiz",
                 "descricao": "Concluiu o primeiro quiz na plataforma.",
-                "logo": "/caminho/da/logo.png"
+                "disciplina": "Matemática"
             }
         ]
         ```
 
-- 🏆 `GET /api/emblemas/user/<str:username>/` – Mostra os emblemas conquistados pelo usuário  
+- 🏆 `GET /api/emblemas/aluno/` – Mostra os emblemas conquistados pelo usuário  
     - 📤 **Formato de resposta:**  
         ```json
         [
             {
-                "nome": "Primeiro Quiz",
-                "descricao": "Concluiu o primeiro quiz na plataforma.",
-                "logo": "/caminho/da/logo.png"
+                "id": 1,
+                "emblema": {
+                    "id": 4,
+                    "nome": "Iniciante POO",
+                    "descricao": "Emblema concedido ao completar o quiz iniciante de Programação Orientada a Objetos.",
+                    "disciplina": "POO"
+                },
+                "conquistado_em": "2025-11-30T22:17:41.075468-03:00"
             }
         ]
         ```
 
-- 📜 `GET /certificados/<str:codigo>/download/` – Faz o download do certificado do aluno logado
+### Certificados
+- 📜 `GET /api/certificados/` – Faz a validação de um certificado
+    - 📤 **Formato de resposta:**  
+        ```json
+        {
+            "valido": true,
+        }
+        ```
+
+- 📜 `GET /api/certificados/<str:codigo>/download/` – Faz o download do certificado do aluno logado
     - 📤 **Formato de resposta:**  
         - 📕 Um arquivo PDF
 
-- 📜 `GET /validar-certificado/` – Faz a validação de um certificado  
+- 📜 `GET /api/certificados/validar-certificado/` – Faz a validação de um certificado  
     - 📤 **Formato de envio:**
         ```json
         {
@@ -337,7 +476,7 @@ O **DevQuiz** é uma plataforma online de quizzes criada para ajudar estudantes 
     - 📤 **Formato de resposta:**  
         ```json
         {
-            "vlido": true,
+            "valido": true,
         }
         ```
 

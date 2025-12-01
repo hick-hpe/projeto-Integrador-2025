@@ -125,7 +125,8 @@ class EmblemaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Emblema
-        fields = ['id', 'nome', 'descricao', 'logo', 'disciplina']
+        # campo 'logo'
+        fields = ['id', 'nome', 'descricao', 'disciplina']
 
 
 class EmblemaUserSerializer(serializers.ModelSerializer):
