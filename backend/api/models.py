@@ -96,6 +96,7 @@ class Tentativa(models.Model):
     ]
     aluno = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, null=True)
     status_quiz = models.CharField(max_length=9, choices=STATUS_QUIZ_CHOICE, default='Iniciado')
     aprovado = models.BooleanField(default=False) # atingiu 70%
     pontuacao = models.IntegerField(default=0)

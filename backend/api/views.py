@@ -110,34 +110,52 @@ class QuizQuestoesListView(APIView):
 
 # Método para verificar se o aluno pode fazer
 def aluno_pode_fazer_quiz(quiz, aluno):
+    print("\n=== Verificando permissão do aluno ===")
+    print("Aluno:", aluno)
+    print("Quiz solicitado:", quiz.id, "| ", quiz.titulo, "| Nível:", quiz.nivel)
+
     # ----------- Avançado -----------
     if quiz.nivel == "Avançado":
-        tentativa = Tentativa.objects.filter(
-            aluno=aluno,
-            quiz__nivel="Intermediário",
-            aprovado=True,
-            status_quiz="Concluído"
-        ).first()
+        tentativa = (
+            Tentativa.objects
+            .filter(aluno=aluno, quiz__nivel="Intermediário", disciplina=quiz.disciplina, aprovado=True, status_quiz="Concluído")
+            .order_by("-id")
+            .first()
+        )
+
+        print("Buscando tentativa prévia (Intermediário → necessário):")
+        print("Tentativa encontrada:", tentativa)
+
+        if tentativa:
+            print("→ Tentativa OK | Nível:", tentativa.quiz.nivel, "| Aprovado:", tentativa.aprovado)
+        else:
+            print("→ Nenhuma tentativa válida encontrada! BLOQUEADO")
 
         if not tentativa:
-            return {'detail': 'Você não pode fazer o nível Avançado!'}
+            return {'detail': f'Você não pode fazer o nível Avançado de {quiz.disciplina}!'}
 
     # ----------- Intermediário -----------
     elif quiz.nivel == "Intermediário":
-        tentativa = Tentativa.objects.filter(
-            aluno=aluno,
-            quiz__nivel="Iniciante",
-            aprovado=True,
-            status_quiz="Concluído"
-        ).first()
+        tentativa = (
+            Tentativa.objects
+            .filter(aluno=aluno, quiz__nivel="Iniciante", disciplina=quiz.disciplina, aprovado=True, status_quiz="Concluído")
+            .order_by("-id")
+            .first()
+        )
 
-        print('tentativa INT:', tentativa)
+        print("Buscando tentativa prévia (Iniciante → necessário):")
+        print("Tentativa encontrada:", tentativa)
+
+        if tentativa:
+            print("→ Tentativa OK | Nível:", tentativa.quiz.nivel, "| Aprovado:", tentativa.aprovado)
+        else:
+            print("→ Nenhuma tentativa válida encontrada! BLOQUEADO")
 
         if not tentativa:
-            return {'detail': 'Você não pode fazer o nível Intermediário!'}
+            return {'detail': f'Você não pode fazer o nível Intermediário de {quiz.disciplina}!'}
 
+    print("✓ Permissão concedida!")
     return {"detail": "OK"}
-
 
 # View
 class AlunoPodeFazerQuizView(APIView):
@@ -346,6 +364,7 @@ class ConcluirQuizView(APIView):
         tentativa.pontuacao = porcentagem
         tentativa.aprovado = porcentagem >= 70
         tentativa.status_quiz = "Concluído"
+        tentativa.disciplina = quiz.disciplina
         tentativa.save()
 
         print(f"> Pontuação: {porcentagem}% | Aprovado: {tentativa.aprovado}")
