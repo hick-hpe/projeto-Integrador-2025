@@ -58,6 +58,11 @@ const QuizButtonDesativado = styled.button`
   margin-bottom: 15px;
 `;
 
+const ContainerFilters = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const FilterSection = styled.div`
   display: flex;
   align-items: center;
@@ -96,8 +101,10 @@ const TableCell = styled.td`
 
 export default function Quizzes() {
   const navigate = useNavigate();
-  const [filtro, setFiltro] = useState("Todos");
+  const [filtroTipo, setFiltroTipo] = useState("Todos");
+  const [filtroDisciplinas, setFiltroDisciplinas] = useState("Todos");
   const [listDisciplinas, setListDisciplinas] = useState([]);
+  const [listDisciplinasFiltro, setListDisciplinasFiltro] = useState([]);
   const [listQuizzes, setListQuizzes] = useState([]);
   const [chaveValorDiscQuiz, setChaveValorDiscQuiz] = useState({});
   const [chaveValorDiscQuizFilter, setChaveValorDiscQuizFilter] = useState({});
@@ -143,6 +150,7 @@ export default function Quizzes() {
         const response = await fetch(URL_DISCIPLINAS, { credentials: "include" });
         const data = await response.json();
         setListDisciplinas(data);
+        setListDisciplinasFiltro(data);
       } catch (err) {
         console.error("Erro ao buscar disciplinas:", err);
       }
@@ -222,9 +230,9 @@ export default function Quizzes() {
     fetchChecks();
   }, [listQuizzes]);
 
-  // handle filtro
-  const handleFiltroChange = (e) => {
-    setFiltro(e.target.value);
+  // handle filtroTipo
+  const handleFiltroTipoChange = (e) => {
+    setFiltroTipo(e.target.value);
 
     if (e.target.value === "Todos") {
       setChaveValorDiscQuizFilter(chaveValorDiscQuiz);
@@ -259,6 +267,35 @@ export default function Quizzes() {
     }
   }
 
+  // handle filtro disciplinas
+  const handleFiltroDisciplinasChange = (e) => {
+    const valor = e.target.value;
+    setFiltroDisciplinas(valor);
+
+    // Se escolher TODOS
+    if (valor === "Todos") {
+      setListDisciplinasFiltro(listDisciplinas);
+      setChaveValorDiscQuizFilter(chaveValorDiscQuiz);
+      return;
+    }
+
+    // Filtra disciplinas
+    const disciplinasFiltradas = listDisciplinas.filter(
+      (disc) => disc.nome === valor
+    );
+    setListDisciplinasFiltro(disciplinasFiltradas);
+
+    // Filtra quizzes ligados à disciplina selecionada
+    const filtrado = {};
+    for (const discNome in chaveValorDiscQuiz) {
+      if (discNome === valor) {
+        filtrado[discNome] = chaveValorDiscQuiz[discNome];
+      }
+    }
+
+    setChaveValorDiscQuizFilter(filtrado);
+  };
+
   const realizarQuiz = (quizID) => {
     // console.log("Realizar quiz de ", disciplina);
     // console.log("Id: ", disciplina.id);
@@ -282,23 +319,39 @@ export default function Quizzes() {
       </Modal>
 
       <Content>
-        <FilterSection>
-          <span>Filtrar por:</span>
-          <FaFilter />
-          <Select value={filtro} onChange={handleFiltroChange}>
-            <option value="Todos">Todos</option>
-            <option value="Alta">Pontuação Alta (300+)</option>
-            <option value="Baixa">Pontuação Baixa (&lt;300)</option>
-            <option value="Iniciante">Iniciante</option>
-            <option value="Intermediário">Intermediário</option>
-            <option value="Avançado">Avançado</option>
-          </Select>
-        </FilterSection>
+        <ContainerFilters>
+          <FilterSection>
+            <span>Filtrar por:</span>
+            <FaFilter />
+            <Select value={filtroTipo} onChange={handleFiltroTipoChange}>
+              <option value="Todos">Todos</option>
+              <option value="Alta">Pontuação Alta (300+)</option>
+              <option value="Baixa">Pontuação Baixa (&lt;300)</option>
+              <option value="Iniciante">Iniciante</option>
+              <option value="Intermediário">Intermediário</option>
+              <option value="Avançado">Avançado</option>
+            </Select>
+          </FilterSection>
+          <FilterSection>
+            <span>Filtrar por disciplinas</span>
+            <FaFilter />
+            <Select value={filtroDisciplinas} onChange={handleFiltroDisciplinasChange}>
+              <option value="Todos">Todos</option>
+              {
+                listDisciplinas.length == 0 ?
+                  (<option value="">Carregando...</option>) :
+                  listDisciplinas.map(disciplina => (
+                    <option value={disciplina.nome}>{disciplina.nome}</option>
+                  ))
+              }
+            </Select>
+          </FilterSection>
+        </ContainerFilters>
 
-        {!listDisciplinas.length ? (
+        {!listDisciplinasFiltro.length ? (
           <h2>Carregando disciplinas...</h2>
         ) : (
-          listDisciplinas.map((disciplina) => (
+          listDisciplinasFiltro.map((disciplina) => (
             <TableSection key={disciplina.id}>
               <Title>Quizzes de {disciplina.nome}</Title>
 
