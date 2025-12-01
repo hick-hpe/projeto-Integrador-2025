@@ -5,6 +5,9 @@ urlpatterns = [
     # rota inicial - teste api
     path('', IndexView.as_view(), name='index'),
 
+    # teste - saiu da pagina
+    path('saiu-da-pagina/', SaiuDaPaginaView.as_view(), name='saiu-da-pagina'),
+
     # Listar disiciplinas
     path('disciplinas/', DisciplinaListView.as_view(), name='disciplinas_list'),
 
@@ -47,6 +50,8 @@ urlpatterns = [
     # estatisticas -> para obter dados de quizzes e nome da disciplina
     path('tentativas/', ListTentativasView.as_view(), name='tentativas'),
 
+    # obter status de um quiz -> tentativa
+    path('tentativas/quiz/<int:quiz_id>/', TentativaStatusQuizView.as_view(), name='tentativas-status-quiz'),
 
     # # Listar detalhes da questão
     # path('quizzes/<int:quiz_id>/questoes/<int:questao_id>/', QuestaoDetailView.as_view(), name='questoes_detail'),

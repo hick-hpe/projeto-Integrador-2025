@@ -97,7 +97,7 @@ export default function ResultadoQuiz() {
         if (!quiz_id) return;
 
         const fetchUserAnswers = async () => {
-            const url = `http://localhost:8000/api/respostas-ultimo-quiz/${quiz_id}/`;
+            const url = `http://localhost:8000/api/quizzes/${quiz_id}/respostas-ultimo-quiz/`;
 
             try {
                 const response = await fetch(url, { credentials: "include" });
@@ -110,24 +110,6 @@ export default function ResultadoQuiz() {
         };
 
         fetchUserAnswers();
-    }, [quiz_id]);
-
-    // concluir quiz
-    useEffect(() => {
-        if (!quiz_id) return;
-
-        const fetchIniciarQuiz = async () => {
-            try {
-                const response = await fetch(`http://localhost:8000/api/quizzes/${quiz_id}/concluir/`, {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-            } catch (err) {
-                console.error(err);
-            }
-        }
-        fetchIniciarQuiz();
     }, [quiz_id]);
 
     // Buscar gabarito

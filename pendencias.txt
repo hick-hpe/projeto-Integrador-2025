@@ -1,14 +1,13 @@
-aluno = CustomUser.objects.get(id=1)
-emblema_ini_mat = Emblema.objects.get(id=1)
+base de dados - teste
 
-emblema_aluno_ini_mat = EmblemaUser.objects.create(
-    aluno=aluno,
-    emblema=emblema_ini_mat
-)
+poo
+ciencia de dados
 
-emblema_inter_mat = Emblema.objects.get(id=2)
 
-emblema_aluno_inter_mat = EmblemaUser.objects.create(
-    aluno=aluno,
-    emblema=emblema_inter_mat
+quiz3 = Quiz.objects.create(
+    titulo="POO - Polimorfismo",
+    disciplina=disciplina_poo,
+    nivel="Avançado",
+    descricao="Questões sobre polimorfismo e sobrescrita de métodos.",
+    tipo_questoes="Múltipla Escolha"
 )

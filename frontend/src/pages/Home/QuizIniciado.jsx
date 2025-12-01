@@ -139,11 +139,9 @@ const QuitButton = styled.button`
   }
 `;
 
-
 export default function QuizIniciado() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [quizIniciado, setQuizIniciado] = useState(false);
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -203,31 +201,8 @@ export default function QuizIniciado() {
     fetchQuiz();
   }, [username, id]);
 
-  // iniciar quiz
-  useEffect(() => {
-    if (!id || !quiz) return;
-
-    const fetchIniciarQuiz = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/api/quizzes/${id}/iniciar/`, {
-          method: 'POST',
-          credentials: 'include'
-        });
-
-        // if (response.ok) {
-        setQuizIniciado(true);
-        // }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    fetchIniciarQuiz();
-  }, [quiz, id]);
-
   // buscar perguntas do backend
   useEffect(() => {
-    if (!quizIniciado) return;
-
     const fetchQuestions = async () => {
       try {
         const response = await fetch(`http://localhost:8000/api/quizzes/${id}/questoes/`,
@@ -243,13 +218,26 @@ export default function QuizIniciado() {
     };
 
     fetchQuestions();
-  }, [quizIniciado]);
+  }, []);
 
   // escolher uma opção
   const handleOptionChange = (e, altID) => {
     setAlternativaID(altID);
     setSelectedOption(e.target.value);
   };
+
+  // concluir quiz
+  const fetchConcluirQuiz = async () => {
+    try {
+      await fetch(`http://localhost:8000/api/quizzes/${id}/concluir/`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   // salva resposta marcada
   const handleSubmit = async () => {
@@ -281,7 +269,7 @@ export default function QuizIniciado() {
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion(prev => prev + 1);
     } else {
-      // setMostrarResultado(true);
+      await fetchConcluirQuiz();
       navigate(`/quiz-info/${id}/resultado-quiz/`, { state: { quiz_id: id } })
     }
   };
@@ -303,6 +291,54 @@ export default function QuizIniciado() {
       console.error("Erro ao desistir do quiz:", error);
     }
   };
+
+  // verificar status do quiz
+  useEffect(() => {
+    const verificarStatus = async () => {
+      const URL = `http://localhost:8000/api/tentativas/quiz/${id}/`;
+
+      try {
+        const response = await fetch(URL, {
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        // se a tentativa estiver desistida, volta pra info
+        if (data.status === "Desistido") {
+          navigate(`/quiz-info/${id}/`);
+        }
+
+      } catch (error) {
+        console.error("Erro ao verificar status:", error);
+      }
+    };
+
+    verificarStatus();
+  }, [id]);
+
+  // notificar servidor ao sair da página
+  useEffect(() => {
+    const URL = `http://localhost:8000/api/quizzes/${id}/desistir/`;
+
+    const send = () => {
+      const data = JSON.stringify({ saiu: true });
+      const blob = new Blob([data], { type: "application/json" });
+      navigator.sendBeacon(URL, blob);
+    };
+
+    const beforeUnloadHandler = (event) => {
+      send();
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
+    };
+  }, [id]);
 
   // Mostrar estado de carregamento ou erro
   if (loading) return <p>Carregando perguntas...</p>;

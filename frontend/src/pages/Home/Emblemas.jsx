@@ -115,7 +115,7 @@ export default function Emblemas() {
                   <MedalIcon active={isActive} />
                 )}
 
-                <Name>{emb.nome}</Name>
+                <Name>{emb.nome} em {emb.disciplina}</Name>
                 <Desc>{emb.descricao}</Desc>
                 <Status ok={isActive}>
                   {isActive ? "Conquistado ✓" : "Pendente —"}

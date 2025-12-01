@@ -143,9 +143,16 @@ class Certificado(models.Model):
 # Emblemas
 # ====================================================
 class Emblema(models.Model):
+    NIVEIS_CHOICE = (
+        ('Iniciante', 'Iniciante'),
+        ('Intermediário', 'Intermediário'),
+        ('Avançado', 'Avançado'),
+    )
     nome = models.CharField(max_length=20)
     descricao = models.TextField(max_length=100)
     logo = models.ImageField(upload_to='emblemas/', null=True)
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, null=True)
+    nivel = models.CharField(max_length=13, choices=NIVEIS_CHOICE, null=True)
 
     def __str__(self):
         return f'Emblema {self.nome}'

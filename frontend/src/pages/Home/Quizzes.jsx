@@ -51,7 +51,7 @@ const QuizButtonDesativado = styled.button`
   border: none;
   border-radius: 6px;
   font-weight: bold;
-  cursor: pointer;
+  cursor: not-allowed;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -179,7 +179,7 @@ export default function Quizzes() {
       agrupado[idDisc].push(quiz);
     });
 
-    console.log(agrupado)
+    // console.log('agrupado:', agrupado);
     setChaveValorDiscQuiz(agrupado);
     setChaveValorDiscQuizFilter(agrupado);
   }, [listQuizzes]);
@@ -316,10 +316,6 @@ export default function Quizzes() {
                 <tbody>
                   {!chaveValorDiscQuizFilter[disciplina.nome] ? (
                     <TableRow key={`${disciplina.id} - ${disciplina.nome}`}>
-                      <TableCell colSpan="4">Carregando quizzes...{disciplina.nome}</TableCell>
-                    </TableRow>
-                  ) : chaveValorDiscQuizFilter[disciplina.nome].length === 0 ? (
-                    <TableRow>
                       <TableCell colSpan="4">Nenhum quiz disponível.</TableCell>
                     </TableRow>
                   ) : (

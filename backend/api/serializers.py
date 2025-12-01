@@ -118,9 +118,14 @@ class CertificadoSerializer(serializers.ModelSerializer):
         
 
 class EmblemaSerializer(serializers.ModelSerializer):
+    disciplina = serializers.SerializerMethodField()
+
+    def get_disciplina(self, obj):
+        return obj.disciplina.nome
+
     class Meta:
         model = Emblema
-        fields = ['id', 'nome', 'descricao', 'logo']
+        fields = ['id', 'nome', 'descricao', 'logo', 'disciplina']
 
 
 class EmblemaUserSerializer(serializers.ModelSerializer):
@@ -134,6 +139,7 @@ class EmblemaUserSerializer(serializers.ModelSerializer):
 class TentativaSerializer(serializers.ModelSerializer):
     disciplina = serializers.SerializerMethodField()
     nivel = serializers.SerializerMethodField()
+    quiz_id = serializers.SerializerMethodField()
 
     def get_disciplina(self, obj):
         return obj.quiz.disciplina.nome
@@ -141,28 +147,10 @@ class TentativaSerializer(serializers.ModelSerializer):
     def get_nivel(self, obj):
         return obj.quiz.nivel
     
+    def get_quiz_id(self, obj):
+        return obj.quiz.id
+    
     class Meta:
         model = Tentativa
-        fields = ['id', 'nivel', 'aprovado', 'disciplina']
+        fields = ['id', 'nivel', 'aprovado', 'disciplina', 'quiz_id', 'status_quiz']
     
-
-# class EmblemaUserSerializer(serializers.ModelSerializer):
-#     aluno = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = EmblemaUser
-#         fields = ['aluno', 'nome', 'descricao', 'logo']
-
-#     def get_aluno(self, obj):
-#         return obj.aluno.user.username
-
-
-# class PontuacaoSerializer(serializers.ModelSerializer):
-#     aluno = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = Pontuacao
-#         fields = ['aluno', 'pontos']
-
-#     def get_aluno(self, obj):
-#         return obj.aluno.user.username

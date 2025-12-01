@@ -56,6 +56,7 @@ export default function QuizInfoPage() {
   const [quiz, setQuiz] = useState(null);
   const [questoes, setQuestoes] = useState([]);
   const [username, setUsername] = useState("");
+  const [quizIniciado, setQuizIniciado] = useState(false);
 
   // auth
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function QuizInfoPage() {
     fetchQuiz();
   }, [id]);
 
-
+  // questoes
   useEffect(() => {
     const fetchQuestoes = async () => {
       try {
@@ -120,6 +121,28 @@ export default function QuizInfoPage() {
 
     fetchQuestoes();
   }, [id]);
+
+  // iniciar quiz
+  const fetchIniciarQuiz = async () => {
+    try {
+      await fetch(`http://localhost:8000/api/quizzes/${id}/iniciar/`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      // iniciar
+      setQuizIniciado(true);
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // iniciar e redirecionar
+  const handleIniciarQuiz = async () => {
+    await fetchIniciarQuiz();
+    navigate(`/quiz-info/${id}/iniciado`);
+  };
 
   return (
     <Container>
@@ -142,7 +165,7 @@ export default function QuizInfoPage() {
           A desistência da realização do quiz não salvará seu progresso e você não irá conquistar pontos.
           Portanto, será necessário refazê-lo e completá-lo.
         </Paragraph>
-        <StartButton onClick={() => navigate(`/quiz-info/${id}/iniciado`)}>
+        <StartButton onClick={handleIniciarQuiz}>
           <FaPlay /> Iniciar quiz
         </StartButton>
       </Content>

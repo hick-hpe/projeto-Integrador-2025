@@ -115,6 +115,44 @@ export default function Meus_Certificados() {
     fetchCertificados();
   }, []);
 
+  // baixar certificado
+  const downloadCertificado = async (codigo) => {
+    try {
+      const URL = `http://localhost:8000/api/certificados/${codigo}/download/`;
+
+      const response = await fetch(URL, {
+        credentials: "include" // IMPORTANTE se estiver usando cookies/CSRF/autenticação
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao baixar certificado");
+      }
+
+      // transforma em blob (arquivo binário)
+      const blob = await response.blob();
+
+      // cria URL temporária
+      const url = window.URL.createObjectURL(blob);
+
+      // cria elemento <a> invisível
+      const a = document.createElement("a");
+      a.href = url;
+
+      // nome sugerido no FileResponse será respeitado se usar browser moderno
+      a.download = `certificado_${codigo}.pdf`;
+
+      document.body.appendChild(a);
+      a.click();   // força o download
+      a.remove();
+
+      // limpa URL temporária
+      window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <Sidebar />
@@ -144,7 +182,7 @@ export default function Meus_Certificados() {
                     <TableCell>{cert.disciplina}</TableCell>
                     <TableCell>{cert.data_emissao}</TableCell>
                     <TableCell>
-                      <PdfButton onClick={() => console.log("abrir pdf", cert.codigo)}>
+                      <PdfButton onClick={() => downloadCertificado(cert.codigo)}>
                         <FaFilePdf />
                       </PdfButton>
                     </TableCell>
