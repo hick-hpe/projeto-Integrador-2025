@@ -10,6 +10,9 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404, render
 from django.http import FileResponse
 import random
+from django.conf import settings
+import os
+from django.contrib.staticfiles import finders
 
 class ValidarCertificadoView(APIView):
     permission_classes = [AllowAny]
@@ -102,18 +105,28 @@ class CertificadoListView(APIView):
 def baixar_certificado(request, certificado, aluno):
     nome = aluno.user.username
     data_formatada = converter_data_para_extenso(datetime.today())
-
+    css_path = finders.find("css/certificado_pdf.css")
+    img_path = finders.find("img/logo/logo-teste.png")
+    
     contexto = {
         "nome": nome.upper(),
         "disciplina": certificado.disciplina.nome,
         "data": data_formatada,
+        'css_path': css_path,
+        'img_path': img_path
     }
-
+    
     rendered = render(request, 'certificado_pdf.html', contexto).content.decode('utf-8')
 
     # gera PDF em memoria
-    pdf_bytes = io.BytesIO()
-    pdfkit.from_string(rendered, pdf_bytes, options={'enable-local-file-access': ''})
+    pdf_binary = pdfkit.from_string(
+        rendered,
+        False,  # ou None, pois não aceita arquivo em memória
+        css=css_path,
+        options={'enable-local-file-access': ''}
+    )
+
+    pdf_bytes = io.BytesIO(pdf_binary)
     pdf_bytes.seek(0) # move cursor de leitura para o inicio do arquivo (pra onde ele vai começar a ler pro response)
 
     filename = f'certificado_{nome.replace(" ", "_")}.pdf'

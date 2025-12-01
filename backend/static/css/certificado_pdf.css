@@ -61,7 +61,7 @@ body {
   .curso {
     font-weight: bold;
     font-size: 20px;
-    color: #2f855a;
+    color: #143153;
     text-shadow: 0 1px 0 #a0e7b6;
   }
 
@@ -69,7 +69,7 @@ body {
     margin-top: 40px;
     text-align: right;
     margin-top: 40px;
-    color: #22543d;
+    color: #143153;
     font-size: 16px;
   }
 
@@ -83,7 +83,7 @@ body {
     left: 80px;
     text-align: left;
     font-size: 15px;
-    color: #22543d;
+    color: #143153;
   }
 
   .linha {
@@ -91,7 +91,6 @@ body {
     text-align: center;
     font-family: "Edu NSW ACT Cursive", cursive;
     font-weight: bold;
-    /* border-top: 2px solid #38a169; */
     margin-bottom: 5px;
   }
 

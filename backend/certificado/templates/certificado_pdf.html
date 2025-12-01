@@ -1,11 +1,11 @@
-<!-- {% load static %} -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <title>Certificado</title>
-  <link rel="stylesheet" href="../../static/css/certificado_pdf.css">
+  <link rel="stylesheet" href="file:///{{ css_path }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap" rel="stylesheet">
@@ -52,7 +52,7 @@
       </div>
 
       <div class="logo">
-        <img src="../../static/img/logo/logo-teste.png" alt="Logo">
+        <img src="file:///{{ img_path }}" alt="Logo">
       </div>
     </div>
   </body>

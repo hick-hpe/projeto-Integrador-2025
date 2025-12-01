@@ -615,16 +615,6 @@ Para isso, deve estar logado como admin/moderador.
         ```
         cd projeto-Integrador-2025
         ```
-    - 🔐 Adicionar variáveis de ambiente:
-        - 🗄️ backend/.env:
-            ```bash
-            EMAIL_HOST_USER='email'
-            EMAIL_HOST_PASSWORD='senha de app'
-            ```
-        - 🌐 frontend/.env:
-            ```bash
-            VITE_REACT_APP_API_URL=http://localhost:8000/api/
-            ```
     - ▶️ Executar:
         ```bash
         docker compose up
