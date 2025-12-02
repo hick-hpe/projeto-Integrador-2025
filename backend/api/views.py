@@ -610,7 +610,9 @@ class TentativaStatusQuizView(APIView):
             .order_by("-id")
             .first()
         )
-        return Response({"status": tentativa.status_quiz})
+        if tentativa:
+            return Response({"status": tentativa.status_quiz})
+        return Response({"status": "vazio"})
 
 # ================================================================================================
 #                                           Área Admin
