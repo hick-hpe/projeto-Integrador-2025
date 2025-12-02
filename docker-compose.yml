@@ -17,8 +17,6 @@ services:
       - "5173:5173"
     depends_on:
       - django
-    # env_file:
-      # - ./frontend/.env
     volumes:
       - ./frontend:/app
       - /app/node_modules

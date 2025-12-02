@@ -74,7 +74,7 @@ export default function Cadastro() {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
-  const [matricula, setMatricula] = useState('123456789');
+  const [matricula, setMatricula] = useState("");
   const [email, setEmail] = useState("");
   const [password, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
